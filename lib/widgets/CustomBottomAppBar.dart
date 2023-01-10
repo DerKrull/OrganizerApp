@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:organizer_app/screens/HomeScreen.dart';
 import 'package:organizer_app/core/app_export.dart';
+import 'package:organizer_app/templates/budgetscreen_screen/budgetscreen_screen.dart';
+import 'package:organizer_app/templates/tasksoverviewscreen_screen/tasksoverviewscreen_screen.dart';
+import 'package:organizer_app/templates/yearlycalendarscreen_screen/yearlycalendarscreen_screen.dart';
 
 class CustomBottomAppBar extends StatelessWidget {
   CustomBottomAppBar({activated: "N/A"}) {
@@ -26,7 +29,12 @@ class CustomBottomAppBar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           TextButton(
-            onPressed: () {/* nothing to do staying on this page*/},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const HomeScreen()));
+              },
             child: BuildBottomAppBarIcons(
                 activated: activated == "Home" ? true : false,
                 icon: Icons.home,
@@ -34,10 +42,10 @@ class CustomBottomAppBar extends StatelessWidget {
           ),
           TextButton(
             onPressed: () {
-              Navigator.pushReplacement(
+              Navigator.push(
               context,
               MaterialPageRoute(
-              builder: (context) => const HomeScreen()));
+              builder: (context) => BudgetscreenScreen()));
             },
             child: BuildBottomAppBarIcons(
                 activated: activated == "Budget" ? true : false,
@@ -46,10 +54,10 @@ class CustomBottomAppBar extends StatelessWidget {
           ),
           TextButton(
             onPressed: () {
-              Navigator.pushReplacement(
+              Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const HomeScreen()));
+                      builder: (context) => YearlycalendarscreenScreen()));
             },
             child: BuildBottomAppBarIcons(
                 activated: activated == "Kalender" ? true : false,
@@ -58,10 +66,10 @@ class CustomBottomAppBar extends StatelessWidget {
           ),
           TextButton(
             onPressed: () {
-              Navigator.pushReplacement(
+              Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const HomeScreen()));
+                      builder: (context) => TasksoverviewscreenScreen()));
             },
             child: BuildBottomAppBarIcons(
                 activated: activated == "Aufgaben" ? true : false,

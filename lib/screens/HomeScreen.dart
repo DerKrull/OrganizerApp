@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:organizer_app/core/app_export.dart';
-import 'package:organizer_app/widgets/BottomAppBar.dart';
-import 'package:organizer_app/widgets/app_bar/appbar_image.dart';
-import 'package:organizer_app/widgets/app_bar/custom_app_bar.dart';
+import 'package:organizer_app/widgets/CustomBottomAppBar.dart';
+
 
 import '../core/utils/color_constant.dart';
 
@@ -21,32 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: buildAppBar(),
       body: Text("Ich bin der Body"),
       //bottomNavigationBar: buildBottomNavigationBar(),
-      bottomNavigationBar: CustomBottomAppBar(),
-    );
-  }
-
-  BottomNavigationBar buildBottomNavigationBar() {
-    return BottomNavigationBar(
-      items: [
-        BottomNavigationBarItem(
-            backgroundColor: ColorConstant.black9004c,
-            icon: Icon(Icons.home),
-            label: "Home"),
-        BottomNavigationBarItem(
-            backgroundColor: ColorConstant.black9004c,
-            icon: Icon(Icons.attach_money),
-            label: "Budget"),
-        BottomNavigationBarItem(
-            backgroundColor: ColorConstant.black9004c,
-            icon: Icon(Icons.calendar_month),
-            label: "Kalender"),
-        BottomNavigationBarItem(
-            backgroundColor: ColorConstant.black9004c,
-            icon: Icon(Icons.task_alt),
-            label: "Aufgaben")
-      ],
-      backgroundColor: ColorConstant.black9004c,
-      currentIndex: 0,
+      bottomNavigationBar: BottomAppBar(),
     );
   }
 
