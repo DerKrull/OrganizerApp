@@ -6,16 +6,20 @@ import 'package:organizer_app/templates/tasksoverviewscreen_screen/tasksoverview
 import 'package:organizer_app/templates/yearlycalendarscreen_screen/yearlycalendarscreen_screen.dart';
 
 class CustomBottomAppBar extends StatefulWidget {
-  CustomBottomAppBar({activated: "N/A"}) {
-    this.activated = activated;
-  }
-  String activated = "Home";
+  CustomBottomAppBar({Key? key, required this.mainPage}) : super(key: key);
+  String mainPage;
 
   @override
   State<CustomBottomAppBar> createState() => _CustomBottomAppBarState();
 }
 
 class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
+  String? activePage;
+  @override
+  void initState() {
+   activePage = widget.mainPage;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -35,7 +39,7 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
           TextButton(
             onPressed: () {
               setState(() {
-                widget.activated = "Home";
+                activePage = MainPages.HomeScreen;
               });
               Navigator.push(
                 context,
@@ -44,12 +48,12 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
               },
             child: BuildBottomAppBarIcons(
                 icon: Icons.home,
-                label: "Home"),
+                label: MainPages.HomeScreen),
           ),
           TextButton(
             onPressed: () {
               setState(() {
-                widget.activated = "Budget";
+                activePage = MainPages.BudgetScreen;
               });
               Navigator.push(
               context,
@@ -59,22 +63,27 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
             },
             child: BuildBottomAppBarIcons(
                 icon: Icons.attach_money,
-                label: "Budget"),
+                label: MainPages.BudgetScreen),
           ),
           TextButton(
             onPressed: () {
+              setState(() {
+                activePage = MainPages.CalendarScreen;
+              });
               Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => YearlycalendarscreenScreen()));
             },
             child: BuildBottomAppBarIcons(
-
                 icon: Icons.calendar_month,
-                label: "Kalender"),
+                label: MainPages.CalendarScreen),
           ),
           TextButton(
             onPressed: () {
+              setState(() {
+                activePage = MainPages.TaskScreen;
+              });
               Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -83,7 +92,7 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
             child: BuildBottomAppBarIcons(
 
                 icon: Icons.task_alt,
-                label: "Aufgaben"),
+                label: MainPages.TaskScreen),
           )
         ],
       ),
@@ -91,7 +100,7 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
   }
 
   Padding BuildBottomAppBarIcons({icon: null, label: "N/A"}) {
-    var active = widget.activated == "label" ? true : false;
+    var active = widget.mainPage == label ? true : false;
     return Padding(
       padding: getPadding(
         bottom: 4,

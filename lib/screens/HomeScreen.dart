@@ -17,7 +17,7 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: buildAppBar(),
       body: Text("Ich bin der Body"),
       //bottomNavigationBar: buildBottomNavigationBar(),
-      bottomNavigationBar: CustomBottomAppBar(),
+      bottomNavigationBar: CustomBottomAppBar(mainPage: MainPages.HomeScreen),
     );
   }
 
