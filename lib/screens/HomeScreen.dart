@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:organizer_app/core/app_export.dart';
 import 'package:organizer_app/widgets/CustomBottomAppBar.dart';
 
-
-import '../core/utils/color_constant.dart';
-
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -16,28 +13,28 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorConstant.gray900,
+      backgroundColor: CustomMaterialThemeColorConstant.dark.surface1,
       appBar: buildAppBar(),
       body: Text("Ich bin der Body"),
       //bottomNavigationBar: buildBottomNavigationBar(),
-      bottomNavigationBar: BottomAppBar(),
+      bottomNavigationBar: CustomBottomAppBar(),
     );
   }
 
   AppBar buildAppBar() {
     return AppBar(
-      backgroundColor: ColorConstant.black9004c,
+      backgroundColor: CustomMaterialThemeColorConstant.dark.surface2,
       centerTitle: true,
       leading: IconButton(
         onPressed: () {},
         icon:
-            Icon(Icons.menu, color: ColorConstant.gray30001, size: getSize(22)),
+            Icon(Icons.menu, color: CustomMaterialThemeColorConstant.dark.onSurfaceVariant, size: getSize(22)),
       ),
       title: Text("Organizer",
           overflow: TextOverflow.ellipsis,
           textAlign: TextAlign.left,
           style: TextStyle(
-              color: ColorConstant.gray30001,
+              color: CustomMaterialThemeColorConstant.dark.onSurfaceVariant,
               fontSize: getFontSize(
                 22,
               ),
@@ -49,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
         IconButton(
             onPressed: () {},
             icon: Icon(Icons.settings,
-                color: ColorConstant.gray30001, size: getSize(22)))
+                color: CustomMaterialThemeColorConstant.dark.onSurfaceVariant, size: getSize(22)))
       ],
     );
   }

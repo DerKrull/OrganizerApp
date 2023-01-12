@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:organizer_app/screens/BudgetScreen.dart';
 import 'package:organizer_app/screens/HomeScreen.dart';
 import 'package:organizer_app/core/app_export.dart';
-import 'package:organizer_app/templates/budgetscreen_screen/budgetscreen_screen.dart';
 import 'package:organizer_app/templates/tasksoverviewscreen_screen/tasksoverviewscreen_screen.dart';
 import 'package:organizer_app/templates/yearlycalendarscreen_screen/yearlycalendarscreen_screen.dart';
 
-class CustomBottomAppBar extends StatelessWidget {
+class CustomBottomAppBar extends StatefulWidget {
   CustomBottomAppBar({activated: "N/A"}) {
     this.activated = activated;
   }
-
   String activated = "Home";
 
+  @override
+  State<CustomBottomAppBar> createState() => _CustomBottomAppBarState();
+}
+
+class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -23,32 +27,37 @@ class CustomBottomAppBar extends StatelessWidget {
         bottom: 12,
       ),
       decoration: BoxDecoration(
-        color: ColorConstant.black9004c,
+        color: CustomMaterialThemeColorConstant.dark.surface2,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           TextButton(
             onPressed: () {
+              setState(() {
+                widget.activated = "Home";
+              });
               Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) => const HomeScreen()));
               },
             child: BuildBottomAppBarIcons(
-                activated: activated == "Home" ? true : false,
                 icon: Icons.home,
                 label: "Home"),
           ),
           TextButton(
             onPressed: () {
+              setState(() {
+                widget.activated = "Budget";
+              });
               Navigator.push(
               context,
               MaterialPageRoute(
-              builder: (context) => BudgetscreenScreen()));
+              //    builder: (context) => BudgetscreenScreen()));
+              builder: (context) => BudgetScreen(initialDate: DateTime.now())));
             },
             child: BuildBottomAppBarIcons(
-                activated: activated == "Budget" ? true : false,
                 icon: Icons.attach_money,
                 label: "Budget"),
           ),
@@ -60,7 +69,7 @@ class CustomBottomAppBar extends StatelessWidget {
                       builder: (context) => YearlycalendarscreenScreen()));
             },
             child: BuildBottomAppBarIcons(
-                activated: activated == "Kalender" ? true : false,
+
                 icon: Icons.calendar_month,
                 label: "Kalender"),
           ),
@@ -72,7 +81,7 @@ class CustomBottomAppBar extends StatelessWidget {
                       builder: (context) => TasksoverviewscreenScreen()));
             },
             child: BuildBottomAppBarIcons(
-                activated: activated == "Aufgaben" ? true : false,
+
                 icon: Icons.task_alt,
                 label: "Aufgaben"),
           )
@@ -81,7 +90,8 @@ class CustomBottomAppBar extends StatelessWidget {
     );
   }
 
-  Padding BuildBottomAppBarIcons({activated: false, icon: null, label: "N/A"}) {
+  Padding BuildBottomAppBarIcons({icon: null, label: "N/A"}) {
+    var active = widget.activated == "label" ? true : false;
     return Padding(
       padding: getPadding(
         bottom: 4,
@@ -104,9 +114,9 @@ class CustomBottomAppBar extends StatelessWidget {
               right: 20,
               bottom: 4,
             ),
-            decoration: activated
-                ? BoxDecoration(
-                    color: ColorConstant.blueGray80001,
+            decoration: active ?
+                BoxDecoration(
+                    color: CustomMaterialThemeColorConstant.dark.secondaryContainer,
                     borderRadius: BorderRadius.circular(
                       getHorizontalSize(
                         16.00,
@@ -141,7 +151,7 @@ class CustomBottomAppBar extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.left,
               style: TextStyle(
-                color: ColorConstant.gray30001,
+                color: CustomMaterialThemeColorConstant.dark.onSurface,
                 fontSize: getFontSize(
                   12,
                 ),

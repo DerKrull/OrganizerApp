@@ -40,6 +40,9 @@ dependencies:
   cloud_firestore: ^4.3.1
   cached_network_image: ^3.2.3
   flutter_svg: ^1.1.6
+  month_picker_dialog_2: ^0.5.8
+  intl: ^0.17.0
+  flutter_localization: ^0.1.9
 
 dev_dependencies:
   flutter_test:

@@ -1,7 +1,9 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 
+// TODO To be removed
 class ColorConstant {
+
   static Color cyanA200 = fromHex('#00ffe0');
 
   static Color deepPurple900 = fromHex('#2803bb');

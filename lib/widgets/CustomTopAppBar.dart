@@ -11,18 +11,16 @@ class CustomTopAppBar extends StatelessWidget with PreferredSizeWidget {
   @override
   AppBar build(BuildContext context) {
     return AppBar(
-      backgroundColor: ColorConstant.black9004c,
+      backgroundColor: CustomMaterialThemeColorConstant.dark.surface2,
       centerTitle: false,
-      leading: IconButton(
-        onPressed: () {},
-        icon:
-        Icon(Icons.arrow_back, color: ColorConstant.gray30001, size: getSize(22)),
+      leading: BackButton(
+        color: CustomMaterialThemeColorConstant.dark.onSurfaceVariant,
       ),
       title: Text(title,
           overflow: TextOverflow.ellipsis,
           textAlign: TextAlign.left,
           style: TextStyle(
-              color: ColorConstant.gray30001,
+              color: CustomMaterialThemeColorConstant.dark.onSurfaceVariant,
               fontSize: getFontSize(
                 22,
               ),
@@ -34,7 +32,7 @@ class CustomTopAppBar extends StatelessWidget with PreferredSizeWidget {
         IconButton(
             onPressed: () {Navigator.pop(context);},
             icon: Icon(Icons.more_vert,
-                color: ColorConstant.gray30001, size: getSize(22)))
+                color: CustomMaterialThemeColorConstant.dark.onSurfaceVariant, size: getSize(22)))
       ],
     ); 
   }
