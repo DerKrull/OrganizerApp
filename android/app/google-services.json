@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "247172018141",
+    "project_id": "organizerapp-163c4",
+    "storage_bucket": "organizerapp-163c4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:247172018141:android:f07347fc90a9cb867e1034",
+        "android_client_info": {
+          "package_name": "de.organizerapp.android_prog_organizer_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "247172018141-rem9f9mt25q8jlrlmqr33qnqvjg4bihv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBb1pn3mUOgAE6B74I0PRyFRZUfmfJmdws"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "247172018141-rem9f9mt25q8jlrlmqr33qnqvjg4bihv.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "247172018141-m0u3i5eg2rlr603aakl4q01fqaphv8c9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "de.organizerapp.androidProgOrganizerApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
