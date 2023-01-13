@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:organizer_app/core/app_export.dart';
 import 'package:organizer_app/widgets/CustomBottomAppBar.dart';
+import 'package:organizer_app/widgets/CustomTopAppBarHome.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -14,40 +15,15 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: CustomMaterialThemeColorConstant.dark.surface1,
-      appBar: buildAppBar(),
-      body: Text("Ich bin der Body"),
+      appBar: const CustomTopAppBarHome(),
+      body: const Text(
+        "Ich bin der Body",
+        style: TextStyle(
+          color: Colors.white,
+        ),
+      ),
       //bottomNavigationBar: buildBottomNavigationBar(),
       bottomNavigationBar: CustomBottomAppBar(mainPage: MainPages.HomeScreen),
-    );
-  }
-
-  AppBar buildAppBar() {
-    return AppBar(
-      backgroundColor: CustomMaterialThemeColorConstant.dark.surface2,
-      centerTitle: true,
-      leading: IconButton(
-        onPressed: () {},
-        icon:
-            Icon(Icons.menu, color: CustomMaterialThemeColorConstant.dark.onSurfaceVariant, size: getSize(22)),
-      ),
-      title: Text("Organizer",
-          overflow: TextOverflow.ellipsis,
-          textAlign: TextAlign.left,
-          style: TextStyle(
-              color: CustomMaterialThemeColorConstant.dark.onSurfaceVariant,
-              fontSize: getFontSize(
-                22,
-              ),
-              fontFamily: 'Roboto',
-              fontWeight: FontWeight.w500,
-              letterSpacing: 0.50,
-              height: 1.25)),
-      actions: [
-        IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.settings,
-                color: CustomMaterialThemeColorConstant.dark.onSurfaceVariant, size: getSize(22)))
-      ],
     );
   }
 }
