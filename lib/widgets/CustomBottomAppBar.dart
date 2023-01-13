@@ -17,6 +17,7 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
   String? activePage;
   @override
   void initState() {
+    super.initState();
    activePage = widget.mainPage;
   }
 
@@ -46,7 +47,7 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
                 MaterialPageRoute(
                     builder: (context) => const HomeScreen()));
               },
-            child: BuildBottomAppBarIcons(
+            child: buildBottomAppBarIcons(
                 icon: Icons.home,
                 label: MainPages.HomeScreen),
           ),
@@ -59,9 +60,9 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
               context,
               MaterialPageRoute(
               //    builder: (context) => BudgetscreenScreen()));
-              builder: (context) => BudgetScreen(initialDate: DateTime.now())));
+              builder: (context) => BudgetScreen()));
             },
-            child: BuildBottomAppBarIcons(
+            child: buildBottomAppBarIcons(
                 icon: Icons.attach_money,
                 label: MainPages.BudgetScreen),
           ),
@@ -75,7 +76,7 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
                   MaterialPageRoute(
                       builder: (context) => YearlycalendarscreenScreen()));
             },
-            child: BuildBottomAppBarIcons(
+            child: buildBottomAppBarIcons(
                 icon: Icons.calendar_month,
                 label: MainPages.CalendarScreen),
           ),
@@ -89,7 +90,7 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
                   MaterialPageRoute(
                       builder: (context) => TasksoverviewscreenScreen()));
             },
-            child: BuildBottomAppBarIcons(
+            child: buildBottomAppBarIcons(
 
                 icon: Icons.task_alt,
                 label: MainPages.TaskScreen),
@@ -99,7 +100,7 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
     );
   }
 
-  Padding BuildBottomAppBarIcons({icon: null, label: "N/A"}) {
+  Padding buildBottomAppBarIcons({icon, label}) {
     var active = widget.mainPage == label ? true : false;
     return Padding(
       padding: getPadding(
