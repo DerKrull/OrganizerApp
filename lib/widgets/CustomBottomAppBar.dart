@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:organizer_app/screens/BudgetScreen.dart';
 import 'package:organizer_app/screens/HomeScreen.dart';
 import 'package:organizer_app/core/app_export.dart';
-import 'package:organizer_app/templates/tasksoverviewscreen_screen/tasksoverviewscreen_screen.dart';
+import 'package:organizer_app/screens/TaskScreen.dart';
 import 'package:organizer_app/templates/yearlycalendarscreen_screen/yearlycalendarscreen_screen.dart';
 
 class CustomBottomAppBar extends StatefulWidget {
@@ -88,7 +88,8 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => TasksoverviewscreenScreen()));
+                      // builder: (context) => TasksoverviewscreenScreen()));
+                      builder: (context) => TaskScreen()));
             },
             child: buildBottomAppBarIcons(
 
