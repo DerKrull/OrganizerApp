@@ -65,7 +65,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-            appBar: CustomTopAppBar(title: "Budget", children: [
+            appBar: CustomTopAppBar(title: "Budget",showThreePoints: true, children: [
               PopupMenuItem(
                 child: Text(
                     style: TextStyle(
