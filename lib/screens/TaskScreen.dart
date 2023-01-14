@@ -12,7 +12,7 @@ class TaskScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomTopAppBar(title: "Aufgaben"),
+      appBar: CustomTopAppBar(title: "Aufgaben", children: []),
       bottomNavigationBar: CustomBottomAppBar(
         mainPage: MainPages.TaskScreen,
       ),

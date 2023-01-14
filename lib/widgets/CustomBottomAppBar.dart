@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:organizer_app/screens/BudgetScreen.dart';
+import 'package:organizer_app/screens/Budget/BudgetScreen.dart';
 import 'package:organizer_app/screens/HomeScreen.dart';
 import 'package:organizer_app/core/app_export.dart';
 import 'package:organizer_app/screens/TaskScreen.dart';

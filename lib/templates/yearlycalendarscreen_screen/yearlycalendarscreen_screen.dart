@@ -18,7 +18,7 @@ class YearlycalendarscreenScreen extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         backgroundColor: ColorConstant.gray900,
-        appBar: CustomTopAppBar(title: "Month ..."),
+        appBar: CustomTopAppBar(title: "Month ...", children: [],),
         body: SizedBox(
           width: size.width,
           child: SingleChildScrollView(

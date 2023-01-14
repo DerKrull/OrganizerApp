@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -5,37 +7,27 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:month_picker_dialog_2/month_picker_dialog_2.dart';
 import 'package:organizer_app/core/app_export.dart';
-import 'package:organizer_app/core/model/Expenditure.dart';
+import 'package:organizer_app/core/model/BudgetCategory.dart';
+import 'package:organizer_app/screens/Budget/BudgetCategoryScreen.dart';
 import 'package:organizer_app/widgets/CustomBottomAppBar.dart';
 import 'package:organizer_app/widgets/CustomTopAppBar.dart';
 
-class BudgetCategoryScreen extends StatefulWidget {
-  final String categoryRef;
-  final String categoryName;
-  final DateTime initialDate;
+class BudgetScreen extends StatefulWidget {
+  //final DateTime initialDate = DateTime(DateTime.now().year, DateTime.now().month, 1, 12, 00);
+  DateTime initialDate = DateTime.now();
 
-  BudgetCategoryScreen(
-      {Key? key,
-      required this.categoryRef,
-      required this.categoryName,
-      required this.initialDate})
-      : super(key: key);
+  BudgetScreen({Key? key}) : super(key: key);
 
   @override
-  State<BudgetCategoryScreen> createState() => _BudgetCategoryScreenState();
+  State<BudgetScreen> createState() => _BudgetScreenState();
 }
 
-class _BudgetCategoryScreenState extends State<BudgetCategoryScreen> {
+class _BudgetScreenState extends State<BudgetScreen> {
   Future<void> dataReceived = initializeDateFormatting('de', null);
 
   DateTime? selectedDate;
   DateFormat format = DateFormat('MMMM', 'de');
   Timestamp timestamp = Timestamp.fromDate(DateTime.now());
-
-  FirebaseFirestore db = FirebaseFirestore.instance;
-
-  double usedBudget = 0;
-  double totalBudget = 0;
 
   @override
   void initState() {
@@ -43,72 +35,95 @@ class _BudgetCategoryScreenState extends State<BudgetCategoryScreen> {
     selectedDate = widget.initialDate;
   }
 
-  Stream<List<Expenditure>> expenditureStream() {
-    DocumentReference categoryDocRef =
-        db.collection("budgetCategory").doc(widget.categoryRef);
+  FirebaseFirestore db = FirebaseFirestore.instance;
+
+  double usedBudget = 0.0;
+
+  double totalBudget = 0.0;
+
+  Stream<List<BudgetCategory>> budgetCategoryStream() {
     try {
-      return db
-          .collection("expenditure")
-          .where("category", isEqualTo: categoryDocRef)
-          .where("date",
-              isGreaterThanOrEqualTo: getFirstTimeOfMonth(selectedDate!))
-          .where("date", isLessThanOrEqualTo: getLastTimeOfMonth(selectedDate!))
-          .snapshots()
-          .map((notes) {
-        final List<Expenditure> expendituresFromFirestore = <Expenditure>[];
+      return db.collection("budgetCategory").snapshots().map((notes) {
+        final List<BudgetCategory> categoriesFromFirestore = <BudgetCategory>[];
         for (final DocumentSnapshot<Map<String, dynamic>> doc in notes.docs) {
-          expendituresFromFirestore
-              .add(Expenditure.fromDocumentSnapshot(doc: doc));
+          categoriesFromFirestore
+              .add(BudgetCategory.fromDocumentSnapshot(doc: doc));
         }
-        return expendituresFromFirestore;
+        return categoriesFromFirestore;
       });
     } catch (e) {
       rethrow;
     }
   }
 
+  double roundDouble(double value, int places) {
+    num mod = pow(10.0, places);
+    return ((value * mod).round().toDouble() / mod);
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-        appBar: CustomTopAppBar(title: "Budget"),
-        bottomNavigationBar:
-            CustomBottomAppBar(mainPage: MainPages.BudgetScreen),
-        backgroundColor: CustomMaterialThemeColorConstant.dark.surface1,
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            //TODO Add Expenditure
-          },
-          backgroundColor: CustomMaterialThemeColorConstant.dark.primaryContainer,
-          child: Icon(Icons.add, color: CustomMaterialThemeColorConstant.dark.onSurface,),
-        ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              buildBarChartWithText(context),
-              buildMonthPicker(context),
-              buildExpenditureStreamBuilder(),
-            ],
-          ),
-        ),
-      ),
-    );
+        child: Scaffold(
+            appBar: CustomTopAppBar(title: "Budget", children: [
+              PopupMenuItem(
+                child: Text(
+                    style: TextStyle(
+                        color: CustomMaterialThemeColorConstant
+                            .dark.onSecondaryContainer),
+                    "Budget-Einstellungen"),
+                onTap: () {
+                  // TODOD go to budget options
+                  print("Budget Options");
+                },
+              ),
+              PopupMenuItem(
+                child: Text(
+                    style: TextStyle(
+                        color: CustomMaterialThemeColorConstant
+                            .dark.onSecondaryContainer),
+                    "Kategorie-Einstellungen"),
+                onTap: () {
+                  // TODOD go to budget options
+                  print("Category Options");
+                },
+              )
+            ]),
+            bottomNavigationBar:
+                CustomBottomAppBar(mainPage: MainPages.BudgetScreen),
+            backgroundColor: CustomMaterialThemeColorConstant.dark.surface1,
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                //TODO Add Category
+              },
+              backgroundColor:
+                  CustomMaterialThemeColorConstant.dark.primaryContainer,
+              child: Icon(
+                Icons.add,
+                color: CustomMaterialThemeColorConstant.dark.onSurface,
+              ),
+            ),
+            body: SingleChildScrollView(
+              child: Column(
+                children: [
+                  buildBarChartWithText(context),
+                  buildMonthPicker(context),
+                  StreamBuilder(
+                      stream: budgetCategoryStream(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return buildListView(snapshot);
+                        } else if (snapshot.hasError) {
+                          return Text('${snapshot.error}');
+                        }
+                        return const CircularProgressIndicator();
+                      }),
+                ],
+              ),
+            )));
   }
 
-  StreamBuilder<List<Expenditure>> buildExpenditureStreamBuilder() {
-    return StreamBuilder(
-        stream: expenditureStream(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return buildListView(snapshot);
-          } else if (snapshot.hasError) {
-            return Text("${snapshot.error}");
-          }
-          return const CircularProgressIndicator();
-        });
-  }
-
-  Widget buildListView(AsyncSnapshot<List<Expenditure>> snapshot) {
+  Widget buildListView(AsyncSnapshot<List<BudgetCategory>> snapshot) {
     return Padding(
       padding: getPadding(top: 20, left: 10, right: 10),
       child: ListView.builder(
@@ -119,26 +134,32 @@ class _BudgetCategoryScreenState extends State<BudgetCategoryScreen> {
             final entry = snapshot.data![index];
             return Card(
               color: CustomMaterialThemeColorConstant.dark.surface5,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: getPadding(left: 20.0),
-                    child: Text(
-                        style: TextStyle(
-                            color: CustomMaterialThemeColorConstant
-                                .dark.onSurface),
-                        DateFormat('dd.MM.yyyy').format(entry.date)),
-                  ),
-                  ListTile(
-                    title: Text(entry.title),
-                    subtitle: Text(entry.description),
-                    isThreeLine: true,
-                    trailing: Text("${entry.value}€"),
-                    textColor: CustomMaterialThemeColorConstant.dark.onSurface,
-                    onTap: () {},
-                  ),
-                ],
+              child: ListTile(
+                title: Text(entry.name),
+                subtitle: Text(entry.description),
+                leading: CircleAvatar(backgroundColor: Color(entry.color)),
+                trailing: FutureBuilder(
+                  future: getUsedBudgetPerCategory(entry.docRef, selectedDate!),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Text("${snapshot.data}");
+                    } else if (snapshot.hasError) {
+                      return Text("${snapshot.error}");
+                    }
+                    return const CircularProgressIndicator();
+                  },
+                ),
+                textColor: CustomMaterialThemeColorConstant.dark.onSurface,
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => BudgetCategoryScreen(
+                                categoryRef: entry.docRef,
+                                categoryName: entry.name,
+                                initialDate: selectedDate!,
+                              )));
+                },
               ),
             );
           }),
@@ -210,12 +231,12 @@ class _BudgetCategoryScreenState extends State<BudgetCategoryScreen> {
     return Padding(
       padding: getPadding(left: 20, right: 20, bottom: 10),
       child: FutureBuilder(
-        future: getUsedBudgetPerCategory(widget.categoryRef, selectedDate!),
+        future: getUsedBudgetTotal(selectedDate!),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Text("${snapshot.error}");
           } else if (snapshot.hasData) {
-            usedBudget = snapshot.data!;
+            usedBudget = roundDouble(snapshot.data!, 2);
             return FutureBuilder(
                 future: getTotalBudget(selectedDate!),
                 builder: (context, snapshot) {
@@ -224,7 +245,7 @@ class _BudgetCategoryScreenState extends State<BudgetCategoryScreen> {
                       print(snapshot.error);
                     }
                   } else if (snapshot.hasData) {
-                    totalBudget = snapshot.data!;
+                    totalBudget = roundDouble(snapshot.data!, 2);
                     double width = MediaQuery.of(context).size.width - 60;
                     double usedBudgetWidth = width * usedBudget / totalBudget;
                     double restBudgetWidth = width - usedBudgetWidth;

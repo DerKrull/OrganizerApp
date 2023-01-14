@@ -1,12 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:organizer_app/core/app_export.dart';
 
-class CustomTopAppBar extends StatelessWidget with PreferredSizeWidget {
-  CustomTopAppBar({title: "N/A"}) {
-    this.title = title;
-  }
-  
-  String title = "";
+class CustomTopAppBar extends StatefulWidget with PreferredSizeWidget {
+  CustomTopAppBar({required this.children, required this.title});
+
+  final List<PopupMenuEntry<Text>> children;
+  final String title;
+
+  @override
+  State<CustomTopAppBar> createState() => _CustomTopAppBarState();
+
+  @override
+  // TODO: implement preferredSize
+  Size get preferredSize => Size.fromHeight(kToolbarHeight);
+}
+
+class _CustomTopAppBarState extends State<CustomTopAppBar> {
+  Text? selectedMenu;
 
   @override
   AppBar build(BuildContext context) {
@@ -16,7 +26,7 @@ class CustomTopAppBar extends StatelessWidget with PreferredSizeWidget {
       leading: BackButton(
         color: CustomMaterialThemeColorConstant.dark.onSurfaceVariant,
       ),
-      title: Text(title,
+      title: Text(widget.title,
           overflow: TextOverflow.ellipsis,
           textAlign: TextAlign.left,
           style: TextStyle(
@@ -29,14 +39,18 @@ class CustomTopAppBar extends StatelessWidget with PreferredSizeWidget {
               letterSpacing: 0.50,
               height: 1.25)),
       actions: [
-        IconButton(
-            onPressed: () {
-              print("Drei Punkte");
+        PopupMenuButton<Text>(
+            color: CustomMaterialThemeColorConstant.dark.secondaryContainer,
+            icon: Icon(Icons.more_vert, color: CustomMaterialThemeColorConstant.dark.onSurfaceVariant,),
+            initialValue: selectedMenu,
+            onSelected: (Text item) {
+              setState(() {
+                selectedMenu = item;
+              });
             },
-            icon: Icon(Icons.more_vert,
-                color: CustomMaterialThemeColorConstant.dark.onSurfaceVariant, size: getSize(22)))
+            itemBuilder: (context) => widget.children),
       ],
-    ); 
+    );
   }
 
   @override
