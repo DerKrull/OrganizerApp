@@ -71,11 +71,15 @@ class _BudgetCategoryScreenState extends State<BudgetCategoryScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: CustomTopAppBar(title: "Budget",showThreePoints: true, children: [
+        appBar:
+            CustomTopAppBar(title: "Budget", showThreePoints: true, children: [
           PopupMenuItem(
-            child: Text(style: TextStyle(
-              color: CustomMaterialThemeColorConstant.dark.onSecondaryContainer,
-            ),"Budget-Einstellungen"),
+            child: Text(
+                style: TextStyle(
+                  color: CustomMaterialThemeColorConstant
+                      .dark.onSecondaryContainer,
+                ),
+                "Budget-Einstellungen"),
             onTap: () {
               // TODOD go to category settings
               print("Open Options");
@@ -222,7 +226,7 @@ class _BudgetCategoryScreenState extends State<BudgetCategoryScreen> {
 
   Widget buildBarChartWithText(BuildContext context) {
     return Padding(
-      padding: getPadding(left: 20, right: 20, bottom: 10),
+      padding: getPadding(left: 20, right: 20, bottom: 10, top: 20),
       child: FutureBuilder(
         future: getUsedBudgetPerCategory(widget.categoryRef, selectedDate!),
         builder: (context, snapshot) {

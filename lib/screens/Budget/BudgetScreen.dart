@@ -229,7 +229,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
 
   Widget buildBarChartWithText(BuildContext context) {
     return Padding(
-      padding: getPadding(left: 20, right: 20, bottom: 10),
+      padding: getPadding(left: 20, right: 20, bottom: 10, top: 20),
       child: FutureBuilder(
         future: getUsedBudgetTotal(selectedDate!),
         builder: (context, snapshot) {
