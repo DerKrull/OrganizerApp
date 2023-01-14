@@ -1,23 +1,45 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
+import 'package:month_picker_dialog_2/month_picker_dialog_2.dart';
 import 'package:organizer_app/core/app_export.dart';
-import 'package:organizer_app/model/BudgetCategory.dart';
-import 'package:organizer_app/model/Expenditure.dart';
+import 'package:organizer_app/core/model/BudgetCategory.dart';
 import 'package:organizer_app/screens/BudgetCategoryScreen.dart';
 import 'package:organizer_app/widgets/CustomBottomAppBar.dart';
 import 'package:organizer_app/widgets/CustomTopAppBar.dart';
-import 'package:organizer_app/widgets/MonthOnlyInput.dart';
 
-class BudgetScreen extends StatelessWidget {
+class BudgetScreen extends StatefulWidget {
+  //final DateTime initialDate = DateTime(DateTime.now().year, DateTime.now().month, 1, 12, 00);
+  DateTime initialDate = DateTime.now();
+
   BudgetScreen({Key? key}) : super(key: key);
+
+  @override
+  State<BudgetScreen> createState() => _BudgetScreenState();
+}
+
+class _BudgetScreenState extends State<BudgetScreen> {
+  Future<void> dataReceived = initializeDateFormatting('de', null);
+
+  DateTime? selectedDate;
+  DateFormat format = DateFormat('MMMM', 'de');
+  Timestamp timestamp = Timestamp.fromDate(DateTime.now());
+
+  @override
+  void initState() {
+    super.initState();
+    selectedDate = widget.initialDate;
+  }
 
   FirebaseFirestore db = FirebaseFirestore.instance;
 
-  double usedBudget = 300.0;
+  double usedBudget = 0.0;
 
-  double totalBudget = 1000.0;
+  double totalBudget = 0.0;
 
   Stream<List<BudgetCategory>> budgetCategoryStream() {
     try {
@@ -34,33 +56,6 @@ class BudgetScreen extends StatelessWidget {
     }
   }
 
-  Future<double?> getUsedBudgetPerCategory(String categoryRef) async {
-    DocumentReference categoryDocRef =
-    db.collection("budgetCategory").doc(categoryRef);
-    double sum = 0;
-    var queryResult = await db
-        .collection("expenditure")
-        .where("category", isEqualTo: categoryDocRef)
-        .get();
-    queryResult.docs.forEach((doc) {
-      sum += Expenditure.fromDocumentSnapshot(doc: doc).value;
-    });
-    print("Result: " + sum.toString());
-    return sum;
-  }
-
-  Future<double?> getUsedBudget() async {
-    double sum = 0;
-    var queryResult = await db
-        .collection("expenditure")
-        .get();
-    queryResult.docs.forEach((doc) {
-      sum += Expenditure.fromDocumentSnapshot(doc: doc).value;
-    });
-    print("Result: " + sum.toString());
-    return sum;
-  }
-
   double roundDouble(double value, int places) {
     num mod = pow(10.0, places);
     return ((value * mod).round().toDouble() / mod);
@@ -74,11 +69,18 @@ class BudgetScreen extends StatelessWidget {
             bottomNavigationBar:
                 CustomBottomAppBar(mainPage: MainPages.BudgetScreen),
             backgroundColor: CustomMaterialThemeColorConstant.dark.surface1,
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                //TODO Add Category
+              },
+              backgroundColor: CustomMaterialThemeColorConstant.dark.primaryContainer,
+              child: Icon(Icons.add, color: CustomMaterialThemeColorConstant.dark.onSurface,),
+            ),
             body: SingleChildScrollView(
               child: Column(
                 children: [
                   buildBarChartWithText(context),
-                  MonthOnlyInput(initialDate: DateTime.now()),
+                  buildMonthPicker(context),
                   StreamBuilder(
                       stream: budgetCategoryStream(),
                       builder: (context, snapshot) {
@@ -87,7 +89,7 @@ class BudgetScreen extends StatelessWidget {
                         } else if (snapshot.hasError) {
                           return Text('${snapshot.error}');
                         }
-                        return CircularProgressIndicator();
+                        return const CircularProgressIndicator();
                       }),
                 ],
               ),
@@ -99,7 +101,7 @@ class BudgetScreen extends StatelessWidget {
       padding: getPadding(top: 20, left: 10, right: 10),
       child: ListView.builder(
           shrinkWrap: true,
-          physics: ClampingScrollPhysics(),
+          physics: const ClampingScrollPhysics(),
           itemCount: snapshot.data!.length,
           itemBuilder: (context, index) {
             final entry = snapshot.data![index];
@@ -110,83 +112,173 @@ class BudgetScreen extends StatelessWidget {
                 subtitle: Text(entry.description),
                 leading: CircleAvatar(backgroundColor: Color(entry.color)),
                 trailing: FutureBuilder(
-                  future: getUsedBudgetPerCategory(entry.docRef),
+                  future: getUsedBudgetPerCategory(entry.docRef, selectedDate!),
                   builder: (context, snapshot) {
-                    if(snapshot.hasData) {
+                    if (snapshot.hasData) {
                       return Text("${snapshot.data}");
-                    } else if(snapshot.hasError) {
+                    } else if (snapshot.hasError) {
                       return Text("${snapshot.error}");
                     }
-                    return CircularProgressIndicator();
+                    return const CircularProgressIndicator();
                   },
                 ),
                 textColor: CustomMaterialThemeColorConstant.dark.onSurface,
-                onTap: () {Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => BudgetCategoryScreen(categoryRef: entry.docRef, categoryName: entry.name,)));},
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => BudgetCategoryScreen(
+                                categoryRef: entry.docRef,
+                                categoryName: entry.name,
+                                initialDate: selectedDate!,
+                              )));
+                },
               ),
             );
           }),
     );
   }
 
+  Padding buildMonthPicker(BuildContext context) {
+    return Padding(
+      padding: getPadding(right: 20, left: 20),
+      child: Container(
+        decoration: BoxDecoration(
+          color: CustomMaterialThemeColorConstant.dark.surface3,
+          borderRadius: BorderRadius.circular(28.0),
+        ),
+        child: Padding(
+          padding: getPadding(all: 20),
+          child: TextFormField(
+              key: Key(format.format(selectedDate!)),
+              initialValue: format.format(selectedDate!),
+              expands: false,
+              readOnly: true,
+              style: const TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                label: const Text("Monat"),
+                labelStyle: const TextStyle(color: Colors.white),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(4.0),
+                  borderSide: const BorderSide(color: Colors.white),
+                ),
+                enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(4.0),
+                    borderSide: const BorderSide(color: Colors.white)),
+              ),
+              onTap: () => {
+                    showMonthPicker(
+                      context: context,
+                      firstDate: DateTime(DateTime.now().year - 1, 5),
+                      lastDate: DateTime(DateTime.now().year + 1, 9),
+                      initialDate: selectedDate ?? widget.initialDate,
+                      headerColor: CustomMaterialThemeColorConstant
+                          .dark.primaryContainer,
+                      headerTextColor: CustomMaterialThemeColorConstant
+                          .dark.onPrimaryContainer,
+                      selectedMonthBackgroundColor:
+                          CustomMaterialThemeColorConstant
+                              .dark.primaryContainer,
+                      selectedMonthTextColor: CustomMaterialThemeColorConstant
+                          .dark.onPrimaryContainer,
+                      unselectedMonthTextColor:
+                          CustomMaterialThemeColorConstant.dark.onSecondary,
+                    ).then((date) {
+                      if (date != null) {
+                        setState(() {
+                          selectedDate = date;
+                          if (kDebugMode) {
+                            print(
+                                "Selected Date is: ${DateFormat("dd.MM.yyyy hh:mm", 'de').format(selectedDate!)}");
+                          }
+                        });
+                      }
+                    })
+                  }),
+        ),
+      ),
+    );
+  }
   Widget buildBarChartWithText(BuildContext context) {
-
-    return FutureBuilder(future: getUsedBudget(), builder: (context, snapshot) {
-      if(snapshot.hasData) {
-        this.usedBudget = roundDouble(snapshot.data!, 2);
-        double width = MediaQuery.of(context).size.width - 60;
-        double usedBudgetWidth = width * usedBudget / totalBudget;
-        double restBudgetWidth = width - usedBudgetWidth;
-        return Padding(
-          padding: getPadding(left: 20, right: 20, bottom: 10),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-                Container(
-                  height: 50,
-                  width: usedBudgetWidth,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: CustomMaterialThemeColorConstant.dark.inversePrimary,
-                  ),
-                ),
-                SizedBox(
-                  width: 5,
-                ),
-                Container(
-                  height: 50,
-                  width: restBudgetWidth,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: CustomMaterialThemeColorConstant.dark.onSurfaceVariant,
-                  ),
-                ),
-              ]),
-              Center(
-                child: Padding(
-                  padding: getPadding(top: 10),
-                  child: Text(
+    return Padding(
+      padding: getPadding(left: 20, right: 20, bottom: 10),
+      child: FutureBuilder(
+        future: getUsedBudgetTotal(selectedDate!),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Text("${snapshot.error}");
+          } else if (snapshot.hasData) {
+            usedBudget = roundDouble(snapshot.data!, 2);
+            return FutureBuilder(
+                future: getTotalBudget(selectedDate!),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    if (kDebugMode) {
+                      print(snapshot.error);
+                    }
+                  } else if (snapshot.hasData) {
+                    totalBudget = roundDouble(snapshot.data!, 2);
+                    double width = MediaQuery.of(context).size.width - 60;
+                    double usedBudgetWidth = width * usedBudget / totalBudget;
+                    double restBudgetWidth = width - usedBudgetWidth;
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Container(
+                                height: 50,
+                                width: usedBudgetWidth,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: CustomMaterialThemeColorConstant
+                                      .dark.inversePrimary,
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              Container(
+                                height: 50,
+                                width: restBudgetWidth,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: CustomMaterialThemeColorConstant
+                                      .dark.onSurfaceVariant,
+                                ),
+                              ),
+                            ]),
+                        Center(
+                          child: Padding(
+                            padding: getPadding(top: 10),
+                            child: Text(
+                                style: TextStyle(
+                                  color: CustomMaterialThemeColorConstant
+                                      .dark.onSurface,
+                                  fontSize: 30.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                "${usedBudget.toStringAsFixed(2)}€   /   ${totalBudget.toStringAsFixed(2)}€"),
+                          ),
+                        )
+                      ],
+                    );
+                  }
+                  return Text(
                       style: TextStyle(
                         color: CustomMaterialThemeColorConstant.dark.onSurface,
                         fontSize: 30.0,
                         fontWeight: FontWeight.bold,
                       ),
-                      usedBudget.toString() +
-                          "€   /   " +
-                          totalBudget.toString() +
-                          "€"),
-                ),
-              )
-            ],
-          ),
-        );
-      } else if (snapshot.hasError) {
-        return Text("${snapshot.error}");
-      }
-      return CircularProgressIndicator();
-    });
+                      textAlign: TextAlign.center,
+                      "No Budget available for selected month");
+                });
+          }
+          return const CircularProgressIndicator();
+        },
+      ),
+    );
   }
+
 }
