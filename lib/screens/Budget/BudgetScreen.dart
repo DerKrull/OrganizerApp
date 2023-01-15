@@ -1,16 +1,17 @@
-import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:month_picker_dialog_2/month_picker_dialog_2.dart';
+import 'package:organizer_app/core/FireStoreFutures/GetBudgetFutures.dart';
 import 'package:organizer_app/core/app_export.dart';
 import 'package:organizer_app/core/model/BudgetCategory.dart';
+import 'package:organizer_app/screens/Budget/AddCategoryScreen.dart';
 import 'package:organizer_app/screens/Budget/BudgetCategoryScreen.dart';
 import 'package:organizer_app/widgets/CustomBottomAppBar.dart';
 import 'package:organizer_app/widgets/CustomTopAppBar.dart';
+import 'package:organizer_app/widgets/ThreePointPopUpMenu.dart';
 
 class BudgetScreen extends StatefulWidget {
   //final DateTime initialDate = DateTime(DateTime.now().year, DateTime.now().month, 1, 12, 00);
@@ -35,8 +36,6 @@ class _BudgetScreenState extends State<BudgetScreen> {
     selectedDate = widget.initialDate;
   }
 
-  FirebaseFirestore db = FirebaseFirestore.instance;
-
   double usedBudget = 0.0;
 
   double totalBudget = 0.0;
@@ -56,45 +55,23 @@ class _BudgetScreenState extends State<BudgetScreen> {
     }
   }
 
-  double roundDouble(double value, int places) {
-    num mod = pow(10.0, places);
-    return ((value * mod).round().toDouble() / mod);
-  }
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-            appBar: CustomTopAppBar(title: "Budget",showThreePoints: true, children: [
-              PopupMenuItem(
-                child: Text(
-                    style: TextStyle(
-                        color: CustomMaterialThemeColorConstant
-                            .dark.onSecondaryContainer),
-                    "Budget-Einstellungen"),
-                onTap: () {
-                  // TODOD go to budget options
-                  print("Budget Options");
-                },
-              ),
-              PopupMenuItem(
-                child: Text(
-                    style: TextStyle(
-                        color: CustomMaterialThemeColorConstant
-                            .dark.onSecondaryContainer),
-                    "Kategorie-Einstellungen"),
-                onTap: () {
-                  // TODOD go to budget options
-                  print("Category Options");
-                },
-              )
-            ]),
+            appBar: CustomTopAppBar(
+                title: "Budget",
+                showThreePoints: true,
+                menu: ThreePointPopUpMenu(
+                    onSelected: (int result) {},
+                    entries: ["Kategorie-Einstellungen"]).build(context)),
             bottomNavigationBar:
                 CustomBottomAppBar(mainPage: MainPages.BudgetScreen),
             backgroundColor: CustomMaterialThemeColorConstant.dark.surface1,
             floatingActionButton: FloatingActionButton(
               onPressed: () {
-                //TODO Add Category
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => AddCategoryScreen()));
               },
               backgroundColor:
                   CustomMaterialThemeColorConstant.dark.primaryContainer,
@@ -236,7 +213,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
           if (snapshot.hasError) {
             return Text("${snapshot.error}");
           } else if (snapshot.hasData) {
-            usedBudget = roundDouble(snapshot.data!, 2);
+            usedBudget = snapshot.data!;
             return FutureBuilder(
                 future: getTotalBudget(selectedDate!),
                 builder: (context, snapshot) {
@@ -245,7 +222,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
                       print(snapshot.error);
                     }
                   } else if (snapshot.hasData) {
-                    totalBudget = roundDouble(snapshot.data!, 2);
+                    totalBudget = snapshot.data!;
                     double width = MediaQuery.of(context).size.width - 60;
                     double usedBudgetWidth = width * usedBudget / totalBudget;
                     double restBudgetWidth = width - usedBudgetWidth;
