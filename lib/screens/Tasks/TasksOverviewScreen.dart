@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:organizer_app/core/app_export.dart';
+import 'package:organizer_app/screens/Tasks/DailyTasksScreen.dart';
 import 'package:organizer_app/screens/Tasks/TasksScreen.dart';
 import 'package:organizer_app/widgets/CustomBottomAppBar.dart';
 import 'package:organizer_app/widgets/CustomTopAppBar.dart';
@@ -65,60 +66,66 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
             addSeparator(height: 10.0),
             Expanded(
               flex: 1,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                child: Container(
-                  width: width,
-                  decoration: BoxDecoration(
-                    color: CustomMaterialThemeColorConstant.dark.surface5,
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(30),
-                    ),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(20.0, 5.0, 0.0, 5.0),
-                            child: Text(
-                              "Tägliche Aufgaben",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 22,
-                              ),
-                            ),
-                          ),
-                        ],
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => DailyTasksScreen()));
+                },
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                  child: Container(
+                    width: width,
+                    decoration: BoxDecoration(
+                      color: CustomMaterialThemeColorConstant.dark.surface5,
+                      borderRadius: const BorderRadius.all(
+                        Radius.circular(30),
                       ),
-                      Expanded(
-                        child: Container(
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: CustomMaterialThemeColorConstant.dark.surface5,
-                            borderRadius: const BorderRadius.only(
-                              bottomLeft: Radius.circular(40.0),
-                              bottomRight: Radius.circular(40.0),
-                            ),
-                          ),
-                          child: Column(
-                            children: <Widget>[
-                              Expanded(
-                                child: ListView.builder(
-                                    physics: const NeverScrollableScrollPhysics(),
-                                    itemCount: 3,
-                                    itemBuilder: (context, index) {
-                                      return _buildSingleTask(
-                                          index, dailyTaskList);
-                                    }),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: const [
+                            Padding(
+                              padding: EdgeInsets.fromLTRB(20.0, 5.0, 0.0, 5.0),
+                              child: Text(
+                                "Tägliche Aufgaben",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 22,
+                                ),
                               ),
-                            ],
+                            ),
+                          ],
+                        ),
+                        Expanded(
+                          child: Container(
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: CustomMaterialThemeColorConstant.dark.surface5,
+                              borderRadius: const BorderRadius.only(
+                                bottomLeft: Radius.circular(40.0),
+                                bottomRight: Radius.circular(40.0),
+                              ),
+                            ),
+                            child: Column(
+                              children: <Widget>[
+                                Expanded(
+                                  child: ListView.builder(
+                                      physics: const NeverScrollableScrollPhysics(),
+                                      itemCount: 3,
+                                      itemBuilder: (context, index) {
+                                        return _buildSingleTask(
+                                            index, dailyTaskList);
+                                      }),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
