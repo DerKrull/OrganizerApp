@@ -4,10 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:month_picker_dialog_2/month_picker_dialog_2.dart';
+import 'package:organizer_app/core/FireStoreFutures/GetBudgetFutures.dart';
 import 'package:organizer_app/core/app_export.dart';
 import 'package:organizer_app/core/model/Expenditure.dart';
+import 'package:organizer_app/screens/Budget/EditCategoryScreen.dart';
 import 'package:organizer_app/widgets/CustomBottomAppBar.dart';
 import 'package:organizer_app/widgets/CustomTopAppBar.dart';
+import 'package:organizer_app/widgets/ThreePointPopUpMenu.dart';
 
 class BudgetCategoryScreen extends StatefulWidget {
   final String categoryRef;
@@ -31,8 +34,6 @@ class _BudgetCategoryScreenState extends State<BudgetCategoryScreen> {
   DateTime? selectedDate;
   DateFormat format = DateFormat('MMMM', 'de');
   Timestamp timestamp = Timestamp.fromDate(DateTime.now());
-
-  FirebaseFirestore db = FirebaseFirestore.instance;
 
   double usedBudget = 0;
   double totalBudget = 0;
@@ -71,21 +72,22 @@ class _BudgetCategoryScreenState extends State<BudgetCategoryScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar:
-            CustomTopAppBar(title: "Budget", showThreePoints: true, children: [
-          PopupMenuItem(
-            child: Text(
-                style: TextStyle(
-                  color: CustomMaterialThemeColorConstant
-                      .dark.onSecondaryContainer,
-                ),
-                "Budget-Einstellungen"),
-            onTap: () {
-              // TODOD go to category settings
-              print("Open Options");
-            },
-          )
-        ]),
+        appBar: CustomTopAppBar(
+            title: widget.categoryName,
+            showThreePoints: true,
+            menu: ThreePointPopUpMenu(
+                onSelected: (int result) {
+                  if (result == 0) {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => EditCategoryScreen(
+                                  categoryRef: widget.categoryRef,
+                                  initalName: widget.categoryName,
+                                )));
+                  }
+                },
+                entries: ["Kategorie-Einstellungen"]).build(context)),
         bottomNavigationBar:
             CustomBottomAppBar(mainPage: MainPages.BudgetScreen),
         backgroundColor: CustomMaterialThemeColorConstant.dark.surface1,
