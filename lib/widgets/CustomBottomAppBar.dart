@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:organizer_app/screens/Budget/BudgetScreen.dart';
 import 'package:organizer_app/screens/HomeScreen.dart';
 import 'package:organizer_app/core/app_export.dart';
-import 'package:organizer_app/screens/Tasks/TaskScreen.dart';
+import 'package:organizer_app/screens/Tasks/TasksOverviewScreen.dart';
 import 'package:organizer_app/templates/yearlycalendarscreen_screen/yearlycalendarscreen_screen.dart';
 
 class CustomBottomAppBar extends StatefulWidget {

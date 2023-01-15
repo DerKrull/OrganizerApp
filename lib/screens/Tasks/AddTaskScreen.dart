@@ -19,7 +19,7 @@ class AddTaskScreen extends StatefulWidget {
 class _AddTaskScreenState extends State<AddTaskScreen> {
   String name = "";
   bool isDaily = false;
-  DateTime dueDate = new DateTime(0);
+  DateTime dueDate = DateTime(0);
   String description = "";
 
   // TaskCategory taskCategory;
@@ -37,12 +37,12 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   var meetingController = TextEditingController();
 
   int _currentSelectionSegmentedControl = 0;
-  Map<int, Widget> _children = {
-    0: Text(
+  final Map<int, Widget> _children = {
+    0: const Text(
       "Normal",
       style: TextStyle(color: Colors.white),
     ),
-    1: Text(
+    1: const Text(
       "Tägliche",
       style: TextStyle(color: Colors.white),
     ),
