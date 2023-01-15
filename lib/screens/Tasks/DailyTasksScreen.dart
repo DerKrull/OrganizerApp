@@ -6,6 +6,7 @@ import '../../core/model/Task.dart';
 import '../../widgets/CustomTopAppBar.dart';
 import '../../widgets/ThreePointPopUpMenu.dart';
 import 'AddTaskScreen.dart';
+import 'TaskDetailScreen.dart';
 
 class DailyTasksScreen extends StatefulWidget {
   const DailyTasksScreen({Key? key}) : super(key: key);
@@ -71,87 +72,99 @@ class _DailyTasksScreenState extends State<DailyTasksScreen> {
   //TODO fix size of cards
   Widget _buildSingleTask(int index, List<Task> taskList) {
     if (index == taskList.length - 1) {
-      return Column(
-        children: [
-          SingleChildScrollView(
-            child: Row(
-              children: [
-                Transform.scale(
-                  scale: 1.3,
-                  // TODO Change color of checkbox
-                  child: Checkbox(
-                    shape: const CircleBorder(),
-                    checkColor: Colors.white,
-                    activeColor: CustomMaterialThemeColorConstant.light.primary,
-                    value: taskList[index].done,
-                    onChanged: (bool? value) {
-                      setState(() {
-                        taskList[index].done = !taskList[index].done;
-                      });
-                    },
+      return GestureDetector(
+        onTap: () {
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => TaskDetailScreen()));
+        },
+        child: Column(
+          children: [
+            SingleChildScrollView(
+              child: Row(
+                children: [
+                  Transform.scale(
+                    scale: 1.3,
+                    // TODO Change color of checkbox
+                    child: Checkbox(
+                      shape: const CircleBorder(),
+                      checkColor: Colors.white,
+                      activeColor: CustomMaterialThemeColorConstant.light.primary,
+                      value: taskList[index].done,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          taskList[index].done = !taskList[index].done;
+                        });
+                      },
+                    ),
                   ),
-                ),
-                Text(
-                  taskList[index].name,
-                  style: taskList[index].done
-                      ? const TextStyle(
-                    fontSize: 20,
-                    decoration: TextDecoration.lineThrough,
-                    color: Colors.white,
-                  )
-                      : const TextStyle(
-                    fontSize: 20,
-                    color: Colors.white,
+                  Text(
+                    taskList[index].name,
+                    style: taskList[index].done
+                        ? const TextStyle(
+                      fontSize: 20,
+                      decoration: TextDecoration.lineThrough,
+                      color: Colors.white,
+                    )
+                        : const TextStyle(
+                      fontSize: 20,
+                      color: Colors.white,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       );
     } else {
-      return Column(
-        children: [
-          SingleChildScrollView(
-            child: Row(
-              children: [
-                Transform.scale(
-                  scale: 1.3,
-                  // TODO Change color of checkbox
-                  child: Checkbox(
-                    shape: const CircleBorder(),
-                    checkColor: Colors.white,
-                    activeColor: CustomMaterialThemeColorConstant.light.primary,
-                    value: taskList[index].done,
-                    onChanged: (bool? value) {
-                      setState(() {
-                        taskList[index].done = !taskList[index].done;
-                      });
-                    },
+      return GestureDetector(
+        onTap: () {
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => TaskDetailScreen()));
+        },
+        child: Column(
+          children: [
+            SingleChildScrollView(
+              child: Row(
+                children: [
+                  Transform.scale(
+                    scale: 1.3,
+                    // TODO Change color of checkbox
+                    child: Checkbox(
+                      shape: const CircleBorder(),
+                      checkColor: Colors.white,
+                      activeColor: CustomMaterialThemeColorConstant.light.primary,
+                      value: taskList[index].done,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          taskList[index].done = !taskList[index].done;
+                        });
+                      },
+                    ),
                   ),
-                ),
-                Text(
-                  taskList[index].name,
-                  style: taskList[index].done
-                      ? const TextStyle(
-                    fontSize: 20,
-                    decoration: TextDecoration.lineThrough,
-                    color: Colors.white,
-                  )
-                      : const TextStyle(
-                    fontSize: 20,
-                    color: Colors.white,
+                  Text(
+                    taskList[index].name,
+                    style: taskList[index].done
+                        ? const TextStyle(
+                      fontSize: 20,
+                      decoration: TextDecoration.lineThrough,
+                      color: Colors.white,
+                    )
+                        : const TextStyle(
+                      fontSize: 20,
+                      color: Colors.white,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          Container(
-            width: double.infinity,
-            height: 2,
-            color: CustomMaterialThemeColorConstant.dark.secondary,
-          ),
-        ],
+            Container(
+              width: double.infinity,
+              height: 2,
+              color: CustomMaterialThemeColorConstant.dark.secondary,
+            ),
+          ],
+        ),
       );
     }
   }

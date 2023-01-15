@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:organizer_app/core/app_export.dart';
+import 'package:organizer_app/screens/Tasks/TaskDetailScreen.dart';
 import 'package:organizer_app/widgets/CustomBottomAppBar.dart';
 
 import '../../core/model/Task.dart';
@@ -68,129 +69,141 @@ class _TasksScreenState extends State<TasksScreen> {
 
   Widget _buildSingleTask(int index, List<Task> taskList) {
     if(index == taskList.length - 1) {
-      return Column(
-        children: [
-          SingleChildScrollView(
-            child: Row(
-              children: [
-                Transform.scale(
-                  scale: 1.3,
-                  // TODO Change color of checkbox
-                  child: Checkbox(
-                    shape: const CircleBorder(),
-                    checkColor: Colors.white,
-                    activeColor: CustomMaterialThemeColorConstant.light.primary,
-                    value: taskList[index].done,
-                    onChanged: (bool? value) {
-                      setState(() {
-                        taskList[index].done = !taskList[index].done;
-                      });
-                    },
+      return GestureDetector(
+        onTap: () {
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => TaskDetailScreen()));
+        },
+        child: Column(
+          children: [
+            SingleChildScrollView(
+              child: Row(
+                children: [
+                  Transform.scale(
+                    scale: 1.3,
+                    // TODO Change color of checkbox
+                    child: Checkbox(
+                      shape: const CircleBorder(),
+                      checkColor: Colors.white,
+                      activeColor: CustomMaterialThemeColorConstant.light.primary,
+                      value: taskList[index].done,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          taskList[index].done = !taskList[index].done;
+                        });
+                      },
+                    ),
                   ),
-                ),
-                Text(
-                  taskList[index].name,
-                  style: taskList[index].done
-                      ? const TextStyle(
-                    fontSize: 20,
-                    decoration: TextDecoration.lineThrough,
-                    color: Colors.white,
+                  Text(
+                    taskList[index].name,
+                    style: taskList[index].done
+                        ? const TextStyle(
+                      fontSize: 20,
+                      decoration: TextDecoration.lineThrough,
+                      color: Colors.white,
+                    )
+                        : const TextStyle(
+                      fontSize: 20,
+                      color: Colors.white,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(120.0, 15.0, 10.0, 10.0),
+                    child: Column(
+                      children: [
+                        Text(
+                          " ${DateFormat("dd.MM.yyyy").format(taskList[index].dueDate)}",
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Text(
+                          taskList[index].description,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
                   )
-                      : const TextStyle(
-                    fontSize: 20,
-                    color: Colors.white,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(120.0, 15.0, 10.0, 10.0),
-                  child: Column(
-                    children: [
-                      Text(
-                        " ${DateFormat("dd.MM.yyyy").format(taskList[index].dueDate)}",
-                        style: const TextStyle(
-                          fontSize: 16,
-                          color: Colors.white,
-                        ),
-                      ),
-                      Text(
-                        taskList[index].description,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       );
     } else {
-      return Column(
-        children: [
-          SingleChildScrollView(
-            child: Row(
-              children: [
-                Transform.scale(
-                  scale: 1.3,
-                  // TODO Change color of checkbox
-                  child: Checkbox(
-                    shape: const CircleBorder(),
-                    checkColor: Colors.white,
-                    activeColor: CustomMaterialThemeColorConstant.light.primary,
-                    value: taskList[index].done,
-                    onChanged: (bool? value) {
-                      setState(() {
-                        taskList[index].done = !taskList[index].done;
-                      });
-                    },
+      return GestureDetector(
+        onTap: () {
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => TaskDetailScreen()));
+        },
+        child: Column(
+          children: [
+            SingleChildScrollView(
+              child: Row(
+                children: [
+                  Transform.scale(
+                    scale: 1.3,
+                    // TODO Change color of checkbox
+                    child: Checkbox(
+                      shape: const CircleBorder(),
+                      checkColor: Colors.white,
+                      activeColor: CustomMaterialThemeColorConstant.light.primary,
+                      value: taskList[index].done,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          taskList[index].done = !taskList[index].done;
+                        });
+                      },
+                    ),
                   ),
-                ),
-                Text(
-                  taskList[index].name,
-                  style: taskList[index].done
-                      ? const TextStyle(
-                    fontSize: 20,
-                    decoration: TextDecoration.lineThrough,
-                    color: Colors.white,
+                  Text(
+                    taskList[index].name,
+                    style: taskList[index].done
+                        ? const TextStyle(
+                      fontSize: 20,
+                      decoration: TextDecoration.lineThrough,
+                      color: Colors.white,
+                    )
+                        : const TextStyle(
+                      fontSize: 20,
+                      color: Colors.white,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(120.0, 15.0, 10.0, 10.0),
+                    child: Column(
+                      children: [
+                        Text(
+                          " ${DateFormat("dd.MM.yyyy").format(taskList[index].dueDate)}",
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Text(
+                          taskList[index].description,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
                   )
-                      : const TextStyle(
-                    fontSize: 20,
-                    color: Colors.white,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(120.0, 15.0, 10.0, 10.0),
-                  child: Column(
-                    children: [
-                      Text(
-                        " ${DateFormat("dd.MM.yyyy").format(taskList[index].dueDate)}",
-                        style: const TextStyle(
-                          fontSize: 16,
-                          color: Colors.white,
-                        ),
-                      ),
-                      Text(
-                        taskList[index].description,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              ],
+                ],
+              ),
             ),
-          ),
-          Container(
-            width: double.infinity,
-            height: 2,
-            color: CustomMaterialThemeColorConstant.dark.secondary,
-          ),
-        ],
+            Container(
+              width: double.infinity,
+              height: 2,
+              color: CustomMaterialThemeColorConstant.dark.secondary,
+            ),
+          ],
+        ),
       );
     }
   }
