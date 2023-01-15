@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:organizer_app/core/app_export.dart';
+import 'package:organizer_app/screens/Tasks/TasksScreen.dart';
 import 'package:organizer_app/widgets/CustomBottomAppBar.dart';
 import 'package:organizer_app/widgets/CustomTopAppBar.dart';
 import 'package:organizer_app/widgets/ThreePointPopUpMenu.dart';
@@ -9,16 +10,16 @@ import 'package:organizer_app/widgets/ThreePointPopUpMenu.dart';
 import '../../core/model/Task.dart';
 import 'AddTaskScreen.dart';
 
-class TaskScreen extends StatefulWidget {
-  TaskScreen({super.key});
+class TaskOverviewScreen extends StatefulWidget {
+  TaskOverviewScreen({super.key});
 
   FirebaseFirestore db = FirebaseFirestore.instance;
 
   @override
-  State<TaskScreen> createState() => _TaskScreenState();
+  State<TaskOverviewScreen> createState() => _TaskOverviewScreenState();
 }
 
-class _TaskScreenState extends State<TaskScreen> {
+class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
   final List<Task> dailyTaskList = <Task>[
     Task(true, "Daily Task 1", DateTime(0), "", false),
     Task(true, "Daily Task 2", DateTime(0), "", false),
@@ -125,58 +126,64 @@ class _TaskScreenState extends State<TaskScreen> {
             addSeparator(height: 10.0),
             Expanded(
               flex: 1,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                child: Container(
-                  width: width,
-                  decoration: BoxDecoration(
-                    color: CustomMaterialThemeColorConstant.dark.surface5,
-                    borderRadius: const BorderRadius.all(Radius.circular(30)),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(20.0, 5.0, 0.0, 5.0),
-                            child: Text(
-                              "Aufgaben",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 22,
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => TasksScreen()));
+                },
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                  child: Container(
+                    width: width,
+                    decoration: BoxDecoration(
+                      color: CustomMaterialThemeColorConstant.dark.surface5,
+                      borderRadius: const BorderRadius.all(Radius.circular(30)),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: const [
+                            Padding(
+                              padding: EdgeInsets.fromLTRB(20.0, 5.0, 0.0, 5.0),
+                              child: Text(
+                                "Aufgaben",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 22,
+                                ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                      Expanded(
-                        child: Container(
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: CustomMaterialThemeColorConstant.dark.surface5,
-                            borderRadius: const BorderRadius.only(
-                              bottomLeft: Radius.circular(40.0),
-                              bottomRight: Radius.circular(40.0),
-                            ),
-                          ),
-                          child: Column(
-                            children: <Widget>[
-                              Expanded(
-                                child: ListView.builder(
-                                    physics: const NeverScrollableScrollPhysics(),
-                                    itemCount: 3,
-                                    itemBuilder: (context, index) {
-                                      return _buildSingleTask(
-                                          index, notDailyTaskList);
-                                    }),
+                          ],
+                        ),
+                        Expanded(
+                          child: Container(
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: CustomMaterialThemeColorConstant.dark.surface5,
+                              borderRadius: const BorderRadius.only(
+                                bottomLeft: Radius.circular(40.0),
+                                bottomRight: Radius.circular(40.0),
                               ),
-                            ],
+                            ),
+                            child: Column(
+                              children: <Widget>[
+                                Expanded(
+                                  child: ListView.builder(
+                                      physics: const NeverScrollableScrollPhysics(),
+                                      itemCount: 3,
+                                      itemBuilder: (context, index) {
+                                        return _buildSingleTask(
+                                            index, notDailyTaskList);
+                                      }),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
