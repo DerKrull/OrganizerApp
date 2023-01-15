@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:organizer_app/core/app_export.dart';
-import 'package:organizer_app/widgets/CustomBottomAppBar.dart';
 import 'package:organizer_app/widgets/CustomTopAppBar.dart';
-import 'package:organizer_app/widgets/app_bar/appbar_image.dart';
-import 'package:organizer_app/widgets/app_bar/appbar_subtitle.dart';
-import 'package:organizer_app/widgets/app_bar/custom_app_bar.dart';
 import 'package:organizer_app/widgets/custom_button.dart';
+
+import '../../widgets/ThreePointPopUpMenu.dart';
 
 class TasksoverviewscreenScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: CustomTopAppBar(title: "Tasks",showThreePoints: true, children: [],),
+        appBar: CustomTopAppBar(
+            title: "Tasks",
+            showThreePoints: true,
+            menu: ThreePointPopUpMenu(
+                onSelected: (int result) {}, entries: ["Test"]).build(context)),
         backgroundColor: ColorConstant.gray900,
         body: SizedBox(
           width: size.width,

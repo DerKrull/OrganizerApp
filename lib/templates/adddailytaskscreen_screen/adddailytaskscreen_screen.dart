@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:organizer_app/core/app_export.dart';
-import 'package:organizer_app/widgets/CustomBottomAppBar.dart';
 import 'package:organizer_app/widgets/CustomTopAppBar.dart';
-import 'package:organizer_app/widgets/app_bar/appbar_image.dart';
-import 'package:organizer_app/widgets/app_bar/appbar_subtitle.dart';
-import 'package:organizer_app/widgets/app_bar/custom_app_bar.dart';
 import 'package:organizer_app/widgets/custom_button.dart';
+
+import '../../widgets/ThreePointPopUpMenu.dart';
 
 class AdddailytaskscreenScreen extends StatelessWidget {
   @override
@@ -13,7 +11,11 @@ class AdddailytaskscreenScreen extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         //appBar: buildAppBar(title: "Add Daily Task", context: context),
-        appBar: CustomTopAppBar(title: "Add daily task",showThreePoints: true, children: []),
+        appBar: CustomTopAppBar(
+            title: "Add daily task",
+            showThreePoints: true,
+            menu: ThreePointPopUpMenu(
+                onSelected: (int result) {}, entries: ["Test"]).build(context)),
         backgroundColor: ColorConstant.gray900,
         body: Container(
           width: size.width,
