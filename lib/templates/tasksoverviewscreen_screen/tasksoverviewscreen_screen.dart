@@ -12,7 +12,7 @@ class TasksoverviewscreenScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: CustomTopAppBar(title: "Tasks"),
+        appBar: CustomTopAppBar(title: "Tasks",showThreePoints: true, children: [],),
         backgroundColor: ColorConstant.gray900,
         body: SizedBox(
           width: size.width,

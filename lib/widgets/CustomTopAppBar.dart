@@ -1,12 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:organizer_app/core/app_export.dart';
 
-class CustomTopAppBar extends StatelessWidget with PreferredSizeWidget {
-  CustomTopAppBar({title: "N/A"}) {
-    this.title = title;
-  }
-  
-  String title = "";
+class CustomTopAppBar extends StatefulWidget with PreferredSizeWidget {
+  CustomTopAppBar(
+      {required this.menu,
+      required this.title,
+      required this.showThreePoints});
+
+  final PopupMenuButton<int> menu;
+  final String title;
+  final bool showThreePoints;
+
+  @override
+  State<CustomTopAppBar> createState() => _CustomTopAppBarState();
+
+  @override
+  // TODO: implement preferredSize
+  Size get preferredSize => Size.fromHeight(kToolbarHeight);
+}
+
+class _CustomTopAppBarState extends State<CustomTopAppBar> {
+  Text? selectedMenu;
 
   @override
   AppBar build(BuildContext context) {
@@ -16,7 +30,7 @@ class CustomTopAppBar extends StatelessWidget with PreferredSizeWidget {
       leading: BackButton(
         color: CustomMaterialThemeColorConstant.dark.onSurfaceVariant,
       ),
-      title: Text(title,
+      title: Text(widget.title,
           overflow: TextOverflow.ellipsis,
           textAlign: TextAlign.left,
           style: TextStyle(
@@ -29,14 +43,9 @@ class CustomTopAppBar extends StatelessWidget with PreferredSizeWidget {
               letterSpacing: 0.50,
               height: 1.25)),
       actions: [
-        IconButton(
-            onPressed: () {
-              print("Drei Punkte");
-            },
-            icon: Icon(Icons.more_vert,
-                color: CustomMaterialThemeColorConstant.dark.onSurfaceVariant, size: getSize(22)))
+        if (widget.showThreePoints) widget.menu
       ],
-    ); 
+    );
   }
 
   @override

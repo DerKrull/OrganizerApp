@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:organizer_app/core/app_export.dart';
 import 'package:organizer_app/widgets/CustomBottomAppBar.dart';
 import 'package:organizer_app/widgets/CustomTopAppBar.dart';
+import 'package:organizer_app/widgets/ThreePointPopUpMenu.dart';
 
 class TaskScreen extends StatefulWidget {
   TaskScreen({super.key});
@@ -31,7 +32,12 @@ class _TaskScreenState extends State<TaskScreen> {
     double width = MediaQuery.of(context).size.width - 20.0;
 
     return Scaffold(
-      appBar: CustomTopAppBar(title: "Aufgaben"),
+      appBar: CustomTopAppBar(
+          title: "Aufgaben",
+          showThreePoints: true,
+          menu: ThreePointPopUpMenu(
+              onSelected: (int result) {},
+              entries: ["Kategorie-Einstellungen"]).build(context)),
       bottomNavigationBar: CustomBottomAppBar(
         mainPage: MainPages.TaskScreen,
       ),

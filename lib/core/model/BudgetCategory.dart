@@ -13,4 +13,7 @@ class BudgetCategory {
     return BudgetCategory(doc.data()!['name'], doc.data()!["description"], doc.data()!['color'], doc.id);
   }
 
+  static Map<String, dynamic> addData({required name, required description, required int color}) {
+    return {"name": name, "description": description, "color": color };
+  }
 }

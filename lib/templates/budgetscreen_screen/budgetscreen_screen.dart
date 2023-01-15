@@ -13,7 +13,7 @@ class BudgetscreenScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: CustomTopAppBar(title: "Budget"),
+        appBar: CustomTopAppBar(title: "Budget",showThreePoints: true, children: []),
         bottomNavigationBar: BottomAppBar(),
         backgroundColor: ColorConstant.gray900,
         body: Container(

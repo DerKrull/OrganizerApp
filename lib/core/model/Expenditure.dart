@@ -27,7 +27,7 @@ class Expenditure {
       Timestamp timestamp = doc.data()!['date'];
     return Expenditure(
         doc.id,
-        (doc.data()!['category']),
+        doc.data()!['category'],
         doc.data()!['description'],
         doc.data()!['title'],
         tmpValue,

@@ -13,7 +13,7 @@ class AdddailytaskscreenScreen extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         //appBar: buildAppBar(title: "Add Daily Task", context: context),
-        appBar: CustomTopAppBar(title: "Add daily task"),
+        appBar: CustomTopAppBar(title: "Add daily task",showThreePoints: true, children: []),
         backgroundColor: ColorConstant.gray900,
         body: Container(
           width: size.width,
