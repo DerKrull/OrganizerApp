@@ -4,8 +4,6 @@ import 'package:organizer_app/core/app_export.dart';
 import 'package:organizer_app/core/model/Budget.dart';
 import 'package:organizer_app/core/model/Expenditure.dart';
 
-FirebaseFirestore db = FirebaseFirestore.instance;
-
 Future<double?> getUsedBudgetPerCategory(String categoryRef, DateTime selectedDate) async {
   DocumentReference categoryDocRef =
   db.collection("budgetCategory").doc(categoryRef);
