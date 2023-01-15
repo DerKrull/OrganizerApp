@@ -1,9 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:organizer_app/core/app_export.dart';
 import 'package:organizer_app/widgets/CustomBottomAppBar.dart';
 import 'package:organizer_app/widgets/CustomTopAppBar.dart';
 import 'package:organizer_app/widgets/ThreePointPopUpMenu.dart';
+
+import '../core/model/Task.dart';
 
 class TaskScreen extends StatefulWidget {
   TaskScreen({super.key});
@@ -15,16 +18,16 @@ class TaskScreen extends StatefulWidget {
 }
 
 class _TaskScreenState extends State<TaskScreen> {
-  final List<bool> isCheckedListDaily = <bool>[
-    false,
-    false,
-    false,
+  final List<Task> dailyTaskList = <Task>[
+    Task(true, "Daily Task 1", DateTime(0), "", false),
+    Task(true, "Daily Task 2", DateTime(0), "", false),
+    Task(true, "Daily Task 3", DateTime(0), "", false),
   ];
 
-  final List<bool> isCheckedListNotDaily = <bool>[
-    false,
-    false,
-    false,
+  final List<Task> notDailyTaskList = <Task>[
+    Task(false, "Task 1", DateTime(2022, 1, 20), "Meeting 1", false),
+    Task(false, "Task 2", DateTime(2022, 1, 21), "Meeting 2", false),
+    Task(false, "Task 3", DateTime(2022, 1, 22), "Meeting 3", false),
   ];
 
   @override
@@ -37,7 +40,7 @@ class _TaskScreenState extends State<TaskScreen> {
           showThreePoints: true,
           menu: ThreePointPopUpMenu(
               onSelected: (int result) {},
-              entries: ["Kategorie-Einstellungen"]).build(context)),
+              entries: const ["Kategorie-Einstellungen"]).build(context)),
       bottomNavigationBar: CustomBottomAppBar(
         mainPage: MainPages.TaskScreen,
       ),
@@ -53,7 +56,7 @@ class _TaskScreenState extends State<TaskScreen> {
                 width: width,
                 decoration: BoxDecoration(
                   color: CustomMaterialThemeColorConstant.dark.surface5,
-                  borderRadius: BorderRadius.all(
+                  borderRadius: const BorderRadius.all(
                     Radius.circular(30),
                   ),
                 ),
@@ -62,10 +65,9 @@ class _TaskScreenState extends State<TaskScreen> {
                   children: <Widget>[
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+                      children: const [
                         Padding(
-                          padding:
-                              const EdgeInsets.fromLTRB(20.0, 5.0, 0.0, 5.0),
+                          padding: EdgeInsets.fromLTRB(20.0, 5.0, 0.0, 5.0),
                           child: Text(
                             "Tägliche Aufgaben",
                             style: TextStyle(
@@ -81,7 +83,7 @@ class _TaskScreenState extends State<TaskScreen> {
                         width: double.infinity,
                         decoration: BoxDecoration(
                           color: CustomMaterialThemeColorConstant.dark.surface5,
-                          borderRadius: BorderRadius.only(
+                          borderRadius: const BorderRadius.only(
                             bottomLeft: Radius.circular(40.0),
                             bottomRight: Radius.circular(40.0),
                           ),
@@ -90,11 +92,11 @@ class _TaskScreenState extends State<TaskScreen> {
                           children: <Widget>[
                             Expanded(
                               child: ListView.builder(
-                                  physics: NeverScrollableScrollPhysics(),
+                                  physics: const NeverScrollableScrollPhysics(),
                                   itemCount: 3,
                                   itemBuilder: (context, index) {
                                     return _buildSingleTask(
-                                        index, isCheckedListDaily);
+                                        index, dailyTaskList);
                                   }),
                             ),
                           ],
@@ -115,17 +117,16 @@ class _TaskScreenState extends State<TaskScreen> {
                 width: width,
                 decoration: BoxDecoration(
                   color: CustomMaterialThemeColorConstant.dark.surface5,
-                  borderRadius: BorderRadius.all(Radius.circular(30)),
+                  borderRadius: const BorderRadius.all(Radius.circular(30)),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+                      children: const [
                         Padding(
-                          padding:
-                              const EdgeInsets.fromLTRB(20.0, 5.0, 0.0, 5.0),
+                          padding: EdgeInsets.fromLTRB(20.0, 5.0, 0.0, 5.0),
                           child: Text(
                             "Aufgaben",
                             style: TextStyle(
@@ -141,7 +142,7 @@ class _TaskScreenState extends State<TaskScreen> {
                         width: double.infinity,
                         decoration: BoxDecoration(
                           color: CustomMaterialThemeColorConstant.dark.surface5,
-                          borderRadius: BorderRadius.only(
+                          borderRadius: const BorderRadius.only(
                             bottomLeft: Radius.circular(40.0),
                             bottomRight: Radius.circular(40.0),
                           ),
@@ -150,11 +151,11 @@ class _TaskScreenState extends State<TaskScreen> {
                           children: <Widget>[
                             Expanded(
                               child: ListView.builder(
-                                  physics: NeverScrollableScrollPhysics(),
+                                  physics: const NeverScrollableScrollPhysics(),
                                   itemCount: 3,
                                   itemBuilder: (context, index) {
                                     return _buildSingleTask(
-                                        index, isCheckedListNotDaily);
+                                        index, notDailyTaskList);
                                   }),
                             ),
                           ],
@@ -172,7 +173,7 @@ class _TaskScreenState extends State<TaskScreen> {
     );
   }
 
-  SizedBox addSeparator({height: double}) {
+  SizedBox addSeparator({height = double}) {
     return SizedBox(
       height: height,
     );
@@ -192,58 +193,11 @@ class _TaskScreenState extends State<TaskScreen> {
             height: 75,
             decoration: BoxDecoration(
               color: CustomMaterialThemeColorConstant.dark.surface5,
-              borderRadius: BorderRadius.only(
+              borderRadius: const BorderRadius.only(
                   bottomLeft: Radius.circular(30.0),
                   bottomRight: Radius.circular(30.0)),
             ),
-            child: Row(
-              children: [
-                Transform.scale(
-                  scale: 1.3,
-                  child: Checkbox(
-                    shape: CircleBorder(),
-                    checkColor: Colors.white,
-                    activeColor: CustomMaterialThemeColorConstant.light.primary,
-                    value: isCheckedList[index],
-                    onChanged: (bool? value) {
-                      setState(() {
-                        isCheckedList[index] = !isCheckedList[index];
-                      });
-                    },
-                  ),
-                ),
-                Text(
-                  "Daily Task 1",
-                  style: isCheckedList[index]
-                      ? const TextStyle(
-                          fontSize: 20,
-                          decoration: TextDecoration.lineThrough,
-                          color: Colors.white)
-                      : const TextStyle(fontSize: 20, color: Colors.white),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(80.0, 15.0, 10.0, 10.0),
-                  child: Column(
-                    children: [
-                      Text(
-                        "30.12.2022",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.white,
-                        ),
-                      ),
-                      Text(
-                        "Meeting 1",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+            child: _createSingleTask(isCheckedList, index),
           ),
         ],
       );
@@ -259,59 +213,97 @@ class _TaskScreenState extends State<TaskScreen> {
             width: double.infinity,
             height: 75,
             color: CustomMaterialThemeColorConstant.dark.surface5,
-            child: Row(
+            child: _createSingleTask(isCheckedList, index),
+          ),
+        ],
+      );
+    }
+  }
+
+  Row _createSingleTask(List<dynamic> isCheckedList, int index) {
+    if (isCheckedList[index].isDaily) {
+      return Row(
+        children: [
+          Transform.scale(
+            scale: 1.3,
+            child: Checkbox(
+              shape: const CircleBorder(),
+              checkColor: Colors.white,
+              activeColor: CustomMaterialThemeColorConstant.light.primary,
+              value: isCheckedList[index].done,
+              onChanged: (bool? value) {
+                setState(() {
+                  isCheckedList[index].done = !isCheckedList[index].done;
+                });
+              },
+            ),
+          ),
+          Text(
+            isCheckedList[index].name,
+            style: isCheckedList[index].done
+                ? const TextStyle(
+                    fontSize: 20,
+                    decoration: TextDecoration.lineThrough,
+                    color: Colors.white,
+                  )
+                : const TextStyle(
+                    fontSize: 20,
+                    color: Colors.white,
+                  ),
+          ),
+        ],
+      );
+    } else {
+      return Row(
+        children: [
+          Transform.scale(
+            scale: 1.3,
+            child: Checkbox(
+              shape: const CircleBorder(),
+              checkColor: Colors.white,
+              activeColor: CustomMaterialThemeColorConstant.light.primary,
+              value: isCheckedList[index].done,
+              onChanged: (bool? value) {
+                setState(() {
+                  isCheckedList[index].done = !isCheckedList[index].done;
+                });
+              },
+            ),
+          ),
+          Text(
+            isCheckedList[index].name,
+            style: isCheckedList[index].done
+                ? const TextStyle(
+                    fontSize: 20,
+                    decoration: TextDecoration.lineThrough,
+                    color: Colors.white,
+                  )
+                : const TextStyle(
+                    fontSize: 20,
+                    color: Colors.white,
+                  ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(120.0, 15.0, 10.0, 10.0),
+            child: Column(
               children: [
-                Transform.scale(
-                  scale: 1.3,
-                  child: Checkbox(
-                    shape: CircleBorder(),
-                    checkColor: Colors.white,
-                    activeColor: CustomMaterialThemeColorConstant.light.primary,
-                    value: isCheckedList[index],
-                    onChanged: (bool? value) {
-                      setState(() {
-                        isCheckedList[index] = !isCheckedList[index];
-                      });
-                    },
+                Text(
+                  " ${DateFormat("dd.MM.yyyy").format(isCheckedList[index].dueDate)}",
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
                   ),
                 ),
                 Text(
-                  "Daily Task 1",
-                  style: isCheckedList[index]
-                      ? const TextStyle(
-                          fontSize: 20,
-                          decoration: TextDecoration.lineThrough,
-                          color: Colors.white,
-                        )
-                      : const TextStyle(
-                          fontSize: 20,
-                          color: Colors.white,
-                        ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(80.0, 15.0, 10.0, 10.0),
-                  child: Column(
-                    children: [
-                      Text(
-                        "30.12.2022",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.white,
-                        ),
-                      ),
-                      Text(
-                        "Meeting 1",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
+                  isCheckedList[index].description,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
                   ),
-                )
+                ),
               ],
             ),
-          ),
+          )
         ],
       );
     }
