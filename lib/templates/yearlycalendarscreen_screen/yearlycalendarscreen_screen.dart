@@ -1,12 +1,9 @@
-import 'package:organizer_app/widgets/CustomBottomAppBar.dart';
 import 'package:organizer_app/widgets/CustomTopAppBar.dart';
+import 'package:organizer_app/widgets/ThreePointPopUpMenu.dart';
 
 import '../yearlycalendarscreen_screen/widgets/listdate_eleven_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:organizer_app/core/app_export.dart';
-import 'package:organizer_app/widgets/app_bar/appbar_image.dart';
-import 'package:organizer_app/widgets/app_bar/appbar_subtitle.dart';
-import 'package:organizer_app/widgets/app_bar/custom_app_bar.dart';
 import 'package:organizer_app/widgets/custom_button.dart';
 import 'package:organizer_app/widgets/custom_drop_down.dart';
 
@@ -18,7 +15,9 @@ class YearlycalendarscreenScreen extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         backgroundColor: ColorConstant.gray900,
-        appBar: CustomTopAppBar(title: "Month ...",showThreePoints: true, children: [],),
+        appBar: CustomTopAppBar(title: "Month ...",showThreePoints: true,                 menu: ThreePointPopUpMenu(
+            onSelected: (int result) {},
+            entries: ["Kategorie-Einstellungen"]).build(context),),
         body: SizedBox(
           width: size.width,
           child: SingleChildScrollView(
