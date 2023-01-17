@@ -15,10 +15,11 @@ class CustomBottomAppBar extends StatefulWidget {
 
 class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
   String? activePage;
+
   @override
   void initState() {
     super.initState();
-   activePage = widget.mainPage;
+    activePage = widget.mainPage;
   }
 
   @override
@@ -39,60 +40,61 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
         children: [
           TextButton(
             onPressed: () {
+              if (!(activePage == MainPages.HomeScreen)) {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const HomeScreen()));
+              }
               setState(() {
                 activePage = MainPages.HomeScreen;
               });
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const HomeScreen()));
-              },
+            },
             child: buildBottomAppBarIcons(
-                icon: Icons.home,
-                label: MainPages.HomeScreen),
+                icon: Icons.home, label: MainPages.HomeScreen),
           ),
           TextButton(
             onPressed: () {
+              if (!(activePage == MainPages.BudgetScreen)) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => BudgetScreen()));
+              }
               setState(() {
                 activePage = MainPages.BudgetScreen;
               });
-              Navigator.push(
-              context,
-              MaterialPageRoute(
-              //    builder: (context) => BudgetscreenScreen()));
-              builder: (context) => BudgetScreen()));
             },
             child: buildBottomAppBarIcons(
-                icon: Icons.attach_money,
-                label: MainPages.BudgetScreen),
+                icon: Icons.attach_money, label: MainPages.BudgetScreen),
           ),
           TextButton(
             onPressed: () {
+              if (!(activePage == MainPages.CalendarScreen)) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => YearlycalendarscreenScreen()));
+              }
               setState(() {
                 activePage = MainPages.CalendarScreen;
               });
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => YearlycalendarscreenScreen()));
             },
             child: buildBottomAppBarIcons(
-                icon: Icons.calendar_month,
-                label: MainPages.CalendarScreen),
+                icon: Icons.calendar_month, label: MainPages.CalendarScreen),
           ),
           TextButton(
             onPressed: () {
+              if (!(activePage == MainPages.TaskScreen)) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => TaskOverviewScreen()));
+              }
               setState(() {
                 activePage = MainPages.TaskScreen;
               });
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => TaskOverviewScreen()));
             },
             child: buildBottomAppBarIcons(
-                icon: Icons.task_alt,
-                label: MainPages.TaskScreen),
+                icon: Icons.task_alt, label: MainPages.TaskScreen),
           )
         ],
       ),
@@ -123,9 +125,10 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
               right: 20,
               bottom: 4,
             ),
-            decoration: active ?
-                BoxDecoration(
-                    color: CustomMaterialThemeColorConstant.dark.secondaryContainer,
+            decoration: active
+                ? BoxDecoration(
+                    color: CustomMaterialThemeColorConstant
+                        .dark.secondaryContainer,
                     borderRadius: BorderRadius.circular(
                       getHorizontalSize(
                         16.00,
