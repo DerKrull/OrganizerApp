@@ -1,68 +1,25 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:organizer_app/widgets/CustomTopAppBar.dart';
+import 'package:get/get.dart';
 
+
+import '../../core/model/BudgetCategory.dart';
+import '../../widgets/BudgetCategoryDropDownField.dart';
+import '../../widgets/CustomDatePicker.dart';
+import '../../widgets/CustomTopAppBar.dart';
+import '../../controller/SingleExpenditureController.dart';
 import '../../core/app_export.dart';
 import '../../widgets/CustomBottomAppBar.dart';
 import '../../widgets/CustomButtons.dart';
 import '../../widgets/CustomTextField.dart';
 import '../../widgets/ThreePointPopUpMenu.dart';
-import '../../widgets/app_bar/CustomNumberField.dart';
+import '../../widgets/CustomNumberField.dart';
 
-class AddExpenditure extends StatefulWidget {
-  const AddExpenditure({Key? key}) : super(key: key);
+class AddExpenditure extends StatelessWidget {
+  AddExpenditure({Key? key}) : super(key: key);
 
-  @override
-  State<AddExpenditure> createState() => _AddExpenditureState();
-}
 
-class _AddExpenditureState extends State<AddExpenditure> {
-  String title = "";
-  DateTime date = DateTime.now();
-  String description = "";
-
-  // BudgetCategory budgetCategory;
-  String category = "";
-
-  double value = 0;
-
-  var titleController = TextEditingController();
-  var dateController = TextEditingController();
-  var descriptionController = TextEditingController();
-
-  var categoryController = TextEditingController();
-
-  var valueController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    titleController.addListener(() {
-      title = titleController.text;
-    });
-    dateController.addListener(() {
-      date = dateController.value as DateTime;
-    });
-    descriptionController.addListener(() {
-      description = descriptionController.text;
-    });
-    categoryController.addListener(() {
-      category = categoryController.text;
-    });
-    valueController.addListener(() {
-      value = double.parse(valueController.text);
-    });
-  }
-
-  @override
-  void dispose() {
-    titleController.dispose();
-    dateController.dispose();
-    descriptionController.dispose();
-    categoryController.dispose();
-    valueController.dispose();
-    super.dispose();
-  }
+  final SingleExpenditureController seController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +30,8 @@ class _AddExpenditureState extends State<AddExpenditure> {
           menu: ThreePointPopUpMenu(
               onSelected: (int result) {},
               entries: const ["Kategorie-Einstellungen"]).build(context)),
-      bottomNavigationBar: CustomBottomAppBar(isMainPage: false,
+      bottomNavigationBar: CustomBottomAppBar(
+        isMainPage: false,
         mainPage: MainPages.TaskScreen,
       ),
       backgroundColor: CustomMaterialThemeColorConstant.dark.surface1,
@@ -84,26 +42,19 @@ class _AddExpenditureState extends State<AddExpenditure> {
           child: Column(
             children: [
               CustomTextField(
-                controller: titleController,
+                controller: seController.titleController,
                 label: 'Titel',
                 hintText: 'Titel der Ausgabe',
               ),
+              CustomDatePicker(label: "Datum"),
+              BudgetCategoryDropDownField(),
               CustomTextField(
-                  controller: dateController,
-                  label: 'Datum',
-                  hintText: 'dd.MM.yyyy'),
-              CustomTextField(
-                controller: categoryController,
-                label: 'Kategorie',
-                hintText: 'Name der Kategorie',
-              ),
-              CustomTextField(
-                controller: descriptionController,
+                controller: seController.descriptionController,
                 label: 'Beschreibung',
                 hintText: 'Beschreibung',
               ),
               CustomNumberField(
-                controller: valueController,
+                controller: seController.valueController,
                 label: 'Betrag',
                 hintText: 'Betrag der Ausgabe',
               ),
@@ -121,19 +72,18 @@ class _AddExpenditureState extends State<AddExpenditure> {
                         }),
                       ),
                       SaveButton(onPressed: () {
-                        if (title != "" &&
-                            description != "" &&
-                            value != 0) {
-                          // addCategory(color: selectedColor!.value, categoryName: categoryName!, categoryDescription: categoryDescription);
-                          if (kDebugMode) {
-                            print("SAVE");
-                          }
-                          Navigator.of(context).pop(context);
-                        } else {
-                          if (kDebugMode) {
-                            print("Values are null");
-                          }
-                        }
+                        String title = seController.titleController.text;
+                        String description = seController.descriptionController.text;
+                        double value = double.parse(seController.valueController.text);
+                        BudgetCategory category = seController.category.value;
+                        String date = seController.dateTextController.text;
+                        print("""This is your data:
+                        title:        ${title}
+                        category:     ${category.name}
+                        value:        ${value}
+                        date:         ${date}
+                        description:  ${description}
+                        """);
                       })
                     ],
                   ),
@@ -146,5 +96,3 @@ class _AddExpenditureState extends State<AddExpenditure> {
     );
   }
 }
-
-

@@ -45,6 +45,8 @@ dependencies:
   flutter_localization: ^0.1.9
   flutter_colorpicker: ^1.0.3
   material_segmented_control: ^4.0.0
+  dropdown_textfield: ^1.0.7
+  get: ^4.6.5
 
 dev_dependencies:
   flutter_test:

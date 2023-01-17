@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:month_picker_dialog_2/month_picker_dialog_2.dart';
 
+import '../../controller/SingleExpenditureController.dart';
 import '../../core/app_export.dart';
 import '../../core/model/Expenditure.dart';
 import '../../widgets/CustomBottomAppBar.dart';
@@ -12,7 +14,6 @@ import '../../widgets/CustomTopAppBar.dart';
 import '../../widgets/ThreePointPopUpMenu.dart';
 import 'AddExpenditure.dart';
 import 'EditCategoryScreen.dart';
-
 
 class BudgetCategoryScreen extends StatefulWidget {
   final String categoryRef;
@@ -39,6 +40,8 @@ class _BudgetCategoryScreenState extends State<BudgetCategoryScreen> {
 
   double usedBudget = 0;
   double totalBudget = 0;
+
+  SingleExpenditureController bcController = Get.find();
 
   @override
   void initState() {
@@ -97,10 +100,10 @@ class _BudgetCategoryScreenState extends State<BudgetCategoryScreen> {
         backgroundColor: CustomMaterialThemeColorConstant.dark.surface1,
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                builder: (context) => const AddExpenditure()));
+            getBudgetCategory(widget.categoryRef).then(
+                (value) => bcController.changeCategory(budgetCategory: value));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => AddExpenditure()));
           },
           backgroundColor:
               CustomMaterialThemeColorConstant.dark.primaryContainer,

@@ -1,32 +1,31 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:get/get.dart';
+import 'package:organizer_app/controller/SingleExpenditureController.dart';
 import 'package:organizer_app/firebase_options.dart';
 import 'package:organizer_app/screens/HomeScreen.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
 
-  Future<void> initaliseFirebase() async {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
-  }
-  // This widget is the root of your application.
+  MyApp({super.key});
+
+  final SingleExpenditureController seController = Get.put(SingleExpenditureController());
+
   @override
   Widget build(BuildContext context) {
-    initaliseFirebase();
+    initialiseFirebase();
     return MaterialApp(
-      localizationsDelegates: [
+      localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: [
+      supportedLocales: const [
         Locale('en'),
         Locale('zh'),
         Locale('fr'),
@@ -44,6 +43,12 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.grey,
           useMaterial3: true),
       home: HomeScreen(),
+    );
+  }
+
+  Future<void> initialiseFirebase() async {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
     );
   }
 }
