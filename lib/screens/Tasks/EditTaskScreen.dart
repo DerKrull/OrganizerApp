@@ -94,6 +94,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
               entries: const ["Kategorie-Einstellungen"]).build(context)),
       bottomNavigationBar: CustomBottomAppBar(
         mainPage: MainPages.TaskScreen,
+        currentPage: CurrentPages.TaskEditScreen,
       ),
       backgroundColor: CustomMaterialThemeColorConstant.dark.surface1,
       body: SingleChildScrollView(

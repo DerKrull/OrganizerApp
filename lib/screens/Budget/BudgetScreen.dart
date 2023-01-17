@@ -65,8 +65,10 @@ class _BudgetScreenState extends State<BudgetScreen> {
                 menu: ThreePointPopUpMenu(
                     onSelected: (int result) {},
                     entries: ["Kategorie-Einstellungen"]).build(context)),
-            bottomNavigationBar:
-                CustomBottomAppBar(mainPage: MainPages.BudgetScreen),
+            bottomNavigationBar: CustomBottomAppBar(
+              mainPage: MainPages.BudgetScreen,
+              currentPage: CurrentPages.BudgetScreen,
+            ),
             backgroundColor: CustomMaterialThemeColorConstant.dark.surface1,
             floatingActionButton: FloatingActionButton(
               onPressed: () {

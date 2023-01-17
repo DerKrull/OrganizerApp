@@ -88,8 +88,10 @@ class _BudgetCategoryScreenState extends State<BudgetCategoryScreen> {
                   }
                 },
                 entries: ["Kategorie-Einstellungen"]).build(context)),
-        bottomNavigationBar:
-            CustomBottomAppBar(mainPage: MainPages.BudgetScreen),
+        bottomNavigationBar: CustomBottomAppBar(
+          mainPage: MainPages.BudgetScreen,
+          currentPage: CurrentPages.BudgetCategoryScreen,
+        ),
         backgroundColor: CustomMaterialThemeColorConstant.dark.surface1,
         floatingActionButton: FloatingActionButton(
           onPressed: () {
