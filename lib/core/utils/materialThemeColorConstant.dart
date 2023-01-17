@@ -72,7 +72,7 @@ class LightMaterialThemeColors {
     }
     return Color.alphaBlend(
         fromInt(0xFF094EE7).withOpacity(opacity), fromInt(0xFFFEFBFF));
-        //surfacetint and surface
+    //surfacetint and surface
   }
 
   static Color fromInt(int hexInt) {
@@ -117,24 +117,35 @@ class DarkMaterialThemeColors {
 
   static Color generateSurfaceColors(int level) {
     double opacity = 0.0;
-    switch(level) {
-      case 1: {
-        opacity = 0.05;
-      } break;
-      case 2: {
-        opacity = 0.08;
-      } break;
-      case 3: {
-        opacity = 0.11;
-      } break;
-      case 4: {
-        opacity = 0.12;
-      } break;
-      case 5: {
-        opacity = 0.14;
-      } break;
+    switch (level) {
+      case 1:
+        {
+          opacity = 0.05;
+        }
+        break;
+      case 2:
+        {
+          opacity = 0.08;
+        }
+        break;
+      case 3:
+        {
+          opacity = 0.11;
+        }
+        break;
+      case 4:
+        {
+          opacity = 0.12;
+        }
+        break;
+      case 5:
+        {
+          opacity = 0.14;
+        }
+        break;
     }
-    return Color.alphaBlend(fromInt(0xFFB7C4FF).withOpacity(opacity), fromInt(0xFF1B1B1F));
+    return Color.alphaBlend(
+        fromInt(0xFFB7C4FF).withOpacity(opacity), fromInt(0xFF1B1B1F));
     //surfacetint and surface
   }
 

@@ -41,8 +41,10 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
           TextButton(
             onPressed: () {
               if (!(activePage == MainPages.HomeScreen)) {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const HomeScreen()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const HomeScreen()));
               }
               setState(() {
                 activePage = MainPages.HomeScreen;
@@ -54,10 +56,8 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
           TextButton(
             onPressed: () {
               if (!(activePage == MainPages.BudgetScreen)) {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => BudgetScreen()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => BudgetScreen()));
               }
               setState(() {
                 activePage = MainPages.BudgetScreen;

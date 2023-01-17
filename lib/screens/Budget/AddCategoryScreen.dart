@@ -51,16 +51,16 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
     });
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
           appBar: CustomTopAppBar(
-              title: "Add Category", showThreePoints: false,                 menu: ThreePointPopUpMenu(
-              onSelected: (int result) {},
-              entries: ["Kategorie-Einstellungen"]).build(context)),
+              title: "Add Category",
+              showThreePoints: false,
+              menu: ThreePointPopUpMenu(
+                  onSelected: (int result) {},
+                  entries: ["Kategorie-Einstellungen"]).build(context)),
           bottomNavigationBar:
               CustomBottomAppBar(mainPage: MainPages.BudgetScreen),
           backgroundColor: CustomMaterialThemeColorConstant.dark.surface1,
@@ -109,9 +109,11 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
                       }),
                     ),
                     SaveButton(onPressed: () {
-                      if (categoryName != null &&
-                          selectedColor != null) {
-                        addCategory(color: selectedColor!.value, categoryName: categoryName!, categoryDescription: categoryDescription);
+                      if (categoryName != null && selectedColor != null) {
+                        addCategory(
+                            color: selectedColor!.value,
+                            categoryName: categoryName!,
+                            categoryDescription: categoryDescription);
                         Navigator.of(context).pop(context);
                       } else {
                         print("Values are null");

@@ -8,16 +8,18 @@ class SaveButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: onPressed,
-      style: ButtonStyle(
-        backgroundColor: MaterialStatePropertyAll(
-            CustomMaterialThemeColorConstant.dark.onPrimary),
-        padding: MaterialStatePropertyAll(
-            getPadding(left: 30, right: 30, top: 20, bottom: 20)),
-      ),
-      child: Text(style: TextStyle(
-          color: CustomMaterialThemeColorConstant.dark.onPrimaryContainer,
-          fontSize: 15), "Speichern"));
+        onPressed: onPressed,
+        style: ButtonStyle(
+          backgroundColor: MaterialStatePropertyAll(
+              CustomMaterialThemeColorConstant.dark.onPrimary),
+          padding: MaterialStatePropertyAll(
+              getPadding(left: 30, right: 30, top: 20, bottom: 20)),
+        ),
+        child: Text(
+            style: TextStyle(
+                color: CustomMaterialThemeColorConstant.dark.onPrimaryContainer,
+                fontSize: 15),
+            "Speichern"));
   }
 }
 
@@ -35,10 +37,11 @@ class AbortButton extends StatelessWidget {
         padding: MaterialStatePropertyAll(
             getPadding(left: 30, right: 30, top: 20, bottom: 20)),
       ),
-      child: Text(style: TextStyle(
-          color: CustomMaterialThemeColorConstant.dark.onPrimary,
-          fontSize: 15), "Abbrechen"),);
-
+      child: Text(
+          style: TextStyle(
+              color: CustomMaterialThemeColorConstant.dark.onPrimary,
+              fontSize: 15),
+          "Abbrechen"),
+    );
   }
 }
-

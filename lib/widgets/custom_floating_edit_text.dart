@@ -186,13 +186,16 @@ class CustomFloatingEditText extends StatelessWidget {
 enum FloatingEditTextPadding {
   PaddingTB11,
 }
+
 enum FloatingEditTextShape {
   CustomBorderTL4,
 }
+
 enum FloatingEditTextVariant {
   None,
   UnderLine,
 }
+
 enum FloatingEditTextFontStyle {
   RobotoRegular16,
 }

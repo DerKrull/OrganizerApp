@@ -1,4 +1,3 @@
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
@@ -75,7 +74,7 @@ class _EditCategoryScreenState extends State<EditCategoryScreen> {
                 } else if (snapshot.hasData) {
                   categoryName = snapshot.data!.name;
                   categoryDescription = snapshot.data!.description;
-                   selectedColor ??= Color(snapshot.data!.color);
+                  selectedColor ??= Color(snapshot.data!.color);
                   nameController.text = categoryName!;
                   descriptionController.text = categoryDescription;
                   return Stack(
@@ -124,7 +123,11 @@ class _EditCategoryScreenState extends State<EditCategoryScreen> {
                             SaveButton(onPressed: () {
                               if (categoryName != null &&
                                   selectedColor != null) {
-                                updateCategory(docRef: widget.categoryRef, categoryName: categoryName!, categoryDescription: categoryDescription, color: selectedColor!.value);
+                                updateCategory(
+                                    docRef: widget.categoryRef,
+                                    categoryName: categoryName!,
+                                    categoryDescription: categoryDescription,
+                                    color: selectedColor!.value);
                                 Navigator.of(context).pop(context);
                               } else {
                                 print("Values are null");

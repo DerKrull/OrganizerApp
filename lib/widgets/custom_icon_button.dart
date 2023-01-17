@@ -120,9 +120,11 @@ class CustomIconButton extends StatelessWidget {
 enum IconButtonShape {
   RoundedBorder16,
 }
+
 enum IconButtonPadding {
   PaddingAll16,
 }
+
 enum IconButtonVariant {
   OutlineBlack9004c,
 }

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:organizer_app/core/app_export.dart';
 
-class ThreePointPopUpMenu extends StatelessWidget  {
+class ThreePointPopUpMenu extends StatelessWidget {
   const ThreePointPopUpMenu({
-    Key? key, required this.onSelected, required this.entries,
+    Key? key,
+    required this.onSelected,
+    required this.entries,
   }) : super(key: key);
 
   final void Function(int) onSelected;
@@ -17,9 +19,9 @@ class ThreePointPopUpMenu extends StatelessWidget  {
         value: index,
         child: Text(
             style: TextStyle(
-              color: CustomMaterialThemeColorConstant
-                  .dark.onSecondaryContainer,
-            ), entry),
+              color: CustomMaterialThemeColorConstant.dark.onSecondaryContainer,
+            ),
+            entry),
       ));
     }
     return list;

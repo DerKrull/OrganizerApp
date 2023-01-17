@@ -310,12 +310,14 @@ enum ButtonShape {
   CustomBorderTL100,
   CustomBorderLR100,
 }
+
 enum ButtonPadding {
   PaddingAll16,
   PaddingAll8,
   PaddingAll11,
   PaddingT11,
 }
+
 enum ButtonVariant {
   FillBlue100,
   OutlineBlack9004c,
@@ -324,6 +326,7 @@ enum ButtonVariant {
   OutlineGray500_1,
   FillIndigo90002,
 }
+
 enum ButtonFontStyle {
   RobotoMedium14Indigo90001,
   RobotoRegular32,

@@ -1,4 +1,3 @@
-
 class Task {
   bool isDaily;
   String name;
@@ -10,5 +9,4 @@ class Task {
   // Meeting meeting;
 
   Task(this.isDaily, this.name, this.dueDate, this.description, this.done);
-
 }

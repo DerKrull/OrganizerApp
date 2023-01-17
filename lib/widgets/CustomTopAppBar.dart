@@ -3,9 +3,7 @@ import 'package:organizer_app/core/app_export.dart';
 
 class CustomTopAppBar extends StatefulWidget with PreferredSizeWidget {
   CustomTopAppBar(
-      {required this.menu,
-      required this.title,
-      required this.showThreePoints});
+      {required this.menu, required this.title, required this.showThreePoints});
 
   final PopupMenuButton<int> menu;
   final String title;
@@ -42,9 +40,7 @@ class _CustomTopAppBarState extends State<CustomTopAppBar> {
               fontWeight: FontWeight.w500,
               letterSpacing: 0.50,
               height: 1.25)),
-      actions: [
-        if (widget.showThreePoints) widget.menu
-      ],
+      actions: [if (widget.showThreePoints) widget.menu],
     );
   }
 
