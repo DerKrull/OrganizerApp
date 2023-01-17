@@ -4,13 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:month_picker_dialog_2/month_picker_dialog_2.dart';
+
 import 'package:organizer_app/core/FireStoreFutures/GetBudgetFutures.dart';
 import 'package:organizer_app/core/app_export.dart';
 import 'package:organizer_app/core/model/BudgetCategory.dart';
 import 'package:organizer_app/screens/Budget/AddCategoryScreen.dart';
 import 'package:organizer_app/screens/Budget/BudgetCategoryScreen.dart';
 import 'package:organizer_app/widgets/CustomBottomAppBar.dart';
-import 'package:organizer_app/widgets/CustomTopAppBar.dart';
+import 'package:organizer_app/widgets/CustomTopAppBarMainPage.dart';
 import 'package:organizer_app/widgets/ThreePointPopUpMenu.dart';
 
 class BudgetScreen extends StatefulWidget {
@@ -59,7 +60,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-            appBar: CustomTopAppBar(
+            appBar: CustomTopAppBarMainPage(
                 title: "Budget",
                 showThreePoints: true,
                 menu: ThreePointPopUpMenu(

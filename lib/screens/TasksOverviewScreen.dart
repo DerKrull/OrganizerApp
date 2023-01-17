@@ -5,11 +5,11 @@ import 'package:organizer_app/core/app_export.dart';
 import 'package:organizer_app/screens/Tasks/DailyTasksScreen.dart';
 import 'package:organizer_app/screens/Tasks/TasksScreen.dart';
 import 'package:organizer_app/widgets/CustomBottomAppBar.dart';
-import 'package:organizer_app/widgets/CustomTopAppBar.dart';
+import 'package:organizer_app/widgets/CustomTopAppBarMainPage.dart';
 import 'package:organizer_app/widgets/ThreePointPopUpMenu.dart';
 
-import '../../core/model/Task.dart';
-import 'AddTaskScreen.dart';
+import '../core/model/Task.dart';
+import 'Tasks/AddTaskScreen.dart';
 
 class TaskOverviewScreen extends StatefulWidget {
   TaskOverviewScreen({super.key});
@@ -39,7 +39,7 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
 
     return SafeArea(
       child: Scaffold(
-        appBar: CustomTopAppBar(
+        appBar: CustomTopAppBarMainPage(
             title: "Aufgaben",
             showThreePoints: true,
             menu: ThreePointPopUpMenu(
