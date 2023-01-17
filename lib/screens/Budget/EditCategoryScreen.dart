@@ -63,8 +63,10 @@ class _EditCategoryScreenState extends State<EditCategoryScreen> {
               menu: ThreePointPopUpMenu(
                   onSelected: (int result) {},
                   entries: ["Kategorie-Einstellungen"]).build(context)),
-          bottomNavigationBar:
-              CustomBottomAppBar(mainPage: MainPages.BudgetScreen),
+          bottomNavigationBar: CustomBottomAppBar(
+            mainPage: MainPages.BudgetScreen,
+            currentPage: CurrentPages.BudgetEditCategoryScreen,
+          ),
           backgroundColor: CustomMaterialThemeColorConstant.dark.surface1,
           body: FutureBuilder<BudgetCategory>(
               future: getBudgetCategory(widget.categoryRef),

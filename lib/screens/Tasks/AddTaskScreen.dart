@@ -91,6 +91,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
               entries: const ["Kategorie-Einstellungen"]).build(context)),
       bottomNavigationBar: CustomBottomAppBar(
         mainPage: MainPages.TaskScreen,
+        currentPage: CurrentPages.TaskAddScreen,
       ),
       backgroundColor: CustomMaterialThemeColorConstant.dark.surface1,
       body: SingleChildScrollView(

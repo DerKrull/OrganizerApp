@@ -61,8 +61,10 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
               menu: ThreePointPopUpMenu(
                   onSelected: (int result) {},
                   entries: ["Kategorie-Einstellungen"]).build(context)),
-          bottomNavigationBar:
-              CustomBottomAppBar(mainPage: MainPages.BudgetScreen),
+          bottomNavigationBar: CustomBottomAppBar(
+            mainPage: MainPages.BudgetScreen,
+            currentPage: CurrentPages.BudgetAddCategoryScreen,
+          ),
           backgroundColor: CustomMaterialThemeColorConstant.dark.surface1,
           body: Stack(
             children: [

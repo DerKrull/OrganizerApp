@@ -4,7 +4,6 @@ import 'package:organizer_app/screens/Tasks/EditTaskScreen.dart';
 
 import '../../core/app_export.dart';
 import '../../widgets/CustomBottomAppBar.dart';
-import '../../widgets/CustomButtons.dart';
 import '../../widgets/CustomTopAppBar.dart';
 import '../../widgets/ThreePointPopUpMenu.dart';
 
@@ -92,6 +91,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
               entries: const ["Kategorie-Einstellungen"]).build(context)),
       bottomNavigationBar: CustomBottomAppBar(
         mainPage: MainPages.TaskScreen,
+        currentPage: CurrentPages.TaskDetailScreen,
       ),
       backgroundColor: CustomMaterialThemeColorConstant.dark.surface1,
       floatingActionButton: FloatingActionButton(
