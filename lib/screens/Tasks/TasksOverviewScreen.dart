@@ -23,14 +23,14 @@ class TaskOverviewScreen extends StatefulWidget {
 class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
   final List<Task> dailyTaskList = <Task>[
     Task(true, "Daily Task 1", DateTime(0), "", false),
-    Task(true, "Daily Task 2", DateTime(0), "", false),
-    Task(true, "Daily Task 3", DateTime(0), "", false),
+    // Task(true, "Daily Task 2", DateTime(0), "", false),
+    // Task(true, "Daily Task 3", DateTime(0), "", false),
   ];
 
   final List<Task> notDailyTaskList = <Task>[
     Task(false, "Task 1", DateTime(2022, 1, 20), "Meeting 1", false),
     Task(false, "Task 2", DateTime(2022, 1, 21), "Meeting 2", false),
-    Task(false, "Task 3", DateTime(2022, 1, 22), "Meeting 3", false),
+    // Task(false, "Task 3", DateTime(2022, 1, 22), "Meeting 3", false),
   ];
 
   @override

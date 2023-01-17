@@ -87,7 +87,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomTopAppBar(
-          title: "Aufgabe hinzufügen",
+          title: "Aufgabe bearbeiten",
           showThreePoints: true,
           menu: ThreePointPopUpMenu(
               onSelected: (int result) {},
