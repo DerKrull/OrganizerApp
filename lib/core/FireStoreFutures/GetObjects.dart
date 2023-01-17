@@ -9,3 +9,16 @@ Future<BudgetCategory> getBudgetCategory(String docRef) async {
     rethrow;
   }
 }
+
+Future<List<BudgetCategory>> getBudgetCategories() async {
+  List<BudgetCategory> list = [];
+  try {
+    var query = await db.collection("budgetCategory").get();
+    query.docs.forEach((doc) {
+      list.add(BudgetCategory.fromDocumentSnapshot(doc: doc));
+    });
+    return list;
+  } catch (e) {
+    rethrow;
+  }
+}
