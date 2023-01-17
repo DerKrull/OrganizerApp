@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:organizer_app/controller/DateController.dart';
+import 'package:organizer_app/controller/DropDownCategoryController.dart';
 
 
 import '../../core/model/BudgetCategory.dart';
@@ -18,8 +20,9 @@ import '../../widgets/CustomNumberField.dart';
 class AddExpenditure extends StatelessWidget {
   AddExpenditure({Key? key}) : super(key: key);
 
-
   final SingleExpenditureController seController = Get.find();
+  final DateController dateController = Get.find();
+  final DropDownCategoryController ddcController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -75,8 +78,8 @@ class AddExpenditure extends StatelessWidget {
                         String title = seController.titleController.text;
                         String description = seController.descriptionController.text;
                         double value = double.parse(seController.valueController.text);
-                        BudgetCategory category = seController.category.value;
-                        String date = seController.dateTextController.text;
+                        BudgetCategory category = ddcController.category.value;
+                        String date = dateController.dateTextController.text;
                         print("""This is your data:
                         title:        ${title}
                         category:     ${category.name}

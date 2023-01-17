@@ -5,8 +5,8 @@ import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:month_picker_dialog_2/month_picker_dialog_2.dart';
+import 'package:organizer_app/controller/DropDownCategoryController.dart';
 
-import '../../controller/SingleExpenditureController.dart';
 import '../../core/app_export.dart';
 import '../../core/model/Expenditure.dart';
 import '../../widgets/CustomBottomAppBar.dart';
@@ -41,7 +41,7 @@ class _BudgetCategoryScreenState extends State<BudgetCategoryScreen> {
   double usedBudget = 0;
   double totalBudget = 0;
 
-  SingleExpenditureController bcController = Get.find();
+  DropDownCategoryController ddcController = Get.find();
 
   @override
   void initState() {
@@ -101,7 +101,7 @@ class _BudgetCategoryScreenState extends State<BudgetCategoryScreen> {
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             getBudgetCategory(widget.categoryRef).then(
-                (value) => bcController.changeCategory(budgetCategory: value));
+                (value) => ddcController.changeCategory(budgetCategory: value));
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => AddExpenditure()));
           },
