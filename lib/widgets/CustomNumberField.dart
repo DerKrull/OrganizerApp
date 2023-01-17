@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../core/app_export.dart';
+import '../core/app_export.dart';
 
 class CustomNumberField extends StatelessWidget {
   final TextEditingController controller;
@@ -9,9 +9,13 @@ class CustomNumberField extends StatelessWidget {
   final String hintText;
   final bool multiline;
 
-  const CustomNumberField({
-    Key? key, required this.controller, required this.label, required this.hintText, this.multiline = false
-  }) : super(key: key);
+  const CustomNumberField(
+      {Key? key,
+      required this.controller,
+      required this.label,
+      required this.hintText,
+      this.multiline = false})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,12 +23,21 @@ class CustomNumberField extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: TextFormField(
         autofocus: false,
-        keyboardType: TextInputType.number,
+        keyboardType:
+            const TextInputType.numberWithOptions(decimal: true, signed: true),
         minLines: 1,
         maxLines: 10,
         controller: controller,
-        inputFormatters: <TextInputFormatter>[
-          FilteringTextInputFormatter.digitsOnly
+        inputFormatters: [
+          FilteringTextInputFormatter.allow(RegExp(r"[0-9.]")),
+          TextInputFormatter.withFunction((oldValue, newValue) {
+            try {
+              final text = newValue.text;
+              if (text.isNotEmpty) double.parse(text);
+              return newValue;
+            } catch (e) {}
+            return oldValue;
+          })
         ],
         style: TextStyle(
           color: CustomMaterialThemeColorConstant.dark.onSurface,
@@ -38,7 +51,7 @@ class CustomNumberField extends StatelessWidget {
             label: Text(
                 style: TextStyle(
                     color:
-                    CustomMaterialThemeColorConstant.dark.onSurfaceVariant),
+                        CustomMaterialThemeColorConstant.dark.onSurfaceVariant),
                 label),
             suffixIcon: IconButton(
               icon: const Icon(Icons.cancel_outlined),
