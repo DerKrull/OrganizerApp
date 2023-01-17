@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:organizer_app/controller/DateController.dart';
 
-import '../controller/SingleExpenditureController.dart';
 import '../core/app_export.dart';
 
 class CustomDatePicker extends StatelessWidget {
@@ -11,7 +11,7 @@ class CustomDatePicker extends StatelessWidget {
   }) : super(key: key);
 
   final String label;
-  final SingleExpenditureController seController = Get.find();
+  final DateController dateController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +25,8 @@ class CustomDatePicker extends StatelessWidget {
         child: Padding(
           padding: getPadding(all: 20),
           child: TextFormField(
-              controller: seController.dateTextController,
-              key: Key(seController.dateTextController.text),
+              controller: dateController.dateTextController,
+              key: Key(dateController.dateTextController.text),
               expands: false,
               readOnly: true,
               style: const TextStyle(color: Colors.white),
@@ -49,7 +49,7 @@ class CustomDatePicker extends StatelessWidget {
                     lastDate: DateTime(2101)
                 );
                 if(pickedDate != null ){
-                  seController.updateSelectedDate(newDate: pickedDate);
+                  dateController.updateSelectedDate(newDate: pickedDate);
                 }else{
                   if (kDebugMode) {
                     print("Date is not selected");

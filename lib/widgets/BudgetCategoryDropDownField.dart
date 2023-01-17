@@ -2,7 +2,7 @@ import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:organizer_app/controller/SingleExpenditureController.dart';
+import 'package:organizer_app/controller/DropDownCategoryController.dart';
 import 'package:organizer_app/core/model/BudgetCategory.dart';
 
 import '../core/app_export.dart';
@@ -12,7 +12,7 @@ class BudgetCategoryDropDownField extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
-  final SingleExpenditureController bcController = Get.find();
+  final DropDownCategoryController ddcController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +37,7 @@ class BudgetCategoryDropDownField extends StatelessWidget {
                     color: CustomMaterialThemeColorConstant.dark.onSurface
                   ),
                   readOnly: true,
-                  initialValue: bcController.category.value.name,
+                  initialValue: ddcController.category.value.name,
                   enableSearch: true,
                   listTextStyle: TextStyle(color: CustomMaterialThemeColorConstant.dark.background,),
                   textStyle: TextStyle(color: CustomMaterialThemeColorConstant.dark.onSurface,),
@@ -58,7 +58,7 @@ class BudgetCategoryDropDownField extends StatelessWidget {
                   onChanged: (docRef) {
                     list.forEach((element) {
                       if (docRef == element.docRef) {
-                        bcController.changeCategory(budgetCategory: element);
+                        ddcController.changeCategory(budgetCategory: element);
                       }
                     });
                   },

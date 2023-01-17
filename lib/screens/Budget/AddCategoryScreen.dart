@@ -1,8 +1,9 @@
-import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:get/get.dart';
+import 'package:organizer_app/controller/SingleCategoryController.dart';
 import 'package:organizer_app/widgets/CustomTextField.dart';
 
 import '../../core/app_export.dart';
@@ -11,47 +12,10 @@ import '../../widgets/CustomTopAppBar.dart';
 import '../../widgets/CustomButtons.dart';
 import '../../widgets/ThreePointPopUpMenu.dart';
 
-class AddCategoryScreen extends StatefulWidget {
+class AddCategoryScreen extends StatelessWidget {
   AddCategoryScreen({Key? key}) : super(key: key);
-  final Color initialColor =
-      Color((Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0);
 
-  @override
-  State<AddCategoryScreen> createState() => _AddCategoryScreenState();
-}
-
-class _AddCategoryScreenState extends State<AddCategoryScreen> {
-  Color? selectedColor;
-  String? categoryName;
-  String categoryDescription = "";
-
-  var nameController = TextEditingController();
-  var descriptionController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    selectedColor = widget.initialColor;
-    nameController.addListener(() {
-      categoryName = nameController.text;
-    });
-    descriptionController.addListener(() {
-      categoryDescription = descriptionController.text;
-    });
-  }
-
-  @override
-  void dispose() {
-    nameController.dispose();
-    descriptionController.dispose();
-    super.dispose();
-  }
-
-  void changeColor(Color color) {
-    setState(() {
-      selectedColor = color;
-    });
-  }
+  final SingleCategoryController scController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +28,8 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
                   onSelected: (int result) {},
                   entries: const ["Kategorie-Einstellungen"]).build(context)),
           bottomNavigationBar: CustomBottomAppBar(
-            mainPage: MainPages.BudgetScreen, isMainPage: false,
+            mainPage: MainPages.BudgetScreen,
+            isMainPage: false,
           ),
           backgroundColor: CustomMaterialThemeColorConstant.dark.surface1,
           body: Stack(
@@ -82,7 +47,7 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
                             padding: getPadding(left: 20),
                             child: CustomTextField(
                                 hintText: "Name der Kategorie",
-                                controller: nameController,
+                                controller: scController.nameController,
                                 label: "Name"),
                           ),
                         )
@@ -94,7 +59,7 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
                       child: CustomTextField(
                           hintText: "Beschreibung",
                           label: "Beschreibung",
-                          controller: descriptionController,
+                          controller: scController.descriptionController,
                           multiline: true)),
                 ],
               ),
@@ -106,20 +71,29 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
                     Padding(
                       padding: getPadding(right: 20, top: 10, bottom: 10),
                       child: AbortButton(onPressed: () {
+                        scController.clear();
                         Navigator.of(context).pop();
                       }),
                     ),
                     SaveButton(onPressed: () {
-                      if (categoryName != null && selectedColor != null) {
+                      String name = scController.nameController.text;
+                      String description =
+                          scController.descriptionController.text;
+                      Color color = scController.color.value;
+                      print("""Controller Data:
+  Name:         ${name}
+  Description:  ${description}
+  Color:        ${color}
+                      """);
+                      if(!name.isEmpty ) {
                         addCategory(
-                            color: selectedColor!.value,
-                            categoryName: categoryName!,
-                            categoryDescription: categoryDescription);
+                            color: color.value,
+                            categoryName: name,
+                            categoryDescription: description);
+                        scController.clear();
                         Navigator.of(context).pop(context);
                       } else {
-                        if (kDebugMode) {
-                          print("Values are null");
-                        }
+                        print("no name set");
                       }
                     })
                   ],
@@ -130,7 +104,7 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
     );
   }
 
-  GestureDetector buildColorPicker(BuildContext context) {
+  Widget buildColorPicker(BuildContext context) {
     return GestureDetector(
       onTap: () {
         showDialog(
@@ -142,22 +116,19 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
                 content: SingleChildScrollView(
                   child: HueRingPicker(
                       enableAlpha: false,
-                      pickerColor: selectedColor!,
-                      onColorChanged: changeColor),
+                      pickerColor: scController.color.value,
+                      onColorChanged: scController.changeColor),
                 ),
                 actions: [
                   SaveButton(onPressed: () {
-                    setState(() {
-                      categoryDescription = categoryDescription;
-                      categoryName = categoryName;
-                    });
+                    print("Controller after ${scController.color}");
                     Navigator.of(context).pop(context);
                   })
                 ],
               );
             });
       },
-      child: CircleAvatar(backgroundColor: selectedColor!, radius: getSize(25)),
+      child: Obx(() => CircleAvatar(backgroundColor: scController.color.value, radius: getSize(25))),
     );
   }
 }
