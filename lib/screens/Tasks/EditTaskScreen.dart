@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:organizer_app/widgets/CustomTopAppBar.dart';
+import 'package:material_segmented_control/material_segmented_control.dart';
 
 import '../../core/app_export.dart';
 import '../../core/constants/constants.dart';
@@ -7,7 +8,6 @@ import '../../core/utils/materialThemeColorConstant.dart';
 import '../../widgets/CustomBottomAppBar.dart';
 import '../../widgets/CustomButtons.dart';
 import '../../widgets/ThreePointPopUpMenu.dart';
-import 'package:material_segmented_control/material_segmented_control.dart';
 
 class EditTaskScreen extends StatefulWidget {
   const EditTaskScreen({Key? key}) : super(key: key);

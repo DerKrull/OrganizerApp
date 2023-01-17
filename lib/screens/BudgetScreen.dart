@@ -5,18 +5,19 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:month_picker_dialog_2/month_picker_dialog_2.dart';
 
-import 'package:organizer_app/core/FireStoreFutures/GetBudgetFutures.dart';
-import 'package:organizer_app/core/app_export.dart';
-import 'package:organizer_app/core/model/BudgetCategory.dart';
-import 'package:organizer_app/screens/Budget/AddCategoryScreen.dart';
-import 'package:organizer_app/screens/Budget/BudgetCategoryScreen.dart';
-import 'package:organizer_app/widgets/CustomBottomAppBar.dart';
-import 'package:organizer_app/widgets/CustomTopAppBarMainPage.dart';
-import 'package:organizer_app/widgets/ThreePointPopUpMenu.dart';
+import '../core/app_export.dart';
+import '../core/model/BudgetCategory.dart';
+import '../widgets/CustomBottomAppBar.dart';
+import '../widgets/CustomTopAppBarMainPage.dart';
+import '../widgets/ThreePointPopUpMenu.dart';
+import 'Budget/AddCategoryScreen.dart';
+import 'Budget/BudgetCategoryScreen.dart';
+
+
 
 class BudgetScreen extends StatefulWidget {
   //final DateTime initialDate = DateTime(DateTime.now().year, DateTime.now().month, 1, 12, 00);
-  DateTime initialDate = DateTime.now();
+  final DateTime initialDate = DateTime.now();
 
   BudgetScreen({Key? key}) : super(key: key);
 
@@ -65,7 +66,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
                 showThreePoints: true,
                 menu: ThreePointPopUpMenu(
                     onSelected: (int result) {},
-                    entries: ["Kategorie-Einstellungen"]).build(context)),
+                    entries: const ["Kategorie-Einstellungen"]).build(context)),
             bottomNavigationBar: CustomBottomAppBar(
               mainPage: MainPages.BudgetScreen,
               isMainPage: true,

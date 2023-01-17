@@ -1,20 +1,20 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-import 'package:organizer_app/core/FireStoreFutures/GetObjects.dart';
-import 'package:organizer_app/core/app_export.dart';
-import 'package:organizer_app/core/constants/constants.dart';
-import 'package:organizer_app/core/model/BudgetCategory.dart';
-import 'package:organizer_app/widgets/CustomBottomAppBar.dart';
-import 'package:organizer_app/widgets/CustomTopAppBar.dart';
-import 'package:organizer_app/widgets/CustomButtons.dart';
-import 'package:organizer_app/widgets/ThreePointPopUpMenu.dart';
+
+import '../../core/app_export.dart';
+import '../../core/model/BudgetCategory.dart';
+import '../../widgets/CustomBottomAppBar.dart';
+import '../../widgets/CustomButtons.dart';
+import '../../widgets/CustomTopAppBar.dart';
+import '../../widgets/ThreePointPopUpMenu.dart';
+
 
 class EditCategoryScreen extends StatefulWidget {
-  EditCategoryScreen({Key? key, this.categoryRef, this.initalName})
+  const EditCategoryScreen({Key? key,required this.categoryRef,required this.initialName})
       : super(key: key);
-  final categoryRef;
-  final initalName;
+  final String categoryRef;
+  final String initialName;
 
   @override
   State<EditCategoryScreen> createState() => _EditCategoryScreenState();
@@ -31,7 +31,7 @@ class _EditCategoryScreenState extends State<EditCategoryScreen> {
   @override
   void initState() {
     super.initState();
-    categoryName = widget.initalName;
+    categoryName = widget.initialName;
     nameController.addListener(() {
       categoryName = nameController.text;
     });
@@ -62,7 +62,7 @@ class _EditCategoryScreenState extends State<EditCategoryScreen> {
               showThreePoints: false,
               menu: ThreePointPopUpMenu(
                   onSelected: (int result) {},
-                  entries: ["Kategorie-Einstellungen"]).build(context)),
+                  entries: const ["Kategorie-Einstellungen"]).build(context)),
           bottomNavigationBar: CustomBottomAppBar(
             mainPage: MainPages.BudgetScreen,
             isMainPage: false,
@@ -72,7 +72,9 @@ class _EditCategoryScreenState extends State<EditCategoryScreen> {
               future: getBudgetCategory(widget.categoryRef),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
-                  print(snapshot.error);
+                  if (kDebugMode) {
+                    print(snapshot.error);
+                  }
                 } else if (snapshot.hasData) {
                   categoryName = snapshot.data!.name;
                   categoryDescription = snapshot.data!.description;
@@ -132,7 +134,9 @@ class _EditCategoryScreenState extends State<EditCategoryScreen> {
                                     color: selectedColor!.value);
                                 Navigator.of(context).pop(context);
                               } else {
-                                print("Values are null");
+                                if (kDebugMode) {
+                                  print("Values are null");
+                                }
                               }
                             })
                           ],
@@ -141,7 +145,7 @@ class _EditCategoryScreenState extends State<EditCategoryScreen> {
                     ],
                   );
                 }
-                return CircularProgressIndicator();
+                return const CircularProgressIndicator();
               })),
     );
   }
@@ -172,7 +176,7 @@ class _EditCategoryScreenState extends State<EditCategoryScreen> {
                       CustomMaterialThemeColorConstant.dark.onSurfaceVariant),
               label),
           suffixIcon: IconButton(
-            icon: Icon(Icons.cancel_outlined),
+            icon: const Icon(Icons.cancel_outlined),
             color: CustomMaterialThemeColorConstant.dark.onSurface,
             onPressed: () {
               controller.clear();

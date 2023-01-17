@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:organizer_app/widgets/CustomTopAppBar.dart';
@@ -76,7 +77,7 @@ class _AddExpenditureState extends State<AddExpenditure> {
       ),
       backgroundColor: CustomMaterialThemeColorConstant.dark.surface1,
       body: SingleChildScrollView(
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
@@ -125,14 +126,17 @@ class _AddExpenditureState extends State<AddExpenditure> {
                       ),
                       SaveButton(onPressed: () {
                         if (title != "" &&
-                            date != "" &&
                             description != "" &&
                             value != 0) {
                           // addCategory(color: selectedColor!.value, categoryName: categoryName!, categoryDescription: categoryDescription);
-                          print("SAVE");
+                          if (kDebugMode) {
+                            print("SAVE");
+                          }
                           Navigator.of(context).pop(context);
                         } else {
-                          print("Values are null");
+                          if (kDebugMode) {
+                            print("Values are null");
+                          }
                         }
                       })
                     ],
@@ -175,7 +179,7 @@ class _AddExpenditureState extends State<AddExpenditure> {
                         CustomMaterialThemeColorConstant.dark.onSurfaceVariant),
                 label),
             suffixIcon: IconButton(
-              icon: Icon(Icons.cancel_outlined),
+              icon: const Icon(Icons.cancel_outlined),
               color: CustomMaterialThemeColorConstant.dark.onSurface,
               onPressed: () {
                 controller.clear();
@@ -217,7 +221,7 @@ class _AddExpenditureState extends State<AddExpenditure> {
                     CustomMaterialThemeColorConstant.dark.onSurfaceVariant),
                 label),
             suffixIcon: IconButton(
-              icon: Icon(Icons.cancel_outlined),
+              icon: const Icon(Icons.cancel_outlined),
               color: CustomMaterialThemeColorConstant.dark.onSurface,
               onPressed: () {
                 controller.clear();

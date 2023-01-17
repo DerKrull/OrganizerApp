@@ -4,21 +4,22 @@ import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:month_picker_dialog_2/month_picker_dialog_2.dart';
-import 'package:organizer_app/core/FireStoreFutures/GetBudgetFutures.dart';
-import 'package:organizer_app/core/app_export.dart';
-import 'package:organizer_app/core/model/Expenditure.dart';
-import 'package:organizer_app/screens/Budget/AddExpenditure.dart';
-import 'package:organizer_app/screens/Budget/EditCategoryScreen.dart';
-import 'package:organizer_app/widgets/CustomBottomAppBar.dart';
-import 'package:organizer_app/widgets/CustomTopAppBar.dart';
-import 'package:organizer_app/widgets/ThreePointPopUpMenu.dart';
+
+import '../../core/app_export.dart';
+import '../../core/model/Expenditure.dart';
+import '../../widgets/CustomBottomAppBar.dart';
+import '../../widgets/CustomTopAppBar.dart';
+import '../../widgets/ThreePointPopUpMenu.dart';
+import 'AddExpenditure.dart';
+import 'EditCategoryScreen.dart';
+
 
 class BudgetCategoryScreen extends StatefulWidget {
   final String categoryRef;
   final String categoryName;
   final DateTime initialDate;
 
-  BudgetCategoryScreen(
+  const BudgetCategoryScreen(
       {Key? key,
       required this.categoryRef,
       required this.categoryName,
@@ -84,11 +85,11 @@ class _BudgetCategoryScreenState extends State<BudgetCategoryScreen> {
                         MaterialPageRoute(
                             builder: (context) => EditCategoryScreen(
                                   categoryRef: widget.categoryRef,
-                                  initalName: widget.categoryName,
+                                  initialName: widget.categoryName,
                                 )));
                   }
                 },
-                entries: ["Kategorie-Einstellungen"]).build(context)),
+                entries: const ["Kategorie-Einstellungen"]).build(context)),
         bottomNavigationBar: CustomBottomAppBar(
           mainPage: MainPages.BudgetScreen,
           isMainPage: false,
@@ -99,7 +100,7 @@ class _BudgetCategoryScreenState extends State<BudgetCategoryScreen> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                builder: (context) => AddExpenditure()));
+                builder: (context) => const AddExpenditure()));
           },
           backgroundColor:
               CustomMaterialThemeColorConstant.dark.primaryContainer,

@@ -1,5 +1,5 @@
-import 'package:organizer_app/core/app_export.dart';
-import 'package:organizer_app/core/model/BudgetCategory.dart';
+import '../model/BudgetCategory.dart';
+import 'FirebaseInstance.dart';
 
 void updateCategory(
     {required String docRef,

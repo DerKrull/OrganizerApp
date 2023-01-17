@@ -2,12 +2,13 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-import 'package:organizer_app/core/app_export.dart';
-import 'package:organizer_app/core/constants/constants.dart';
-import 'package:organizer_app/widgets/CustomBottomAppBar.dart';
-import 'package:organizer_app/widgets/CustomTopAppBar.dart';
-import 'package:organizer_app/widgets/CustomButtons.dart';
-import 'package:organizer_app/widgets/ThreePointPopUpMenu.dart';
+
+import '../../core/app_export.dart';
+import '../../core/constants/constants.dart';
+import '../../widgets/CustomBottomAppBar.dart';
+import '../../widgets/CustomTopAppBar.dart';
+import '../../widgets/CustomButtons.dart';
+import '../../widgets/ThreePointPopUpMenu.dart';
 
 class AddCategoryScreen extends StatefulWidget {
   AddCategoryScreen({Key? key}) : super(key: key);

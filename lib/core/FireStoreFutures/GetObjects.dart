@@ -1,5 +1,5 @@
-import 'package:organizer_app/core/app_export.dart';
-import 'package:organizer_app/core/model/BudgetCategory.dart';
+import '../model/BudgetCategory.dart';
+import 'FirebaseInstance.dart';
 
 Future<BudgetCategory> getBudgetCategory(String docRef) async {
   try {
