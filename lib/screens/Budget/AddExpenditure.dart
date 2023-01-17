@@ -1,12 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:organizer_app/widgets/CustomTopAppBar.dart';
 
 import '../../core/app_export.dart';
 import '../../widgets/CustomBottomAppBar.dart';
 import '../../widgets/CustomButtons.dart';
+import '../../widgets/CustomTextField.dart';
 import '../../widgets/ThreePointPopUpMenu.dart';
+import '../../widgets/app_bar/CustomNumberField.dart';
 
 class AddExpenditure extends StatefulWidget {
   const AddExpenditure({Key? key}) : super(key: key);
@@ -82,32 +83,27 @@ class _AddExpenditureState extends State<AddExpenditure> {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
-              buildTextField(
+              CustomTextField(
                 controller: titleController,
-                onChangedVar: title,
                 label: 'Titel',
                 hintText: 'Titel der Ausgabe',
               ),
-              buildTextField(
+              CustomTextField(
                   controller: dateController,
-                  onChangedVar: date,
                   label: 'Datum',
                   hintText: 'dd.MM.yyyy'),
-              buildTextField(
+              CustomTextField(
                 controller: categoryController,
-                onChangedVar: category,
                 label: 'Kategorie',
                 hintText: 'Name der Kategorie',
               ),
-              buildTextField(
+              CustomTextField(
                 controller: descriptionController,
-                onChangedVar: description,
                 label: 'Beschreibung',
                 hintText: 'Beschreibung',
               ),
-              buildNumberField(
+              CustomNumberField(
                 controller: valueController,
-                onChangedVar: value,
                 label: 'Betrag',
                 hintText: 'Betrag der Ausgabe',
               ),
@@ -149,85 +145,6 @@ class _AddExpenditureState extends State<AddExpenditure> {
       ),
     );
   }
-
-  Widget buildTextField(
-      {required controller,
-      required onChangedVar,
-      required String label,
-      required String hintText,
-      bool multiline = false}) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: TextFormField(
-        autofocus: false,
-        keyboardType: multiline ? TextInputType.multiline : TextInputType.name,
-        minLines: 1,
-        maxLines: 10,
-        controller: controller,
-        style: TextStyle(
-          color: CustomMaterialThemeColorConstant.dark.onSurface,
-        ),
-        decoration: InputDecoration(
-            hintText: hintText,
-            hintStyle: TextStyle(
-                color: CustomMaterialThemeColorConstant.dark.onSurface),
-            filled: true,
-            fillColor: CustomMaterialThemeColorConstant.dark.surfaceVariant,
-            label: Text(
-                style: TextStyle(
-                    color:
-                        CustomMaterialThemeColorConstant.dark.onSurfaceVariant),
-                label),
-            suffixIcon: IconButton(
-              icon: const Icon(Icons.cancel_outlined),
-              color: CustomMaterialThemeColorConstant.dark.onSurface,
-              onPressed: () {
-                controller.clear();
-              },
-            )),
-      ),
-    );
-  }
-
-  Widget buildNumberField(
-      {required controller,
-        required onChangedVar,
-        required String label,
-        required String hintText,
-        bool multiline = false}) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: TextFormField(
-        autofocus: false,
-        keyboardType: TextInputType.number,
-        minLines: 1,
-        maxLines: 10,
-        controller: controller,
-        inputFormatters: <TextInputFormatter>[
-          FilteringTextInputFormatter.digitsOnly
-        ],
-        style: TextStyle(
-          color: CustomMaterialThemeColorConstant.dark.onSurface,
-        ),
-        decoration: InputDecoration(
-            hintText: hintText,
-            hintStyle: TextStyle(
-                color: CustomMaterialThemeColorConstant.dark.onSurface),
-            filled: true,
-            fillColor: CustomMaterialThemeColorConstant.dark.surfaceVariant,
-            label: Text(
-                style: TextStyle(
-                    color:
-                    CustomMaterialThemeColorConstant.dark.onSurfaceVariant),
-                label),
-            suffixIcon: IconButton(
-              icon: const Icon(Icons.cancel_outlined),
-              color: CustomMaterialThemeColorConstant.dark.onSurface,
-              onPressed: () {
-                controller.clear();
-              },
-            )),
-      ),
-    );
-  }
 }
+
+

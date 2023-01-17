@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:organizer_app/widgets/CustomTextField.dart';
 
 import '../../core/app_export.dart';
 import '../../core/model/BudgetCategory.dart';
@@ -94,7 +95,7 @@ class _EditCategoryScreenState extends State<EditCategoryScreen> {
                                 Expanded(
                                   child: Padding(
                                     padding: getPadding(left: 20),
-                                    child: buildTextField(
+                                    child: CustomTextField(
                                         hintText: "Name der Kategorie",
                                         controller: nameController,
                                         label: "Name"),
@@ -105,7 +106,7 @@ class _EditCategoryScreenState extends State<EditCategoryScreen> {
                           ),
                           Padding(
                               padding: getPadding(left: 20, right: 20, top: 20),
-                              child: buildTextField(
+                              child: CustomTextField(
                                   hintText: "Beschreibung",
                                   label: "Beschreibung",
                                   controller: descriptionController,
@@ -147,41 +148,6 @@ class _EditCategoryScreenState extends State<EditCategoryScreen> {
                 }
                 return const CircularProgressIndicator();
               })),
-    );
-  }
-
-  Widget buildTextField(
-      {required controller,
-      required String label,
-      required String hintText,
-      bool multiline = false}) {
-    return TextFormField(
-      autofocus: false,
-      keyboardType: multiline ? TextInputType.multiline : TextInputType.name,
-      minLines: 1,
-      maxLines: 10,
-      controller: controller,
-      style: TextStyle(
-        color: CustomMaterialThemeColorConstant.dark.onSurface,
-      ),
-      decoration: InputDecoration(
-          hintText: hintText,
-          hintStyle:
-              TextStyle(color: CustomMaterialThemeColorConstant.dark.onSurface),
-          filled: true,
-          fillColor: CustomMaterialThemeColorConstant.dark.surfaceVariant,
-          label: Text(
-              style: TextStyle(
-                  color:
-                      CustomMaterialThemeColorConstant.dark.onSurfaceVariant),
-              label),
-          suffixIcon: IconButton(
-            icon: const Icon(Icons.cancel_outlined),
-            color: CustomMaterialThemeColorConstant.dark.onSurface,
-            onPressed: () {
-              controller.clear();
-            },
-          )),
     );
   }
 

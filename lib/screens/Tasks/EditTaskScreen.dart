@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:organizer_app/widgets/CustomTextField.dart';
 import 'package:organizer_app/widgets/CustomTopAppBar.dart';
 import 'package:material_segmented_control/material_segmented_control.dart';
 
@@ -103,33 +104,28 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
-              buildTextField(
+              CustomTextField(
                 controller: nameController,
-                onChangedVar: name,
                 label: 'Name',
                 hintText: 'Name der Aufgabe',
               ),
               buildSegmentedControl(),
-              buildTextField(
+              CustomTextField(
                   controller: dueDateController,
-                  onChangedVar: dueDate,
                   label: 'Fälligkeitstermin',
                   hintText: 'dd.MM.yyyy'),
-              buildTextField(
+              CustomTextField(
                 controller: categoryController,
-                onChangedVar: category,
                 label: 'Kategorie',
                 hintText: 'Name der Kategorie',
               ),
-              buildTextField(
+              CustomTextField(
                 controller: descriptionController,
-                onChangedVar: description,
                 label: 'Beschreibung',
                 hintText: 'Beschreibung',
               ),
-              buildTextField(
+              CustomTextField(
                 controller: meetingController,
-                onChangedVar: meeting,
                 label: 'Termin',
                 hintText: 'Name des Termins',
               ),
@@ -187,44 +183,4 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
       ),
     );
   }
-
-  Widget buildTextField(
-      {required controller,
-        required onChangedVar,
-        required String label,
-        required String hintText,
-        bool multiline = false}) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: TextFormField(
-        autofocus: false,
-        keyboardType: multiline ? TextInputType.multiline : TextInputType.name,
-        minLines: 1,
-        maxLines: 10,
-        controller: controller,
-        style: TextStyle(
-          color: CustomMaterialThemeColorConstant.dark.onSurface,
-        ),
-        decoration: InputDecoration(
-            hintText: hintText,
-            hintStyle: TextStyle(
-                color: CustomMaterialThemeColorConstant.dark.onSurface),
-            filled: true,
-            fillColor: CustomMaterialThemeColorConstant.dark.surfaceVariant,
-            label: Text(
-                style: TextStyle(
-                    color:
-                    CustomMaterialThemeColorConstant.dark.onSurfaceVariant),
-                label),
-            suffixIcon: IconButton(
-              icon: Icon(Icons.cancel_outlined),
-              color: CustomMaterialThemeColorConstant.dark.onSurface,
-              onPressed: () {
-                controller.clear();
-              },
-            )),
-      ),
-    );
-  }
-
 }
