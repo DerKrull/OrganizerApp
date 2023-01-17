@@ -4,9 +4,6 @@ import 'package:intl/intl.dart';
 import 'package:organizer_app/core/model/BudgetCategory.dart';
 
 class SingleExpenditureController extends GetxController {
-  String title = "";
-  String description = "";
-  double value = 0;
   DateTime actualDate = DateTime.now();
 
   final dateTextController = TextEditingController();
