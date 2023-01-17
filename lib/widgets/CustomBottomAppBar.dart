@@ -7,10 +7,10 @@ import 'package:organizer_app/templates/yearlycalendarscreen_screen/yearlycalend
 
 class CustomBottomAppBar extends StatefulWidget {
   CustomBottomAppBar(
-      {Key? key, required this.mainPage, required this.currentPage})
+      {Key? key, required this.mainPage, required this.isMainPage})
       : super(key: key);
   String mainPage;
-  var currentPage;
+  bool isMainPage;
 
   @override
   State<CustomBottomAppBar> createState() => _CustomBottomAppBarState();
@@ -43,7 +43,7 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
         children: [
           TextButton(
             onPressed: () {
-              if (widget.currentPage != MainPages.HomeScreen || !(activePage == MainPages.HomeScreen)) {
+              if (!widget.isMainPage || !(activePage == MainPages.HomeScreen)) {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -58,7 +58,7 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
           ),
           TextButton(
             onPressed: () {
-              if (widget.currentPage != MainPages.BudgetScreen || !(activePage == MainPages.BudgetScreen)) {
+              if (!widget.isMainPage || !(activePage == MainPages.BudgetScreen)) {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => BudgetScreen()));
               }
@@ -71,7 +71,7 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
           ),
           TextButton(
             onPressed: () {
-              if (widget.currentPage != MainPages.CalendarScreen || !(activePage == MainPages.CalendarScreen)) {
+              if (!widget.isMainPage || !(activePage == MainPages.CalendarScreen)) {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -86,7 +86,7 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
           ),
           TextButton(
             onPressed: () {
-              if (widget.currentPage != MainPages.TaskScreen || !(activePage == MainPages.TaskScreen)) {
+              if (!widget.isMainPage || !(activePage == MainPages.TaskScreen)) {
                 Navigator.push(
                     context,
                     MaterialPageRoute(

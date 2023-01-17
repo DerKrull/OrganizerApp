@@ -71,7 +71,7 @@ class _AddExpenditureState extends State<AddExpenditure> {
           menu: ThreePointPopUpMenu(
               onSelected: (int result) {},
               entries: const ["Kategorie-Einstellungen"]).build(context)),
-      bottomNavigationBar: CustomBottomAppBar(currentPage: CurrentPages.budget.BudgetAddExpenditureScreen,
+      bottomNavigationBar: CustomBottomAppBar(isMainPage: false,
         mainPage: MainPages.TaskScreen,
       ),
       backgroundColor: CustomMaterialThemeColorConstant.dark.surface1,

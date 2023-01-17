@@ -62,8 +62,7 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
                   onSelected: (int result) {},
                   entries: ["Kategorie-Einstellungen"]).build(context)),
           bottomNavigationBar: CustomBottomAppBar(
-            mainPage: MainPages.BudgetScreen,
-            currentPage: CurrentPages.budget.BudgetAddCategoryScreen,
+            mainPage: MainPages.BudgetScreen, isMainPage: false,
           ),
           backgroundColor: CustomMaterialThemeColorConstant.dark.surface1,
           body: Stack(

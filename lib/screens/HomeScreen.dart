@@ -25,7 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
       //bottomNavigationBar: buildBottomNavigationBar(),
       bottomNavigationBar: CustomBottomAppBar(
         mainPage: MainPages.HomeScreen,
-        currentPage: CurrentPages.HomeScreen,
+        isMainPage: true,
       ),
     );
   }

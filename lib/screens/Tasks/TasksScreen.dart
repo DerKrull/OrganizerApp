@@ -40,7 +40,7 @@ class _TasksScreenState extends State<TasksScreen> {
               entries: const ["Kategorie-Einstellungen"]).build(context)),
       bottomNavigationBar: CustomBottomAppBar(
         mainPage: MainPages.TaskScreen,
-        currentPage: CurrentPages.task.TaskScreen,
+        isMainPage: false,
       ),
       backgroundColor: CustomMaterialThemeColorConstant.dark.surface1,
       floatingActionButton: FloatingActionButton(

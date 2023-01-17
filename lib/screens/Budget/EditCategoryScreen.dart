@@ -65,7 +65,7 @@ class _EditCategoryScreenState extends State<EditCategoryScreen> {
                   entries: ["Kategorie-Einstellungen"]).build(context)),
           bottomNavigationBar: CustomBottomAppBar(
             mainPage: MainPages.BudgetScreen,
-            currentPage: CurrentPages.budget.BudgetEditCategoryScreen,
+            isMainPage: false,
           ),
           backgroundColor: CustomMaterialThemeColorConstant.dark.surface1,
           body: FutureBuilder<BudgetCategory>(
