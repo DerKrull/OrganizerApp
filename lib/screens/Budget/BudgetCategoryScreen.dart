@@ -7,6 +7,7 @@ import 'package:month_picker_dialog_2/month_picker_dialog_2.dart';
 import 'package:organizer_app/core/FireStoreFutures/GetBudgetFutures.dart';
 import 'package:organizer_app/core/app_export.dart';
 import 'package:organizer_app/core/model/Expenditure.dart';
+import 'package:organizer_app/screens/Budget/AddExpenditure.dart';
 import 'package:organizer_app/screens/Budget/EditCategoryScreen.dart';
 import 'package:organizer_app/widgets/CustomBottomAppBar.dart';
 import 'package:organizer_app/widgets/CustomTopAppBar.dart';
@@ -93,7 +94,10 @@ class _BudgetCategoryScreenState extends State<BudgetCategoryScreen> {
         backgroundColor: CustomMaterialThemeColorConstant.dark.surface1,
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            //TODO Add Expenditure
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                builder: (context) => AddExpenditure()));
           },
           backgroundColor:
               CustomMaterialThemeColorConstant.dark.primaryContainer,
