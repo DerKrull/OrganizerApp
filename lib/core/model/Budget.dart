@@ -4,7 +4,7 @@ class Budget {
   DateTime  date;
   double value;
 
-  Budget(this.date, this.value);
+  Budget({required this.date, required this.value});
 
   factory Budget.fromDocumentSnapshot({required DocumentSnapshot<Map<String, dynamic>> doc}) {
     Timestamp timestamp = doc.data()!['date'];
@@ -15,7 +15,7 @@ class Budget {
     } else if (tmpValue.runtimeType != double) {
       throw TypeError();
     }
-    return Budget(date, tmpValue);
+    return Budget(date: date, value: tmpValue);
   }
 }
 

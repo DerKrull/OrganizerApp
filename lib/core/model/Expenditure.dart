@@ -13,8 +13,8 @@ class Expenditure {
   // Task task;
   // Event Event;
 
-  Expenditure(this.docRef, this.category, this.description, this.title,
-      this.value, this.date);
+  Expenditure({required this.docRef,required this.category,required this.description,required this.title,
+      required this.value,required this.date});
 
   factory Expenditure.fromDocumentSnapshot(
       {required DocumentSnapshot<Map<String, dynamic>> doc}) {
@@ -26,11 +26,11 @@ class Expenditure {
       }
       Timestamp timestamp = doc.data()!['date'];
     return Expenditure(
-        doc.id,
-        doc.data()!['category'],
-        doc.data()!['description'],
-        doc.data()!['title'],
-        tmpValue,
-        DateTime.fromMillisecondsSinceEpoch(timestamp.millisecondsSinceEpoch));
+        docRef: doc.id,
+        category: doc.data()!['category'],
+        description: doc.data()!['description'],
+        title: doc.data()!['title'],
+        value: tmpValue,
+        date: DateTime.fromMillisecondsSinceEpoch(timestamp.millisecondsSinceEpoch));
   }
 }
