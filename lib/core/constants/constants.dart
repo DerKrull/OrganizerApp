@@ -8,15 +8,30 @@ class MainPages {
 class CurrentPages {
   static String HomeScreen = "Home";
 
-  static String BudgetAddCategoryScreen = "BudgetAddCategory";
-  static String BudgetCategoryScreen = "BudgetCategory";
-  static String BudgetScreen = "Budget";
-  static String BudgetEditCategoryScreen = "BudgetEditCategory";
+  static BudgetScreens budget = BudgetScreens();
+  static TaskScreens task = TaskScreens();
+  static CalendarScreens calendar = CalendarScreens();
+}
 
-  static String TaskAddScreen = "TaskAdd";
-  static String TasksDailyScreen = "TasksDaily";
-  static String TaskEditScreen = "TaskEdit";
-  static String TaskDetailScreen = "TaskDetail";
-  static String TaskOverviewScreen = "Aufgaben";
-  static String TaskScreen = "Task";
+class BudgetScreens {
+  final String BudgetScreen = "Budget";
+  final String BudgetCategoryScreen = "BudgetCategory";
+  final String BudgetAddCategoryScreen = "BudgetAddCategory";
+  final String BudgetEditCategoryScreen = "BudgetEditCategory";
+  final String BudgetAddExpenditureScreen = "BudgetAddExpenditure";
+  final String BudgetEditExpenditureScreen = "BudgetEditExpenditure";
+  final String BudgetSettingsScreen = "BudgetSettingsScreen";
+}
+
+class TaskScreens {
+  final String TaskAddScreen = "TaskAdd";
+  final String TasksDailyScreen = "TasksDaily";
+  final String TaskEditScreen = "TaskEdit";
+  final String TaskDetailScreen = "TaskDetail";
+  final String TaskOverviewScreen = "Aufgaben";
+  final String TaskScreen = "Task";
+}
+
+class CalendarScreens {
+
 }

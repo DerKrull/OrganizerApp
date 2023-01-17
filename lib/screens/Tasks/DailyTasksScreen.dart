@@ -42,7 +42,7 @@ class _DailyTasksScreenState extends State<DailyTasksScreen> {
               entries: const ["Kategorie-Einstellungen"]).build(context)),
       bottomNavigationBar: CustomBottomAppBar(
         mainPage: MainPages.TaskScreen,
-        currentPage: CurrentPages.TasksDailyScreen,
+        currentPage: CurrentPages.task.TasksDailyScreen,
       ),
       backgroundColor: CustomMaterialThemeColorConstant.dark.surface1,
       floatingActionButton: FloatingActionButton(

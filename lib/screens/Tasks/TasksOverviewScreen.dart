@@ -47,7 +47,7 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
                 entries: const ["Kategorie-Einstellungen"]).build(context)),
         bottomNavigationBar: CustomBottomAppBar(
           mainPage: MainPages.TaskScreen,
-          currentPage: CurrentPages.TaskOverviewScreen,
+          currentPage: CurrentPages.task.TaskOverviewScreen,
         ),
         backgroundColor: CustomMaterialThemeColorConstant.dark.surface1,
         floatingActionButton: FloatingActionButton(

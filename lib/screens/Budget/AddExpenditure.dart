@@ -6,7 +6,6 @@ import '../../core/app_export.dart';
 import '../../widgets/CustomBottomAppBar.dart';
 import '../../widgets/CustomButtons.dart';
 import '../../widgets/ThreePointPopUpMenu.dart';
-import 'package:material_segmented_control/material_segmented_control.dart';
 
 class AddExpenditure extends StatefulWidget {
   const AddExpenditure({Key? key}) : super(key: key);
@@ -72,7 +71,7 @@ class _AddExpenditureState extends State<AddExpenditure> {
           menu: ThreePointPopUpMenu(
               onSelected: (int result) {},
               entries: const ["Kategorie-Einstellungen"]).build(context)),
-      bottomNavigationBar: CustomBottomAppBar(
+      bottomNavigationBar: CustomBottomAppBar(currentPage: CurrentPages.budget.BudgetAddExpenditureScreen,
         mainPage: MainPages.TaskScreen,
       ),
       backgroundColor: CustomMaterialThemeColorConstant.dark.surface1,
