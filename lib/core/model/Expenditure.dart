@@ -1,5 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../app_export.dart';
+import 'BudgetCategory.dart';
+
 class Expenditure {
   String docRef;
   DocumentReference category;
@@ -38,5 +41,15 @@ class Expenditure {
         value: tmpValue,
         date: DateTime.fromMillisecondsSinceEpoch(
             timestamp.millisecondsSinceEpoch));
+  }
+
+  static Map<String, dynamic> fromExpenditure(
+      {required BudgetCategory category,
+      String description = "",
+      required String title,
+      required double value,
+      required DateTime date}) {
+    Timestamp timestamp = Timestamp.fromDate(date);
+    return {"category": db.collection("budgetCategory").doc(category.docRef), "description": description, "date": timestamp, "title": title, "value": value};
   }
 }

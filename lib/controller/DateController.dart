@@ -12,6 +12,10 @@ class DateController extends GetxController {
     actualDate = newDate;
   }
 
+  void clear() {
+    updateSelectedDate(newDate: DateTime.now());
+  }
+
   @override
   void onInit() {
     dateTextController.text = DateFormat("dd.MM.yyyy").format(DateTime.now());

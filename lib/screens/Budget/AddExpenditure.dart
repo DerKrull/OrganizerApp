@@ -1,9 +1,7 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:organizer_app/controller/DateController.dart';
 import 'package:organizer_app/controller/DropDownCategoryController.dart';
-
 
 import '../../core/model/BudgetCategory.dart';
 import '../../widgets/BudgetCategoryDropDownField.dart';
@@ -76,17 +74,30 @@ class AddExpenditure extends StatelessWidget {
                       ),
                       SaveButton(onPressed: () {
                         String title = seController.titleController.text;
-                        String description = seController.descriptionController.text;
-                        double value = double.parse(seController.valueController.text);
+                        String description =
+                            seController.descriptionController.text;
+                        String valueStr =
+                            seController.valueController.text;
                         BudgetCategory category = ddcController.category.value;
-                        String date = dateController.dateTextController.text;
-                        print("""This is your data:
-                        title:        ${title}
-                        category:     ${category.name}
-                        value:        ${value}
-                        date:         ${date}
-                        description:  ${description}
-                        """);
+                        String dateStr = dateController.dateTextController.text;
+                        DateTime date = dateController.actualDate;
+                        if(title.isNotEmpty && valueStr.isNotEmpty && dateStr.isNotEmpty ) {
+                          double value = double.parse(valueStr);
+                          addExpenditure(category: category, title: title, value: value, date: date, description: description);
+                          seController.clear();
+                          dateController.clear();
+                          ddcController.clear();
+                          Navigator.of(context).pop();
+                        //   print("""This is your data:
+                        //   title:        ${title}
+                        //   category:     ${category.name}
+                        //   value:        ${value}
+                        //   date:         ${date}
+                        //   description:  ${description}
+                        // """);
+                        } else {
+                          print("Values are empty");
+                        }
                       })
                     ],
                   ),
