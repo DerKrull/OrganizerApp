@@ -101,7 +101,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
         },
         backgroundColor: CustomMaterialThemeColorConstant.dark.primaryContainer,
         child: Icon(
-          Icons.settings,
+          Icons.edit,
           color: CustomMaterialThemeColorConstant.dark.onSurface,
         ),
       ),
