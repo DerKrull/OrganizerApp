@@ -6,7 +6,7 @@ void updateCategory(
     required String categoryName,
     String categoryDescription = "",
     required int color}) {
-  final data = BudgetCategory.addData(
+  final data = BudgetCategory.fromBudgetCategory(
       name: categoryName, description: categoryDescription, color: color);
   db
       .collection("budgetCategory")

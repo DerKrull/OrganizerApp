@@ -12,4 +12,10 @@ class SingleExpenditureController extends GetxController {
     descriptionController.dispose();
     valueController.dispose();
   }
+
+  void clear() {
+    titleController.clear();
+    descriptionController.clear();
+    valueController.clear();
+  }
 }

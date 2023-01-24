@@ -8,6 +8,7 @@ import 'package:month_picker_dialog_2/month_picker_dialog_2.dart';
 import 'package:organizer_app/controller/DropDownCategoryController.dart';
 
 import '../../core/app_export.dart';
+import '../../core/model/BudgetCategory.dart';
 import '../../core/model/Expenditure.dart';
 import '../../widgets/CustomBottomAppBar.dart';
 import '../../widgets/CustomTopAppBar.dart';
@@ -18,13 +19,14 @@ import 'EditCategoryScreen.dart';
 class BudgetCategoryScreen extends StatefulWidget {
   final String categoryRef;
   final String categoryName;
+  final BudgetCategory category;
   final DateTime initialDate;
 
-  const BudgetCategoryScreen(
-      {Key? key,
-      required this.categoryRef,
-      required this.categoryName,
-      required this.initialDate})
+  const BudgetCategoryScreen({Key? key,
+    required this.categoryRef,
+    required this.categoryName,
+    required this.initialDate,
+    required this.category})
       : super(key: key);
 
   @override
@@ -51,13 +53,13 @@ class _BudgetCategoryScreenState extends State<BudgetCategoryScreen> {
 
   Stream<List<Expenditure>> expenditureStream() {
     DocumentReference categoryDocRef =
-        db.collection("budgetCategory").doc(widget.categoryRef);
+    db.collection("budgetCategory").doc(widget.categoryRef);
     try {
       return db
           .collection("expenditure")
           .where("category", isEqualTo: categoryDocRef)
           .where("date",
-              isGreaterThanOrEqualTo: getFirstTimeOfMonth(selectedDate!))
+          isGreaterThanOrEqualTo: getFirstTimeOfMonth(selectedDate!))
           .where("date", isLessThanOrEqualTo: getLastTimeOfMonth(selectedDate!))
           .snapshots()
           .map((notes) {
@@ -86,7 +88,8 @@ class _BudgetCategoryScreenState extends State<BudgetCategoryScreen> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => EditCategoryScreen(
+                            builder: (context) =>
+                                EditCategoryScreen(
                                   categoryRef: widget.categoryRef,
                                   initialName: widget.categoryName,
                                 )));
@@ -100,13 +103,15 @@ class _BudgetCategoryScreenState extends State<BudgetCategoryScreen> {
         backgroundColor: CustomMaterialThemeColorConstant.dark.surface1,
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            getBudgetCategory(widget.categoryRef).then(
-                (value) => ddcController.changeCategory(budgetCategory: value));
+            ddcController.changeCategory(budgetCategory: widget.category);
+            if (kDebugMode) {
+              print("Category:${widget.category.name}");
+            }
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => AddExpenditure()));
           },
           backgroundColor:
-              CustomMaterialThemeColorConstant.dark.primaryContainer,
+          CustomMaterialThemeColorConstant.dark.primaryContainer,
           child: Icon(
             Icons.add,
             color: CustomMaterialThemeColorConstant.dark.onSurface,
@@ -202,35 +207,42 @@ class _BudgetCategoryScreenState extends State<BudgetCategoryScreen> {
                     borderRadius: BorderRadius.circular(4.0),
                     borderSide: const BorderSide(color: Colors.white)),
               ),
-              onTap: () => {
-                    showMonthPicker(
-                      context: context,
-                      firstDate: DateTime(DateTime.now().year - 1, 5),
-                      lastDate: DateTime(DateTime.now().year + 1, 9),
-                      initialDate: selectedDate ?? widget.initialDate,
-                      headerColor: CustomMaterialThemeColorConstant
-                          .dark.primaryContainer,
-                      headerTextColor: CustomMaterialThemeColorConstant
-                          .dark.onPrimaryContainer,
-                      selectedMonthBackgroundColor:
-                          CustomMaterialThemeColorConstant
-                              .dark.primaryContainer,
-                      selectedMonthTextColor: CustomMaterialThemeColorConstant
-                          .dark.onPrimaryContainer,
-                      unselectedMonthTextColor:
-                          CustomMaterialThemeColorConstant.dark.onSecondary,
-                    ).then((date) {
-                      if (date != null) {
-                        setState(() {
-                          selectedDate = date;
-                          if (kDebugMode) {
-                            print(
-                                "Selected Date is: ${DateFormat("dd.MM.yyyy hh:mm", 'de').format(selectedDate!)}");
-                          }
-                        });
+              onTap: () =>
+              {
+                showMonthPicker(
+                  context: context,
+                  firstDate: DateTime(DateTime
+                      .now()
+                      .year - 1, 5),
+                  lastDate: DateTime(DateTime
+                      .now()
+                      .year + 1, 9),
+                  initialDate: selectedDate ?? widget.initialDate,
+                  headerColor: CustomMaterialThemeColorConstant
+                      .dark.primaryContainer,
+                  headerTextColor: CustomMaterialThemeColorConstant
+                      .dark.onPrimaryContainer,
+                  selectedMonthBackgroundColor:
+                  CustomMaterialThemeColorConstant
+                      .dark.primaryContainer,
+                  selectedMonthTextColor: CustomMaterialThemeColorConstant
+                      .dark.onPrimaryContainer,
+                  unselectedMonthTextColor:
+                  CustomMaterialThemeColorConstant.dark.onSecondary,
+                ).then((date) {
+                  if (date != null) {
+                    setState(() {
+                      selectedDate = date;
+                      if (kDebugMode) {
+                        print(
+                            "Selected Date is: ${DateFormat(
+                                "dd.MM.yyyy hh:mm", 'de').format(
+                                selectedDate!)}");
                       }
-                    })
-                  }),
+                    });
+                  }
+                })
+              }),
         ),
       ),
     );
@@ -255,7 +267,10 @@ class _BudgetCategoryScreenState extends State<BudgetCategoryScreen> {
                     }
                   } else if (snapshot.hasData) {
                     totalBudget = snapshot.data!;
-                    double width = MediaQuery.of(context).size.width - 60;
+                    double width = MediaQuery
+                        .of(context)
+                        .size
+                        .width - 60;
                     double usedBudgetWidth = width * usedBudget / totalBudget;
                     double restBudgetWidth = width - usedBudgetWidth;
                     return Column(
@@ -296,7 +311,9 @@ class _BudgetCategoryScreenState extends State<BudgetCategoryScreen> {
                                   fontSize: 30.0,
                                   fontWeight: FontWeight.bold,
                                 ),
-                                "${usedBudget.toStringAsFixed(2)}€   /   ${totalBudget.toStringAsFixed(2)}€"),
+                                "${usedBudget.toStringAsFixed(
+                                    2)}€   /   ${totalBudget.toStringAsFixed(
+                                    2)}€"),
                           ),
                         )
                       ],

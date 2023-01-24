@@ -22,7 +22,7 @@ class BudgetCategory {
         docRef: doc.id);
   }
 
-  static Map<String, dynamic> addData(
+  static Map<String, dynamic> fromBudgetCategory(
       {required name, required description, required int color}) {
     return {"name": name, "description": description, "color": color};
   }

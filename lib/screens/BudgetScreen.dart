@@ -107,43 +107,51 @@ class _BudgetScreenState extends State<BudgetScreen> {
   Widget buildListView(AsyncSnapshot<List<BudgetCategory>> snapshot) {
     return Padding(
       padding: getPadding(top: 20, left: 10, right: 10),
-      child: ListView.builder(
-          shrinkWrap: true,
-          physics: const ClampingScrollPhysics(),
-          itemCount: snapshot.data!.length,
-          itemBuilder: (context, index) {
-            final entry = snapshot.data![index];
-            return Card(
-              color: CustomMaterialThemeColorConstant.dark.surface5,
-              child: ListTile(
-                title: Text(entry.name),
-                subtitle: Text(entry.description),
-                leading: CircleAvatar(backgroundColor: Color(entry.color)),
-                trailing: FutureBuilder(
-                  future: getUsedBudgetPerCategory(entry.docRef, selectedDate!),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return Text("${snapshot.data}");
-                    } else if (snapshot.hasError) {
-                      return Text("${snapshot.error}");
-                    }
-                    return const CircularProgressIndicator();
-                  },
-                ),
-                textColor: CustomMaterialThemeColorConstant.dark.onSurface,
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => BudgetCategoryScreen(
-                                categoryRef: entry.docRef,
-                                categoryName: entry.name,
-                                initialDate: selectedDate!,
-                              )));
-                },
+      child: Column(
+        children: [
+          ListView.builder(
+              shrinkWrap: true,
+              physics: const ClampingScrollPhysics(),
+              itemCount: snapshot.data!.length,
+              itemBuilder: (context, index) {
+                final entry = snapshot.data![index];
+                return Card(
+                  color: CustomMaterialThemeColorConstant.dark.surface5,
+                  child: ListTile(
+                    title: Text(entry.name),
+                    subtitle: Text(entry.description),
+                    leading: CircleAvatar(backgroundColor: Color(entry.color)),
+                    trailing: FutureBuilder(
+                      future: getUsedBudgetPerCategory(entry.docRef, selectedDate!),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return Text("${snapshot.data}");
+                        } else if (snapshot.hasError) {
+                          return Text("${snapshot.error}");
+                        }
+                        return const CircularProgressIndicator();
+                      },
+                    ),
+                    textColor: CustomMaterialThemeColorConstant.dark.onSurface,
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => BudgetCategoryScreen(
+                                    category: entry,
+                                    categoryRef: entry.docRef,
+                                    categoryName: entry.name,
+                                    initialDate: selectedDate!,
+                                  )));
+                    },
+                  ),
+                );
+              }),
+              SizedBox(
+                height: 80,
               ),
-            );
-          }),
+        ],
+      ),
     );
   }
 
