@@ -37,7 +37,6 @@ class AddExpenditure extends StatelessWidget {
       ),
       backgroundColor: CustomMaterialThemeColorConstant.dark.surface1,
       body: SingleChildScrollView(
-        physics: const NeverScrollableScrollPhysics(),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
@@ -59,48 +58,45 @@ class AddExpenditure extends StatelessWidget {
                 label: 'Betrag',
                 hintText: 'Betrag der Ausgabe',
               ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Padding(
-                  padding: getPadding(top: 30),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: getPadding(right: 20, top: 10, bottom: 10),
-                        child: AbortButton(onPressed: () {
-                          Navigator.of(context).pop();
-                        }),
-                      ),
-                      SaveButton(onPressed: () {
-                        String title = seController.titleController.text;
-                        String description =
-                            seController.descriptionController.text;
-                        String valueStr =
-                            seController.valueController.text;
-                        BudgetCategory category = ddcController.category.value;
-                        String dateStr = dateController.dateTextController.text;
-                        DateTime date = dateController.actualDate;
-                        if(title.isNotEmpty && valueStr.isNotEmpty && dateStr.isNotEmpty ) {
-                          double value = double.parse(valueStr);
-                          addExpenditure(category: category, title: title, value: value, date: date, description: description);
-                          seController.clear();
-                          dateController.clear();
-                          ddcController.clear();
-                          Navigator.of(context).pop();
-                        //   print("""This is your data:
-                        //   title:        ${title}
-                        //   category:     ${category.name}
-                        //   value:        ${value}
-                        //   date:         ${date}
-                        //   description:  ${description}
-                        // """);
-                        } else {
-                          print("Values are empty");
-                        }
-                      })
-                    ],
-                  ),
+              Padding(
+                padding: getPadding(top: 30),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: getPadding(right: 20, top: 10, bottom: 10),
+                      child: AbortButton(onPressed: () {
+                        Navigator.of(context).pop();
+                      }),
+                    ),
+                    SaveButton(onPressed: () {
+                      String title = seController.titleController.text;
+                      String description =
+                          seController.descriptionController.text;
+                      String valueStr =
+                          seController.valueController.text;
+                      BudgetCategory category = ddcController.category.value;
+                      String dateStr = dateController.dateTextController.text;
+                      DateTime date = dateController.actualDate;
+                      if(title.isNotEmpty && valueStr.isNotEmpty && dateStr.isNotEmpty ) {
+                        double value = double.parse(valueStr);
+                        addExpenditure(category: category, title: title, value: value, date: date, description: description);
+                        seController.clear();
+                        dateController.clear();
+                        ddcController.clear();
+                        Navigator.of(context).pop();
+                      //   print("""This is your data:
+                      //   title:        ${title}
+                      //   category:     ${category.name}
+                      //   value:        ${value}
+                      //   date:         ${date}
+                      //   description:  ${description}
+                      // """);
+                      } else {
+                        print("Values are empty");
+                      }
+                    })
+                  ],
                 ),
               ),
             ],
