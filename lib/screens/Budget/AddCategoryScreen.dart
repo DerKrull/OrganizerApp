@@ -1,4 +1,3 @@
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
@@ -32,39 +31,35 @@ class AddCategoryScreen extends StatelessWidget {
             isMainPage: false,
           ),
           backgroundColor: CustomMaterialThemeColorConstant.dark.surface1,
-          body: Stack(
+          body: Column(
             children: [
-              Column(
-                children: [
-                  Padding(
-                    padding:
-                        getPadding(top: 20, left: 20, right: 20, bottom: 10),
-                    child: Row(
-                      children: [
-                        buildColorPicker(context),
-                        Expanded(
-                          child: Padding(
-                            padding: getPadding(left: 20),
-                            child: CustomTextField(
-                                hintText: "Name der Kategorie",
-                                controller: scController.nameController,
-                                label: "Name"),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  Padding(
-                      padding: getPadding(left: 20, right: 20, top: 20),
-                      child: CustomTextField(
-                          hintText: "Beschreibung",
-                          label: "Beschreibung",
-                          controller: scController.descriptionController,
-                          multiline: true)),
-                ],
+              Padding(
+                padding:
+                    getPadding(top: 20, left: 20, right: 20, bottom: 10),
+                child: Row(
+                  children: [
+                    buildColorPicker(context),
+                    Expanded(
+                      child: Padding(
+                        padding: getPadding(left: 20),
+                        child: CustomTextField(
+                            hintText: "Name der Kategorie",
+                            controller: scController.nameController,
+                            label: "Name"),
+                      ),
+                    )
+                  ],
+                ),
               ),
-              Align(
-                alignment: Alignment.bottomCenter,
+              Padding(
+                  padding: getPadding(left: 20, right: 20, top: 20),
+                  child: CustomTextField(
+                      hintText: "Beschreibung",
+                      label: "Beschreibung",
+                      controller: scController.descriptionController,
+                      multiline: true)),
+              Padding(
+                padding: getPadding(top: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -84,8 +79,8 @@ class AddCategoryScreen extends StatelessWidget {
   Name:         ${name}
   Description:  ${description}
   Color:        ${color}
-                      """);
-                      if(!name.isEmpty ) {
+                  """);
+                      if (!name.isEmpty) {
                         addCategory(
                             color: color.value,
                             categoryName: name,
@@ -98,7 +93,7 @@ class AddCategoryScreen extends StatelessWidget {
                     })
                   ],
                 ),
-              ),
+              )
             ],
           )),
     );
@@ -128,7 +123,8 @@ class AddCategoryScreen extends StatelessWidget {
               );
             });
       },
-      child: Obx(() => CircleAvatar(backgroundColor: scController.color.value, radius: getSize(25))),
+      child: Obx(() => CircleAvatar(
+          backgroundColor: scController.color.value, radius: getSize(25))),
     );
   }
 }
