@@ -29,8 +29,8 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
 
   final List<Task> notDailyTaskList = <Task>[
     Task(false, "Task 1", DateTime(2022, 1, 20), "Meeting 1", false),
-    Task(false, "Task 2", DateTime(2022, 1, 21), "Meeting 2", false),
-    Task(false, "Task 3", DateTime(2022, 1, 22), "Meeting 3", false),
+    /*Task(false, "Task 2", DateTime(2022, 1, 21), "Meeting 2", false),
+    Task(false, "Task 3", DateTime(2022, 1, 22), "Meeting 3", false),*/
   ];
 
   @override
@@ -69,8 +69,8 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
                 padding: const EdgeInsets.only(top: 20.0),
                 child: GestureDetector(
                   onTap: () {
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => DailyTasksScreen()));
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => DailyTasksScreen()));
                   },
                   child: Column(
                     children: [
@@ -162,6 +162,44 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
   }
 
   Widget _buildSingleTask(int index, List isCheckedList) {
+    if (index >= isCheckedList.length) {
+      if (index == 2) {
+        return Column(
+          children: [
+            Container(
+              width: MediaQuery.of(context).size.width - 20.0,
+              height: 2,
+              color: Colors.black,
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width - 20.0,
+              height: 75,
+              decoration: BoxDecoration(
+                color: CustomMaterialThemeColorConstant.dark.surface5,
+                borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(30.0),
+                    bottomRight: Radius.circular(30.0)),
+              ),
+            ),
+          ],
+        );
+      } else {
+        return Column(
+          children: [
+            Container(
+              width: MediaQuery.of(context).size.width - 20.0,
+              height: 2,
+              color: Colors.black,
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width - 20.0,
+              height: 75,
+              color: CustomMaterialThemeColorConstant.dark.surface5,
+            ),
+          ],
+        );
+      }
+    }
     if (index == 2) {
       return Column(
         children: [
@@ -211,8 +249,7 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
             child: Checkbox(
               side: BorderSide(
                   color: CustomMaterialThemeColorConstant.dark.secondary,
-                  width: 1.5
-              ),
+                  width: 1.5),
               shape: const CircleBorder(),
               checkColor: Colors.white,
               activeColor: CustomMaterialThemeColorConstant.light.primary,
@@ -247,8 +284,7 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
             child: Checkbox(
               side: BorderSide(
                   color: CustomMaterialThemeColorConstant.dark.secondary,
-                  width: 1.5
-              ),
+                  width: 1.5),
               shape: const CircleBorder(),
               checkColor: Colors.white,
               activeColor: CustomMaterialThemeColorConstant.light.primary,
