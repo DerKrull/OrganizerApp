@@ -144,6 +144,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                         if (name != "" && isDaily != null && dueDate != "" && description != "" && meeting != "" && meeting != "") {
                           // addCategory(color: selectedColor!.value, categoryName: categoryName!, categoryDescription: categoryDescription);
                           print("SAVE");
+                          //TODO: Implement add method to use the new stuff
+                          addTask(isDaily: isDaily, name: name, dueDate: dueDate, description: description, done: true, taskCategory: "");
                           Navigator.of(context).pop(context);
                         } else {
                           print("Values are null");
