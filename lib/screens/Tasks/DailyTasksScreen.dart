@@ -120,7 +120,7 @@ class _DailyTasksScreenState extends State<DailyTasksScreen> {
                   value: taskList[index].done,
                   onChanged: (bool? value) {
                     setState(() {
-                      taskList[index].done = !taskList[index].done;
+                      changeDone(taskList, index);
                     });
                   },
                 ),
@@ -135,5 +135,17 @@ class _DailyTasksScreenState extends State<DailyTasksScreen> {
         ],
       ),
     );
+  }
+
+  void changeDone(List<Task> isCheckedList, int index) {
+    isCheckedList[index].done = !isCheckedList[index].done;
+    updateTask(
+        docRef: isCheckedList[index].taskRef,
+        description: isCheckedList[index].description,
+        done: isCheckedList[index].done,
+        dueDate: isCheckedList[index].dueDate,
+        isDaily: isCheckedList[index].isDaily,
+        name: isCheckedList[index].name,
+        taskCategory: isCheckedList[index].taskCategory);
   }
 }

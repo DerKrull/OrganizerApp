@@ -21,10 +21,11 @@ class TaskOverviewScreen extends StatefulWidget {
 }
 
 class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
-
   Stream<List<Task>> dailyTasksStream() {
     try {
-      return db.collection("task").where("isDaily", isEqualTo: true)
+      return db
+          .collection("task")
+          .where("isDaily", isEqualTo: true)
           .snapshots()
           .map((tasks) {
         final List<Task> dailyTasksFromFirestore = <Task>[];
@@ -40,7 +41,9 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
 
   Stream<List<Task>> notDailyTasksStream() {
     try {
-      return db.collection("task").where("isDaily", isEqualTo: false)
+      return db
+          .collection("task")
+          .where("isDaily", isEqualTo: false)
           .snapshots()
           .map((tasks) {
         final List<Task> dailyTasksFromFirestore = <Task>[];
@@ -116,22 +119,23 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
                             ),
                           )),
                       StreamBuilder(
-                        stream: dailyTasksStream(),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            return ListView.builder(
-                                shrinkWrap: true,
-                                physics: const ClampingScrollPhysics(),
-                                itemCount: 3,
-                                itemBuilder: (context, index) {
-                                  return _buildSingleTask(index, snapshot.data!);
-                                });
-                          } else if (snapshot.hasError) {
-                            Text("${snapshot.error}");
-                          }
-                          return const Center(child: CircularProgressIndicator());
-                        }
-                      )
+                          stream: dailyTasksStream(),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              return ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: const ClampingScrollPhysics(),
+                                  itemCount: 3,
+                                  itemBuilder: (context, index) {
+                                    return _buildSingleTask(
+                                        index, snapshot.data!);
+                                  });
+                            } else if (snapshot.hasError) {
+                              Text("${snapshot.error}");
+                            }
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          })
                     ],
                   ),
                 ),
@@ -169,7 +173,7 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
                             ),
                           )),
                       StreamBuilder(
-                        stream: notDailyTasksStream(),
+                          stream: notDailyTasksStream(),
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
                               return ListView.builder(
@@ -177,14 +181,15 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
                                   physics: const ClampingScrollPhysics(),
                                   itemCount: 3,
                                   itemBuilder: (context, index) {
-                                    return _buildSingleTask(index, snapshot.data!);
+                                    return _buildSingleTask(
+                                        index, snapshot.data!);
                                   });
                             } else if (snapshot.hasError) {
                               Text("${snapshot.error}");
                             }
-                            return const Center(child: CircularProgressIndicator());
-                          }
-                      )
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          })
                     ],
                   ),
                 ),
@@ -202,7 +207,7 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
     );
   }
 
-  Widget _buildSingleTask(int index, List isCheckedList) {
+  Widget _buildSingleTask(int index, List<Task> isCheckedList) {
     if (index >= isCheckedList.length) {
       if (index == 2) {
         return Column(
@@ -281,7 +286,7 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
     }
   }
 
-  Row _createSingleTask(List<dynamic> isCheckedList, int index) {
+  Row _createSingleTask(List<Task> isCheckedList, int index) {
     if (isCheckedList[index].isDaily) {
       return Row(
         children: [
@@ -297,8 +302,7 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
               value: isCheckedList[index].done,
               onChanged: (bool? value) {
                 setState(() {
-                  // updateTask(isCheckedList[index].ref)
-                  isCheckedList[index].done = !isCheckedList[index].done;
+                  changeDone(isCheckedList, index);
                 });
               },
             ),
@@ -333,7 +337,7 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
               value: isCheckedList[index].done,
               onChanged: (bool? value) {
                 setState(() {
-                  isCheckedList[index].done = !isCheckedList[index].done;
+                  changeDone(isCheckedList, index);
                 });
               },
             ),
@@ -375,5 +379,17 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
         ],
       );
     }
+  }
+
+  void changeDone(List<Task> isCheckedList, int index) {
+    isCheckedList[index].done = !isCheckedList[index].done;
+    updateTask(
+        docRef: isCheckedList[index].taskRef,
+        description: isCheckedList[index].description,
+        done: isCheckedList[index].done,
+        dueDate: isCheckedList[index].dueDate,
+        isDaily: isCheckedList[index].isDaily,
+        name: isCheckedList[index].name,
+        taskCategory: isCheckedList[index].taskCategory);
   }
 }
