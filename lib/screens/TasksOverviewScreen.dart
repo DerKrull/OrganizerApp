@@ -21,18 +21,38 @@ class TaskOverviewScreen extends StatefulWidget {
 }
 
 class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
-  final List<Task> dailyTaskList = <Task>[
-    Task(true, "Daily Task 1", DateTime(0), "", false),
-    Task(true, "Daily Task 2", DateTime(0), "", false),
-    Task(true, "Daily Task 3", DateTime(0), "", false),
-    Task(true, "Daily Task 3", DateTime(0), "", false),
-  ];
 
-  final List<Task> notDailyTaskList = <Task>[
-    Task(false, "Task 1", DateTime(2022, 1, 20), "Meeting 1", false),
-    Task(false, "Task 2", DateTime(2022, 1, 21), "Meeting 2", false),
-    Task(false, "Task 3", DateTime(2022, 1, 22), "Meeting 3", false),
-  ];
+  Stream<List<Task>> dailyTasksStream() {
+    try {
+      return db.collection("task").where("isDaily", isEqualTo: true)
+          .snapshots()
+          .map((tasks) {
+        final List<Task> dailyTasksFromFirestore = <Task>[];
+        for (final DocumentSnapshot<Map<String, dynamic>> doc in tasks.docs) {
+          dailyTasksFromFirestore.add(Task.fromDocumentSnapshot(doc: doc));
+        }
+        return dailyTasksFromFirestore;
+      });
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Stream<List<Task>> notDailyTasksStream() {
+    try {
+      return db.collection("task").where("isDaily", isEqualTo: false)
+          .snapshots()
+          .map((tasks) {
+        final List<Task> dailyTasksFromFirestore = <Task>[];
+        for (final DocumentSnapshot<Map<String, dynamic>> doc in tasks.docs) {
+          dailyTasksFromFirestore.add(Task.fromDocumentSnapshot(doc: doc));
+        }
+        return dailyTasksFromFirestore;
+      });
+    } catch (e) {
+      rethrow;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -95,13 +115,23 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
                               ),
                             ),
                           )),
-                      ListView.builder(
-                          shrinkWrap: true,
-                          physics: const ClampingScrollPhysics(),
-                          itemCount: 3,
-                          itemBuilder: (context, index) {
-                            return _buildSingleTask(index, dailyTaskList);
-                          })
+                      StreamBuilder(
+                        stream: dailyTasksStream(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return ListView.builder(
+                                shrinkWrap: true,
+                                physics: const ClampingScrollPhysics(),
+                                itemCount: 3,
+                                itemBuilder: (context, index) {
+                                  return _buildSingleTask(index, snapshot.data!);
+                                });
+                          } else if (snapshot.hasError) {
+                            Text("${snapshot.error}");
+                          }
+                          return const Center(child: CircularProgressIndicator());
+                        }
+                      )
                     ],
                   ),
                 ),
@@ -138,13 +168,23 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
                               ),
                             ),
                           )),
-                      ListView.builder(
-                          shrinkWrap: true,
-                          physics: const ClampingScrollPhysics(),
-                          itemCount: 3,
-                          itemBuilder: (context, index) {
-                            return _buildSingleTask(index, notDailyTaskList);
-                          })
+                      StreamBuilder(
+                        stream: notDailyTasksStream(),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              return ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: const ClampingScrollPhysics(),
+                                  itemCount: 3,
+                                  itemBuilder: (context, index) {
+                                    return _buildSingleTask(index, snapshot.data!);
+                                  });
+                            } else if (snapshot.hasError) {
+                              Text("${snapshot.error}");
+                            }
+                            return const Center(child: CircularProgressIndicator());
+                          }
+                      )
                     ],
                   ),
                 ),
@@ -257,6 +297,7 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
               value: isCheckedList[index].done,
               onChanged: (bool? value) {
                 setState(() {
+                  // updateTask(isCheckedList[index].ref)
                   isCheckedList[index].done = !isCheckedList[index].done;
                 });
               },

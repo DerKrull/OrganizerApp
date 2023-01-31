@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:organizer_app/core/app_export.dart';
@@ -17,17 +18,22 @@ class TasksScreen extends StatefulWidget {
 }
 
 class _TasksScreenState extends State<TasksScreen> {
-  final List<Task> taskList = <Task>[
-    Task(false, "Task 1", DateTime(2022, 1, 20), "Meeting 1", false),
-    Task(false, "Task 2", DateTime(2022, 1, 21), "Meeting 2", false),
-    Task(false, "Task 3", DateTime(2022, 1, 22), "Meeting 3", false),
-    Task(false, "Task 3", DateTime(2022, 1, 22), "Meeting 3", false),
-    Task(false, "Task 3", DateTime(2022, 1, 22), "Meeting 3", false),
-    Task(false, "Task 3", DateTime(2022, 1, 22), "Meeting 3", false),
-    Task(false, "Task 3", DateTime(2022, 1, 22), "Meeting 3", false),
-    Task(false, "Task 3", DateTime(2022, 1, 22), "Meeting 3", false),
-    Task(false, "Task 3", DateTime(2022, 1, 22), "Meeting 3", false),
-  ];
+
+  Stream<List<Task>> tasksStream() {
+    try {
+      return db.collection("task").where("isDaily", isEqualTo: false)
+          .snapshots()
+          .map((tasks) {
+        final List<Task> dailyTasksFromFirestore = <Task>[];
+        for (final DocumentSnapshot<Map<String, dynamic>> doc in tasks.docs) {
+          dailyTasksFromFirestore.add(Task.fromDocumentSnapshot(doc: doc));
+        }
+        return dailyTasksFromFirestore;
+      });
+    } catch (e) {
+      rethrow;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,18 +62,30 @@ class _TasksScreenState extends State<TasksScreen> {
       ),
       body: Column(
         children: [
-          Expanded(
-            child: ListView.builder(
-                itemCount: taskList.length,
-                itemBuilder: (context, index) {
-                  return _buildSingleTask(index, taskList);
-                }),
+          StreamBuilder(
+            stream: tasksStream(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Expanded(
+                  child: ListView.builder(
+                      itemCount: snapshot.data!.length,
+                      itemBuilder: (context, index) {
+                        return _buildSingleTask(index, snapshot.data!);
+                      }),
+                );
+              } else if (snapshot.hasError) {
+                return Text("${snapshot.error}");
+              }
+              return const Center(child: CircularProgressIndicator());
+
+            }
           )
         ],
       ),
     );
   }
 
+  //TODO: Add Category as subtitle and as trailing due date and meeting in a column
   Widget _buildSingleTask(int index, List<Task> taskList) {
     return Card(
       color: CustomMaterialThemeColorConstant.dark.surface5,

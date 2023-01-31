@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:organizer_app/core/app_export.dart';
 import 'package:organizer_app/widgets/CustomBottomAppBar.dart';
@@ -17,19 +18,21 @@ class DailyTasksScreen extends StatefulWidget {
 
 class _DailyTasksScreenState extends State<DailyTasksScreen> {
 
-  final List<Task> dailyTaskList = <Task>[
-    Task(true, "Daily Task 1", DateTime(0), "", false),
-    Task(true, "Daily Task 2", DateTime(0), "", false),
-    Task(true, "Daily Task 3", DateTime(0), "", false),
-    Task(true, "Daily Task 3", DateTime(0), "", false),
-    Task(true, "Daily Task 3", DateTime(0), "", false),
-    Task(true, "Daily Task 3", DateTime(0), "", false),
-    Task(true, "Daily Task 3", DateTime(0), "", false),
-    Task(true, "Daily Task 3", DateTime(0), "", false),
-    Task(true, "Daily Task 3", DateTime(0), "", false),
-    Task(true, "Daily Task 3", DateTime(0), "", false),
-    Task(true, "Daily Task 3", DateTime(0), "", false),
-  ];
+  Stream<List<Task>> tasksStream() {
+    try {
+      return db.collection("task").where("isDaily", isEqualTo: true)
+          .snapshots()
+          .map((tasks) {
+        final List<Task> dailyTasksFromFirestore = <Task>[];
+        for (final DocumentSnapshot<Map<String, dynamic>> doc in tasks.docs) {
+          dailyTasksFromFirestore.add(Task.fromDocumentSnapshot(doc: doc));
+        }
+        return dailyTasksFromFirestore;
+      });
+    } catch (e) {
+      rethrow;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,18 +61,30 @@ class _DailyTasksScreenState extends State<DailyTasksScreen> {
       ),
       body: Column(
         children: [
-          Expanded(
-            child: ListView.builder(
-                itemCount: dailyTaskList.length,
-                itemBuilder: (context, index) {
-                  return _buildSingleTask(index, dailyTaskList);
-                }),
+          StreamBuilder(
+              stream: tasksStream(),
+              builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return Expanded(
+                child: ListView.builder(
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (context, index) {
+                      return _buildSingleTask(index, snapshot.data!);
+                    }),
+              );
+            } else if (snapshot.hasError) {
+                return Text("${snapshot.error}");
+              }
+            return const Center(child: CircularProgressIndicator());
+          }
+
           )
         ],
       ),
     );
   }
 
+  //TODO: Add Category as subtitle
   Widget _buildSingleTask(int index, List<Task> taskList) {
     return Card(
       color: CustomMaterialThemeColorConstant.dark.surface5,
@@ -112,7 +127,8 @@ class _DailyTasksScreenState extends State<DailyTasksScreen> {
               ),
               onTap: () {
                 Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => TaskDetailScreen()));
+                    MaterialPageRoute(
+                        builder: (context) => TaskDetailScreen()));
               },
             ),
           ),
