@@ -44,7 +44,7 @@ class _DailyTasksScreenState extends State<DailyTasksScreen> {
         mainPage: MainPages.TaskScreen,
         isMainPage: false,
       ),
-      backgroundColor: CustomMaterialThemeColorConstant.dark.surface1,
+      backgroundColor: CustomMaterialThemeColorConstant.dark.surface5,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context)
@@ -85,8 +85,11 @@ class _DailyTasksScreenState extends State<DailyTasksScreen> {
                 children: [
                   Transform.scale(
                     scale: 1.3,
-                    // TODO Change color of checkbox
                     child: Checkbox(
+                      side: BorderSide(
+                        color: CustomMaterialThemeColorConstant.dark.secondary,
+                        width: 1.5
+                      ),
                       shape: const CircleBorder(),
                       checkColor: Colors.white,
                       activeColor: CustomMaterialThemeColorConstant.light.primary,
@@ -109,6 +112,12 @@ class _DailyTasksScreenState extends State<DailyTasksScreen> {
                         : const TextStyle(
                       fontSize: 20,
                       color: Colors.white,
+                    ),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.fromLTRB(120.0, 15.0, 10.0, 10.0),
+                    child: SizedBox(
+                      height: 47,
                     ),
                   ),
                 ],
@@ -130,8 +139,11 @@ class _DailyTasksScreenState extends State<DailyTasksScreen> {
                 children: [
                   Transform.scale(
                     scale: 1.3,
-                    // TODO Change color of checkbox
                     child: Checkbox(
+                      side: BorderSide(
+                          color: CustomMaterialThemeColorConstant.dark.secondary,
+                          width: 1.5
+                      ),
                       shape: const CircleBorder(),
                       checkColor: Colors.white,
                       activeColor: CustomMaterialThemeColorConstant.light.primary,
@@ -154,6 +166,12 @@ class _DailyTasksScreenState extends State<DailyTasksScreen> {
                         : const TextStyle(
                       fontSize: 20,
                       color: Colors.white,
+                    ),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.fromLTRB(120.0, 15.0, 10.0, 10.0),
+                    child: SizedBox(
+                      height: 47,
                     ),
                   ),
                 ],

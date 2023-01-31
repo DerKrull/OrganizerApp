@@ -52,152 +52,104 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
         backgroundColor: CustomMaterialThemeColorConstant.dark.surface1,
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => AddTaskScreen()));
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => AddTaskScreen()));
           },
           backgroundColor:
-          CustomMaterialThemeColorConstant.dark.primaryContainer,
+              CustomMaterialThemeColorConstant.dark.primaryContainer,
           child: Icon(
             Icons.add,
             color: CustomMaterialThemeColorConstant.dark.onSurface,
           ),
         ),
-        body: Column(
-          children: [
-            addSeparator(height: 10.0),
-            Expanded(
-              flex: 1,
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => DailyTasksScreen()));
-                },
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                  child: Container(
-                    width: width,
-                    decoration: BoxDecoration(
-                      color: CustomMaterialThemeColorConstant.dark.surface5,
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(30),
-                      ),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(20.0, 5.0, 0.0, 5.0),
-                              child: Text(
-                                "Tägliche Aufgaben",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 22,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Expanded(
-                          child: Container(
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: CustomMaterialThemeColorConstant.dark.surface5,
-                              borderRadius: const BorderRadius.only(
-                                bottomLeft: Radius.circular(40.0),
-                                bottomRight: Radius.circular(40.0),
-                              ),
-                            ),
-                            child: Column(
-                              children: <Widget>[
-                                Expanded(
-                                  child: ListView.builder(
-                                      physics: const NeverScrollableScrollPhysics(),
-                                      itemCount: 3,
-                                      itemBuilder: (context, index) {
-                                        return _buildSingleTask(
-                                            index, dailyTaskList);
-                                      }),
-                                ),
-                              ],
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 20.0),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => DailyTasksScreen()));
+                  },
+                  child: Column(
+                    children: [
+                      Container(
+                          width: width,
+                          decoration: BoxDecoration(
+                            color:
+                                CustomMaterialThemeColorConstant.dark.surface5,
+                            borderRadius: const BorderRadius.only(
+                              topRight: Radius.circular(30.0),
+                              topLeft: Radius.circular(30.0),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
+                          child: const Padding(
+                            padding: EdgeInsets.fromLTRB(20.0, 5.0, 0.0, 5.0),
+                            child: Text(
+                              "Tägliche Aufgaben",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 22,
+                              ),
+                            ),
+                          )),
+                      ListView.builder(
+                          shrinkWrap: true,
+                          physics: const ClampingScrollPhysics(),
+                          itemCount: 3,
+                          itemBuilder: (context, index) {
+                            return _buildSingleTask(index, dailyTaskList);
+                          })
+                    ],
                   ),
                 ),
               ),
-            ),
-            addSeparator(height: 10.0),
-            Expanded(
-              flex: 1,
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => TasksScreen()));
-                },
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                  child: Container(
-                    width: width,
-                    decoration: BoxDecoration(
-                      color: CustomMaterialThemeColorConstant.dark.surface5,
-                      borderRadius: const BorderRadius.all(Radius.circular(30)),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(20.0, 5.0, 0.0, 5.0),
-                              child: Text(
-                                "Aufgaben",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 22,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Expanded(
-                          child: Container(
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: CustomMaterialThemeColorConstant.dark.surface5,
-                              borderRadius: const BorderRadius.only(
-                                bottomLeft: Radius.circular(40.0),
-                                bottomRight: Radius.circular(40.0),
-                              ),
-                            ),
-                            child: Column(
-                              children: <Widget>[
-                                Expanded(
-                                  child: ListView.builder(
-                                      physics: const NeverScrollableScrollPhysics(),
-                                      itemCount: 3,
-                                      itemBuilder: (context, index) {
-                                        return _buildSingleTask(
-                                            index, notDailyTaskList);
-                                      }),
-                                ),
-                              ],
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: 20.0,
+                  bottom: 20.0,
+                ),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => TasksScreen()));
+                  },
+                  child: Column(
+                    children: [
+                      Container(
+                          width: width,
+                          decoration: BoxDecoration(
+                            color:
+                                CustomMaterialThemeColorConstant.dark.surface5,
+                            borderRadius: const BorderRadius.only(
+                              topRight: Radius.circular(30.0),
+                              topLeft: Radius.circular(30.0),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
+                          child: const Padding(
+                            padding: EdgeInsets.fromLTRB(20.0, 5.0, 0.0, 5.0),
+                            child: Text(
+                              "Aufgaben",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 22,
+                              ),
+                            ),
+                          )),
+                      ListView.builder(
+                          shrinkWrap: true,
+                          physics: const ClampingScrollPhysics(),
+                          itemCount: 3,
+                          itemBuilder: (context, index) {
+                            return _buildSingleTask(index, notDailyTaskList);
+                          })
+                    ],
                   ),
                 ),
               ),
-            ),
-            addSeparator(height: 10.0),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -214,12 +166,12 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
       return Column(
         children: [
           Container(
-            width: double.infinity,
+            width: MediaQuery.of(context).size.width - 20.0,
             height: 2,
             color: Colors.black,
           ),
           Container(
-            width: double.infinity,
+            width: MediaQuery.of(context).size.width - 20.0,
             height: 75,
             decoration: BoxDecoration(
               color: CustomMaterialThemeColorConstant.dark.surface5,
@@ -235,12 +187,12 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
       return Column(
         children: [
           Container(
-            width: double.infinity,
+            width: MediaQuery.of(context).size.width - 20.0,
             height: 2,
             color: Colors.black,
           ),
           Container(
-            width: double.infinity,
+            width: MediaQuery.of(context).size.width - 20.0,
             height: 75,
             color: CustomMaterialThemeColorConstant.dark.surface5,
             child: _createSingleTask(isCheckedList, index),
@@ -257,6 +209,10 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
           Transform.scale(
             scale: 1.3,
             child: Checkbox(
+              side: BorderSide(
+                  color: CustomMaterialThemeColorConstant.dark.secondary,
+                  width: 1.5
+              ),
               shape: const CircleBorder(),
               checkColor: Colors.white,
               activeColor: CustomMaterialThemeColorConstant.light.primary,
@@ -289,6 +245,10 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
           Transform.scale(
             scale: 1.3,
             child: Checkbox(
+              side: BorderSide(
+                  color: CustomMaterialThemeColorConstant.dark.secondary,
+                  width: 1.5
+              ),
               shape: const CircleBorder(),
               checkColor: Colors.white,
               activeColor: CustomMaterialThemeColorConstant.light.primary,
