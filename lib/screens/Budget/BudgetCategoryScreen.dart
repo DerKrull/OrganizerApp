@@ -17,16 +17,11 @@ import 'AddExpenditure.dart';
 import 'EditCategoryScreen.dart';
 
 class BudgetCategoryScreen extends StatefulWidget {
-  final String categoryRef;
-  final String categoryName;
-  final BudgetCategory category;
+  BudgetCategory category;
   final DateTime initialDate;
 
-  const BudgetCategoryScreen({Key? key,
-    required this.categoryRef,
-    required this.categoryName,
-    required this.initialDate,
-    required this.category})
+  BudgetCategoryScreen(
+      {Key? key, required this.initialDate, required this.category})
       : super(key: key);
 
   @override
@@ -53,13 +48,13 @@ class _BudgetCategoryScreenState extends State<BudgetCategoryScreen> {
 
   Stream<List<Expenditure>> expenditureStream() {
     DocumentReference categoryDocRef =
-    db.collection("budgetCategory").doc(widget.categoryRef);
+        db.collection("budgetCategory").doc(widget.category.docRef);
     try {
       return db
           .collection("expenditure")
           .where("category", isEqualTo: categoryDocRef)
           .where("date",
-          isGreaterThanOrEqualTo: getFirstTimeOfMonth(selectedDate!))
+              isGreaterThanOrEqualTo: getFirstTimeOfMonth(selectedDate!))
           .where("date", isLessThanOrEqualTo: getLastTimeOfMonth(selectedDate!))
           .snapshots()
           .map((notes) {
@@ -80,7 +75,7 @@ class _BudgetCategoryScreenState extends State<BudgetCategoryScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: CustomTopAppBar(
-            title: widget.categoryName,
+            title: widget.category.name, //ToDo Use getx controller
             showThreePoints: true,
             menu: ThreePointPopUpMenu(
                 onSelected: (int result) {
@@ -89,10 +84,7 @@ class _BudgetCategoryScreenState extends State<BudgetCategoryScreen> {
                         context,
                         MaterialPageRoute(
                             builder: (context) =>
-                                EditCategoryScreen(
-                                  categoryRef: widget.categoryRef,
-                                  initialName: widget.categoryName,
-                                )));
+                                EditCategoryScreen(category: widget.category)));
                   }
                 },
                 entries: const ["Kategorie-Einstellungen"]).build(context)),
@@ -111,7 +103,7 @@ class _BudgetCategoryScreenState extends State<BudgetCategoryScreen> {
                 MaterialPageRoute(builder: (context) => AddExpenditure()));
           },
           backgroundColor:
-          CustomMaterialThemeColorConstant.dark.primaryContainer,
+              CustomMaterialThemeColorConstant.dark.primaryContainer,
           child: Icon(
             Icons.add,
             color: CustomMaterialThemeColorConstant.dark.onSurface,
@@ -157,21 +149,53 @@ class _BudgetCategoryScreenState extends State<BudgetCategoryScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: getPadding(left: 20.0),
-                    child: Text(
+                  ExpansionTile(
+                    title: Text(entry.title,
                         style: TextStyle(
                             color: CustomMaterialThemeColorConstant
-                                .dark.onSurface),
-                        DateFormat('dd.MM.yyyy').format(entry.date)),
-                  ),
-                  ListTile(
-                    title: Text(entry.title),
-                    subtitle: Text(entry.description),
-                    isThreeLine: true,
-                    trailing: Text("${entry.value}€"),
-                    textColor: CustomMaterialThemeColorConstant.dark.onSurface,
-                    onTap: () {},
+                                .dark.onSurface)),
+                    subtitle: Text(
+                        "${entry.description}\n${DateFormat('dd.MM.yyyy').format(entry.date)}",
+                        style: TextStyle(
+                            color: CustomMaterialThemeColorConstant
+                                .dark.onSurface)),
+                    trailing: Text("${entry.value}€",
+                        style: TextStyle(
+                            color: CustomMaterialThemeColorConstant
+                                .dark.onSurface)),
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                            color: CustomMaterialThemeColorConstant
+                                .dark.tertiaryContainer,
+                            borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(10),
+                                bottomRight: Radius.circular(10))),
+                        child: Padding(
+                          padding: getPadding(all: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                  child: IconButton(
+                                onPressed: () {},
+                                icon: Icon(Icons.delete),
+                                iconSize: getSize(30),
+                                color: CustomMaterialThemeColorConstant
+                                    .dark.onTertiaryContainer,
+                              )),
+                              Expanded(
+                                  child: IconButton(
+                                      onPressed: () {},
+                                      icon: Icon(Icons.edit),
+                                      iconSize: getSize(30),
+                                      color: CustomMaterialThemeColorConstant
+                                          .dark.onTertiaryContainer))
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -207,42 +231,35 @@ class _BudgetCategoryScreenState extends State<BudgetCategoryScreen> {
                     borderRadius: BorderRadius.circular(4.0),
                     borderSide: const BorderSide(color: Colors.white)),
               ),
-              onTap: () =>
-              {
-                showMonthPicker(
-                  context: context,
-                  firstDate: DateTime(DateTime
-                      .now()
-                      .year - 1, 5),
-                  lastDate: DateTime(DateTime
-                      .now()
-                      .year + 1, 9),
-                  initialDate: selectedDate ?? widget.initialDate,
-                  headerColor: CustomMaterialThemeColorConstant
-                      .dark.primaryContainer,
-                  headerTextColor: CustomMaterialThemeColorConstant
-                      .dark.onPrimaryContainer,
-                  selectedMonthBackgroundColor:
-                  CustomMaterialThemeColorConstant
-                      .dark.primaryContainer,
-                  selectedMonthTextColor: CustomMaterialThemeColorConstant
-                      .dark.onPrimaryContainer,
-                  unselectedMonthTextColor:
-                  CustomMaterialThemeColorConstant.dark.onSecondary,
-                ).then((date) {
-                  if (date != null) {
-                    setState(() {
-                      selectedDate = date;
-                      if (kDebugMode) {
-                        print(
-                            "Selected Date is: ${DateFormat(
-                                "dd.MM.yyyy hh:mm", 'de').format(
-                                selectedDate!)}");
+              onTap: () => {
+                    showMonthPicker(
+                      context: context,
+                      firstDate: DateTime(DateTime.now().year - 1, 5),
+                      lastDate: DateTime(DateTime.now().year + 1, 9),
+                      initialDate: selectedDate ?? widget.initialDate,
+                      headerColor: CustomMaterialThemeColorConstant
+                          .dark.primaryContainer,
+                      headerTextColor: CustomMaterialThemeColorConstant
+                          .dark.onPrimaryContainer,
+                      selectedMonthBackgroundColor:
+                          CustomMaterialThemeColorConstant
+                              .dark.primaryContainer,
+                      selectedMonthTextColor: CustomMaterialThemeColorConstant
+                          .dark.onPrimaryContainer,
+                      unselectedMonthTextColor:
+                          CustomMaterialThemeColorConstant.dark.onSecondary,
+                    ).then((date) {
+                      if (date != null) {
+                        setState(() {
+                          selectedDate = date;
+                          if (kDebugMode) {
+                            print(
+                                "Selected Date is: ${DateFormat("dd.MM.yyyy hh:mm", 'de').format(selectedDate!)}");
+                          }
+                        });
                       }
-                    });
-                  }
-                })
-              }),
+                    })
+                  }),
         ),
       ),
     );
@@ -252,7 +269,7 @@ class _BudgetCategoryScreenState extends State<BudgetCategoryScreen> {
     return Padding(
       padding: getPadding(left: 20, right: 20, bottom: 10, top: 20),
       child: FutureBuilder(
-        future: getUsedBudgetPerCategory(widget.categoryRef, selectedDate!),
+        future: getUsedBudgetPerCategory(widget.category.docRef, selectedDate!),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Text("${snapshot.error}");
@@ -267,10 +284,7 @@ class _BudgetCategoryScreenState extends State<BudgetCategoryScreen> {
                     }
                   } else if (snapshot.hasData) {
                     totalBudget = snapshot.data!;
-                    double width = MediaQuery
-                        .of(context)
-                        .size
-                        .width - 60;
+                    double width = MediaQuery.of(context).size.width - 60;
                     double usedBudgetWidth = width * usedBudget / totalBudget;
                     double restBudgetWidth = width - usedBudgetWidth;
                     return Column(
@@ -311,9 +325,7 @@ class _BudgetCategoryScreenState extends State<BudgetCategoryScreen> {
                                   fontSize: 30.0,
                                   fontWeight: FontWeight.bold,
                                 ),
-                                "${usedBudget.toStringAsFixed(
-                                    2)}€   /   ${totalBudget.toStringAsFixed(
-                                    2)}€"),
+                                "${usedBudget.toStringAsFixed(2)}€   /   ${totalBudget.toStringAsFixed(2)}€"),
                           ),
                         )
                       ],
