@@ -69,152 +69,62 @@ class _TasksScreenState extends State<TasksScreen> {
   }
 
   Widget _buildSingleTask(int index, List<Task> taskList) {
-    if(index == taskList.length - 1) {
-      return GestureDetector(
-        onTap: () {
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => TaskDetailScreen()));
-        },
-        child: Column(
-          children: [
-            SingleChildScrollView(
-              child: Row(
-                children: [
-                  Transform.scale(
-                    scale: 1.3,
-                    child: Checkbox(
-                      side: BorderSide(
-                          color: CustomMaterialThemeColorConstant.dark.secondary,
-                          width: 1.5
-                      ),
-                      shape: const CircleBorder(),
-                      checkColor: Colors.white,
-                      activeColor: CustomMaterialThemeColorConstant.light.primary,
-                      value: taskList[index].done,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          taskList[index].done = !taskList[index].done;
-                        });
-                      },
-                    ),
-                  ),
-                  Text(
-                    taskList[index].name,
-                    style: taskList[index].done
-                        ? const TextStyle(
-                      fontSize: 20,
+    return Card(
+      color: CustomMaterialThemeColorConstant.dark.surface5,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ListTile(
+            title: Text(
+              taskList[index].name,
+              style: taskList[index].done
+                  ? TextStyle(
                       decoration: TextDecoration.lineThrough,
-                      color: Colors.white,
-                    )
-                        : const TextStyle(
+                      decorationThickness: 3,
                       fontSize: 20,
-                      color: Colors.white,
+                      color: CustomMaterialThemeColorConstant.dark.onSurface,
+                    )
+                  : TextStyle(
+                      fontSize: 20,
+                      color: CustomMaterialThemeColorConstant.dark.onSurface,
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(120.0, 15.0, 10.0, 10.0),
-                    child: Column(
-                      children: [
-                        Text(
-                          " ${DateFormat("dd.MM.yyyy").format(taskList[index].dueDate)}",
-                          style: const TextStyle(
-                            fontSize: 16,
-                            color: Colors.white,
-                          ),
-                        ),
-                        Text(
-                          taskList[index].description,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
+            ),
+            subtitle: Text(
+              taskList[index].description,
+              style: TextStyle(
+                  fontSize: 16,
+                  color: CustomMaterialThemeColorConstant.dark.onSurface),
+            ),
+            trailing: Text(
+              " ${DateFormat("dd.MM.yyyy").format(taskList[index].dueDate)}",
+              style: TextStyle(
+                  fontSize: 16,
+                  color: CustomMaterialThemeColorConstant.dark.onSurface),
+            ),
+            leading: Transform.scale(
+              scale: 1.3,
+              child: Checkbox(
+                side: BorderSide(
+                    color: CustomMaterialThemeColorConstant.dark.secondary,
+                    width: 1.5),
+                shape: const CircleBorder(),
+                checkColor: Colors.white,
+                activeColor: CustomMaterialThemeColorConstant.light.primary,
+                value: taskList[index].done,
+                onChanged: (bool? value) {
+                  setState(() {
+                    taskList[index].done = !taskList[index].done;
+                  });
+                },
               ),
             ),
-          ],
-        ),
-      );
-    } else {
-      return GestureDetector(
-        onTap: () {
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => TaskDetailScreen()));
-        },
-        child: Column(
-          children: [
-            SingleChildScrollView(
-              child: Row(
-                children: [
-                  Transform.scale(
-                    scale: 1.3,
-                    child: Checkbox(
-                      side: BorderSide(
-                          color: CustomMaterialThemeColorConstant.dark.secondary,
-                          width: 1.5
-                      ),
-                      shape: const CircleBorder(),
-                      checkColor: Colors.white,
-                      activeColor: CustomMaterialThemeColorConstant.light.primary,
-                      value: taskList[index].done,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          taskList[index].done = !taskList[index].done;
-                        });
-                      },
-                    ),
-                  ),
-                  Text(
-                    taskList[index].name,
-                    style: taskList[index].done
-                        ? const TextStyle(
-                      fontSize: 20,
-                      decoration: TextDecoration.lineThrough,
-                      color: Colors.white,
-                    )
-                        : const TextStyle(
-                      fontSize: 20,
-                      color: Colors.white,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(120.0, 15.0, 10.0, 10.0),
-                    child: SizedBox(
-                      height: 47,
-                      child: Column(
-                        children: [
-                          Text(
-                            " ${DateFormat("dd.MM.yyyy").format(taskList[index].dueDate)}",
-                            style: const TextStyle(
-                              fontSize: 16,
-                              color: Colors.white,
-                            ),
-                          ),
-                          Text(
-                            taskList[index].description,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ),
-            Container(
-              width: double.infinity,
-              height: 2,
-              color: CustomMaterialThemeColorConstant.dark.secondary,
-            ),
-          ],
-        ),
-      );
-    }
+            onTap: () {
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => TaskDetailScreen()));
+            },
+          ),
+        ],
+      ),
+    );
   }
 }

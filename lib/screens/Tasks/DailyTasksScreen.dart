@@ -70,121 +70,54 @@ class _DailyTasksScreenState extends State<DailyTasksScreen> {
     );
   }
 
-  //TODO fix size of cards
   Widget _buildSingleTask(int index, List<Task> taskList) {
-    if (index == taskList.length - 1) {
-      return GestureDetector(
-        onTap: () {
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => TaskDetailScreen()));
-        },
-        child: Column(
-          children: [
-            SingleChildScrollView(
-              child: Row(
-                children: [
-                  Transform.scale(
-                    scale: 1.3,
-                    child: Checkbox(
-                      side: BorderSide(
-                        color: CustomMaterialThemeColorConstant.dark.secondary,
-                        width: 1.5
-                      ),
-                      shape: const CircleBorder(),
-                      checkColor: Colors.white,
-                      activeColor: CustomMaterialThemeColorConstant.light.primary,
-                      value: taskList[index].done,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          taskList[index].done = !taskList[index].done;
-                        });
-                      },
-                    ),
-                  ),
-                  Text(
-                    taskList[index].name,
-                    style: taskList[index].done
-                        ? const TextStyle(
-                      fontSize: 20,
-                      decoration: TextDecoration.lineThrough,
-                      color: Colors.white,
-                    )
-                        : const TextStyle(
-                      fontSize: 20,
-                      color: Colors.white,
-                    ),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.fromLTRB(120.0, 15.0, 10.0, 10.0),
-                    child: SizedBox(
-                      height: 47,
-                    ),
-                  ),
-                ],
+    return Card(
+      color: CustomMaterialThemeColorConstant.dark.surface5,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0.0, 8.0, 8.0, 8.0),
+            child: ListTile(
+              title: Text(
+                taskList[index].name,
+                style: taskList[index].done
+                    ? TextStyle(
+                  decoration: TextDecoration.lineThrough,
+                  decorationThickness: 3,
+                  fontSize: 20,
+                  color: CustomMaterialThemeColorConstant.dark.onSurface,
+                )
+                    : TextStyle(
+                  fontSize: 20,
+                  color: CustomMaterialThemeColorConstant.dark.onSurface,
+                ),
               ),
-            ),
-          ],
-        ),
-      );
-    } else {
-      return GestureDetector(
-        onTap: () {
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => TaskDetailScreen()));
-        },
-        child: Column(
-          children: [
-            SingleChildScrollView(
-              child: Row(
-                children: [
-                  Transform.scale(
-                    scale: 1.3,
-                    child: Checkbox(
-                      side: BorderSide(
-                          color: CustomMaterialThemeColorConstant.dark.secondary,
-                          width: 1.5
-                      ),
-                      shape: const CircleBorder(),
-                      checkColor: Colors.white,
-                      activeColor: CustomMaterialThemeColorConstant.light.primary,
-                      value: taskList[index].done,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          taskList[index].done = !taskList[index].done;
-                        });
-                      },
-                    ),
-                  ),
-                  Text(
-                    taskList[index].name,
-                    style: taskList[index].done
-                        ? const TextStyle(
-                      fontSize: 20,
-                      decoration: TextDecoration.lineThrough,
-                      color: Colors.white,
-                    )
-                        : const TextStyle(
-                      fontSize: 20,
-                      color: Colors.white,
-                    ),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.fromLTRB(120.0, 15.0, 10.0, 10.0),
-                    child: SizedBox(
-                      height: 47,
-                    ),
-                  ),
-                ],
+              leading: Transform.scale(
+                scale: 1.3,
+                child: Checkbox(
+                  side: BorderSide(
+                      color: CustomMaterialThemeColorConstant.dark.secondary,
+                      width: 1.5),
+                  shape: const CircleBorder(),
+                  checkColor: Colors.white,
+                  activeColor: CustomMaterialThemeColorConstant.light.primary,
+                  value: taskList[index].done,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      taskList[index].done = !taskList[index].done;
+                    });
+                  },
+                ),
               ),
+              onTap: () {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => TaskDetailScreen()));
+              },
             ),
-            Container(
-              width: double.infinity,
-              height: 2,
-              color: CustomMaterialThemeColorConstant.dark.secondary,
-            ),
-          ],
-        ),
-      );
-    }
+          ),
+        ],
+      ),
+    );
   }
 }
