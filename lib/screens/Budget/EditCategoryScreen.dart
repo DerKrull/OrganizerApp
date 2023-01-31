@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:organizer_app/screens/Budget/BudgetCategoryScreen.dart';
 import 'package:organizer_app/widgets/CustomTextField.dart';
 
 import '../../core/app_export.dart';
@@ -12,10 +13,9 @@ import '../../widgets/ThreePointPopUpMenu.dart';
 
 
 class EditCategoryScreen extends StatefulWidget {
-  const EditCategoryScreen({Key? key,required this.categoryRef,required this.initialName})
+  EditCategoryScreen({Key? key, required this.category})
       : super(key: key);
-  final String categoryRef;
-  final String initialName;
+  BudgetCategory category;
 
   @override
   State<EditCategoryScreen> createState() => _EditCategoryScreenState();
@@ -32,7 +32,7 @@ class _EditCategoryScreenState extends State<EditCategoryScreen> {
   @override
   void initState() {
     super.initState();
-    categoryName = widget.initialName;
+    categoryName = widget.category.name;
     nameController.addListener(() {
       categoryName = nameController.text;
     });
@@ -70,7 +70,7 @@ class _EditCategoryScreenState extends State<EditCategoryScreen> {
           ),
           backgroundColor: CustomMaterialThemeColorConstant.dark.surface1,
           body: FutureBuilder<BudgetCategory>(
-              future: getBudgetCategory(widget.categoryRef),
+              future: getBudgetCategory(widget.category.docRef),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   if (kDebugMode) {
@@ -128,12 +128,15 @@ class _EditCategoryScreenState extends State<EditCategoryScreen> {
                             SaveButton(onPressed: () {
                               if (categoryName != null &&
                                   selectedColor != null) {
+                                widget.category.name = categoryName!;
+                                widget.category.description = categoryDescription;
+                                widget.category.color = selectedColor!.value;
                                 updateCategory(
-                                    docRef: widget.categoryRef,
+                                    docRef: widget.category.docRef,
                                     categoryName: categoryName!,
                                     categoryDescription: categoryDescription,
                                     color: selectedColor!.value);
-                                Navigator.of(context).pop(context);
+                                Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => BudgetCategoryScreen(initialDate: DateTime.now(), category: widget.category)));
                               } else {
                                 if (kDebugMode) {
                                   print("Values are null");

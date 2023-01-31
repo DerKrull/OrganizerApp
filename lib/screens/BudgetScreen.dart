@@ -16,7 +16,6 @@ import 'Budget/BudgetCategoryScreen.dart';
 
 
 class BudgetScreen extends StatefulWidget {
-  //final DateTime initialDate = DateTime(DateTime.now().year, DateTime.now().month, 1, 12, 00);
   final DateTime initialDate = DateTime.now();
 
   BudgetScreen({Key? key}) : super(key: key);
@@ -139,8 +138,6 @@ class _BudgetScreenState extends State<BudgetScreen> {
                           MaterialPageRoute(
                               builder: (context) => BudgetCategoryScreen(
                                     category: entry,
-                                    categoryRef: entry.docRef,
-                                    categoryName: entry.name,
                                     initialDate: selectedDate!,
                                   )));
                     },

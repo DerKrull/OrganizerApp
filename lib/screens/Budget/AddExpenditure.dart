@@ -85,13 +85,6 @@ class AddExpenditure extends StatelessWidget {
                         dateController.clear();
                         ddcController.clear();
                         Navigator.of(context).pop();
-                      //   print("""This is your data:
-                      //   title:        ${title}
-                      //   category:     ${category.name}
-                      //   value:        ${value}
-                      //   date:         ${date}
-                      //   description:  ${description}
-                      // """);
                       } else {
                         print("Values are empty");
                       }
