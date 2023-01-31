@@ -42,7 +42,7 @@ class _TasksScreenState extends State<TasksScreen> {
         mainPage: MainPages.TaskScreen,
         isMainPage: false,
       ),
-      backgroundColor: CustomMaterialThemeColorConstant.dark.surface1,
+      backgroundColor: CustomMaterialThemeColorConstant.dark.surface5,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context)
