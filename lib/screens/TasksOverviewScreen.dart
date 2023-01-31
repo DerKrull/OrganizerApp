@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:organizer_app/core/app_export.dart';
+import 'package:organizer_app/screens/Tasks/DailyTasksScreen.dart';
 import 'package:organizer_app/screens/Tasks/TasksScreen.dart';
 import 'package:organizer_app/widgets/CustomBottomAppBar.dart';
 import 'package:organizer_app/widgets/CustomTopAppBarMainPage.dart';
@@ -69,7 +70,7 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
                 child: GestureDetector(
                   onTap: () {
                     Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => TasksScreen()));
+                        MaterialPageRoute(builder: (context) => DailyTasksScreen()));
                   },
                   child: Column(
                     children: [
@@ -208,6 +209,10 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
           Transform.scale(
             scale: 1.3,
             child: Checkbox(
+              side: BorderSide(
+                  color: CustomMaterialThemeColorConstant.dark.secondary,
+                  width: 1.5
+              ),
               shape: const CircleBorder(),
               checkColor: Colors.white,
               activeColor: CustomMaterialThemeColorConstant.light.primary,
@@ -240,6 +245,10 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
           Transform.scale(
             scale: 1.3,
             child: Checkbox(
+              side: BorderSide(
+                  color: CustomMaterialThemeColorConstant.dark.secondary,
+                  width: 1.5
+              ),
               shape: const CircleBorder(),
               checkColor: Colors.white,
               activeColor: CustomMaterialThemeColorConstant.light.primary,
