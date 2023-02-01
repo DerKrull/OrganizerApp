@@ -8,6 +8,7 @@ import 'package:organizer_app/widgets/CustomBottomAppBar.dart';
 import 'package:organizer_app/widgets/CustomTopAppBarMainPage.dart';
 import 'package:organizer_app/widgets/ThreePointPopUpMenu.dart';
 
+import '../core/FireStoreFutures/GetTasksFutures.dart';
 import '../core/model/Task.dart';
 import 'Tasks/AddTaskScreen.dart';
 
@@ -307,18 +308,45 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
               },
             ),
           ),
-          Text(
-            isCheckedList[index].name,
-            style: isCheckedList[index].done
-                ? const TextStyle(
-                    fontSize: 20,
-                    decoration: TextDecoration.lineThrough,
-                    color: Colors.white,
-                  )
-                : const TextStyle(
-                    fontSize: 20,
-                    color: Colors.white,
-                  ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(
+                height: 12,
+              ),
+              Text(
+                isCheckedList[index].name,
+                style: isCheckedList[index].done
+                    ? const TextStyle(
+                        fontSize: 20,
+                        decoration: TextDecoration.lineThrough,
+                        decorationThickness: 3,
+                        color: Colors.white,
+                      )
+                    : const TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                      ),
+              ),
+              FutureBuilder(
+                future:
+                    getTaskCategoryName(isCheckedList[index].taskCategory.id),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return Text(
+                      "${snapshot.data}",
+                      style: TextStyle(
+                          color:
+                              CustomMaterialThemeColorConstant.dark.onSurface,
+                          fontSize: 16),
+                    );
+                  } else if (snapshot.hasError) {
+                    return Text("${snapshot.error}");
+                  }
+                  return const CircularProgressIndicator();
+                },
+              ),
+            ],
           ),
         ],
       );
@@ -342,22 +370,50 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
               },
             ),
           ),
-          Text(
-            isCheckedList[index].name,
-            style: isCheckedList[index].done
-                ? const TextStyle(
-                    fontSize: 20,
-                    decoration: TextDecoration.lineThrough,
-                    color: Colors.white,
-                  )
-                : const TextStyle(
-                    fontSize: 20,
-                    color: Colors.white,
-                  ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(
+                height: 12,
+              ),
+              Text(
+                isCheckedList[index].name,
+                style: isCheckedList[index].done
+                    ? const TextStyle(
+                  fontSize: 20,
+                  decoration: TextDecoration.lineThrough,
+                  decorationThickness: 3,
+                  color: Colors.white,
+                )
+                    : const TextStyle(
+                  fontSize: 20,
+                  color: Colors.white,
+                ),
+              ),
+              FutureBuilder(
+                future:
+                getTaskCategoryName(isCheckedList[index].taskCategory.id),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return Text(
+                      "${snapshot.data}",
+                      style: TextStyle(
+                          color:
+                          CustomMaterialThemeColorConstant.dark.onSurface,
+                          fontSize: 16),
+                    );
+                  } else if (snapshot.hasError) {
+                    return Text("${snapshot.error}");
+                  }
+                  return const CircularProgressIndicator();
+                },
+              ),
+            ],
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(120.0, 15.0, 10.0, 10.0),
+            padding: const EdgeInsets.fromLTRB(130.0, 15.0, 10.0, 10.0),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
                   " ${DateFormat("dd.MM.yyyy").format(isCheckedList[index].dueDate)}",

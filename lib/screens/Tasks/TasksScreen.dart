@@ -5,6 +5,7 @@ import 'package:organizer_app/core/app_export.dart';
 import 'package:organizer_app/screens/Tasks/TaskDetailScreen.dart';
 import 'package:organizer_app/widgets/CustomBottomAppBar.dart';
 
+import '../../core/FireStoreFutures/GetTasksFutures.dart';
 import '../../core/model/Task.dart';
 import '../../widgets/CustomTopAppBar.dart';
 import '../../widgets/ThreePointPopUpMenu.dart';
@@ -18,10 +19,11 @@ class TasksScreen extends StatefulWidget {
 }
 
 class _TasksScreenState extends State<TasksScreen> {
-
   Stream<List<Task>> tasksStream() {
     try {
-      return db.collection("task").where("isDaily", isEqualTo: false)
+      return db
+          .collection("task")
+          .where("isDaily", isEqualTo: false)
           .snapshots()
           .map((tasks) {
         final List<Task> dailyTasksFromFirestore = <Task>[];
@@ -63,29 +65,26 @@ class _TasksScreenState extends State<TasksScreen> {
       body: Column(
         children: [
           StreamBuilder(
-            stream: tasksStream(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return Expanded(
-                  child: ListView.builder(
-                      itemCount: snapshot.data!.length,
-                      itemBuilder: (context, index) {
-                        return _buildSingleTask(index, snapshot.data!);
-                      }),
-                );
-              } else if (snapshot.hasError) {
-                return Text("${snapshot.error}");
-              }
-              return const Center(child: CircularProgressIndicator());
-
-            }
-          )
+              stream: tasksStream(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return Expanded(
+                    child: ListView.builder(
+                        itemCount: snapshot.data!.length,
+                        itemBuilder: (context, index) {
+                          return _buildSingleTask(index, snapshot.data!);
+                        }),
+                  );
+                } else if (snapshot.hasError) {
+                  return Text("${snapshot.error}");
+                }
+                return const Center(child: CircularProgressIndicator());
+              })
         ],
       ),
     );
   }
 
-  //TODO: Add Category as subtitle and as trailing due date and meeting in a column
   Widget _buildSingleTask(int index, List<Task> taskList) {
     return Card(
       color: CustomMaterialThemeColorConstant.dark.surface5,
@@ -107,17 +106,41 @@ class _TasksScreenState extends State<TasksScreen> {
                       color: CustomMaterialThemeColorConstant.dark.onSurface,
                     ),
             ),
-            subtitle: Text(
-              taskList[index].description,
-              style: TextStyle(
-                  fontSize: 16,
-                  color: CustomMaterialThemeColorConstant.dark.onSurface),
+            subtitle: FutureBuilder(
+              future: getTaskCategoryName(taskList[index].taskCategory.id),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return Text(
+                    "${snapshot.data}",
+                    style: TextStyle(
+                        color: CustomMaterialThemeColorConstant.dark.onSurface,
+                        fontSize: 16),
+                  );
+                } else if (snapshot.hasError) {
+                  return Text("${snapshot.error}");
+                }
+                return const CircularProgressIndicator();
+              },
             ),
-            trailing: Text(
-              " ${DateFormat("dd.MM.yyyy").format(taskList[index].dueDate)}",
-              style: TextStyle(
-                  fontSize: 16,
-                  color: CustomMaterialThemeColorConstant.dark.onSurface),
+            trailing: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                const SizedBox(
+                  height: 5,
+                ),
+                Text(
+                  " ${DateFormat("dd.MM.yyyy").format(taskList[index].dueDate)}",
+                  style: TextStyle(
+                      fontSize: 16,
+                      color: CustomMaterialThemeColorConstant.dark.onSurface),
+                ),
+                Text(
+                  taskList[index].description,
+                  style: TextStyle(
+                      fontSize: 16,
+                      color: CustomMaterialThemeColorConstant.dark.onSurface),
+                ),
+              ],
             ),
             leading: Transform.scale(
               scale: 1.3,
