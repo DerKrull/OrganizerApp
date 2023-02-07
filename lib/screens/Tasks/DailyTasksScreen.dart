@@ -127,7 +127,7 @@ class _DailyTasksScreenState extends State<DailyTasksScreen> {
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return Text(
-                    "${snapshot.data}",
+                    "${snapshot.data?.name}",
                     style: TextStyle(
                         color: CustomMaterialThemeColorConstant.dark.onSurface,
                         fontSize: 16),

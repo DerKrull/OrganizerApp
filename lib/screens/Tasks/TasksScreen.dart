@@ -111,7 +111,7 @@ class _TasksScreenState extends State<TasksScreen> {
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return Text(
-                    "${snapshot.data}",
+                    "${snapshot.data?.name}",
                     style: TextStyle(
                         color: CustomMaterialThemeColorConstant.dark.onSurface,
                         fontSize: 16),
