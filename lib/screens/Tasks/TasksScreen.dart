@@ -7,6 +7,7 @@ import 'package:organizer_app/widgets/CustomBottomAppBar.dart';
 
 import '../../core/FireStoreFutures/GetTasksFutures.dart';
 import '../../core/model/Task.dart';
+import '../../core/model/TaskCategory.dart';
 import '../../widgets/CustomTopAppBar.dart';
 import '../../widgets/ThreePointPopUpMenu.dart';
 import 'AddTaskScreen.dart';
@@ -91,77 +92,77 @@ class _TasksScreenState extends State<TasksScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ListTile(
-            title: Text(
-              taskList[index].name,
-              style: taskList[index].done
-                  ? TextStyle(
+          FutureBuilder(
+            future: getTaskCategoryName(taskList[index].taskCategory.id),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return ListTile(
+                  title: Text(
+                    taskList[index].name,
+                    style: taskList[index].done
+                        ? TextStyle(
                       decoration: TextDecoration.lineThrough,
                       decorationThickness: 3,
                       fontSize: 20,
                       color: CustomMaterialThemeColorConstant.dark.onSurface,
                     )
-                  : TextStyle(
+                        : TextStyle(
                       fontSize: 20,
                       color: CustomMaterialThemeColorConstant.dark.onSurface,
                     ),
-            ),
-            subtitle: FutureBuilder(
-              future: getTaskCategoryName(taskList[index].taskCategory.id),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return Text(
-                    "${snapshot.data}",
+                  ),
+                  subtitle: Text(
+                    "${snapshot.data?.name}",
                     style: TextStyle(
                         color: CustomMaterialThemeColorConstant.dark.onSurface,
                         fontSize: 16),
-                  );
-                } else if (snapshot.hasError) {
-                  return Text("${snapshot.error}");
-                }
-                return const CircularProgressIndicator();
-              },
-            ),
-            trailing: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                const SizedBox(
-                  height: 5,
-                ),
-                Text(
-                  " ${DateFormat("dd.MM.yyyy").format(taskList[index].dueDate)}",
-                  style: TextStyle(
-                      fontSize: 16,
-                      color: CustomMaterialThemeColorConstant.dark.onSurface),
-                ),
-                Text(
-                  taskList[index].description,
-                  style: TextStyle(
-                      fontSize: 16,
-                      color: CustomMaterialThemeColorConstant.dark.onSurface),
-                ),
-              ],
-            ),
-            leading: Transform.scale(
-              scale: 1.3,
-              child: Checkbox(
-                side: BorderSide(
-                    color: CustomMaterialThemeColorConstant.dark.secondary,
-                    width: 1.5),
-                shape: const CircleBorder(),
-                checkColor: Colors.white,
-                activeColor: CustomMaterialThemeColorConstant.light.primary,
-                value: taskList[index].done,
-                onChanged: (bool? value) {
-                  setState(() {
-                    changeDone(taskList, index);
-                  });
-                },
-              ),
-            ),
-            onTap: () {
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => TaskDetailScreen()));
+                  ),
+                  trailing: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      Text(
+                        " ${DateFormat("dd.MM.yyyy").format(taskList[index].dueDate)}",
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: CustomMaterialThemeColorConstant.dark.onSurface),
+                      ),
+                      Text(
+                        taskList[index].description,
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: CustomMaterialThemeColorConstant.dark.onSurface),
+                      ),
+                    ],
+                  ),
+                  leading: Transform.scale(
+                    scale: 1.3,
+                    child: Checkbox(
+                      side: BorderSide(
+                          color: CustomMaterialThemeColorConstant.dark.secondary,
+                          width: 1.5),
+                      shape: const CircleBorder(),
+                      checkColor: Colors.white,
+                      activeColor: CustomMaterialThemeColorConstant.light.primary,
+                      value: taskList[index].done,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          changeDone(taskList, index, snapshot.data!);
+                        });
+                      },
+                    ),
+                  ),
+                  onTap: () {
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => TaskDetailScreen()));
+                  },
+                );
+              } else if (snapshot.hasError) {
+                return Text("${snapshot.error}");
+              }
+              return const CircularProgressIndicator();
             },
           ),
         ],
@@ -169,7 +170,7 @@ class _TasksScreenState extends State<TasksScreen> {
     );
   }
 
-  void changeDone(List<Task> isCheckedList, int index) {
+  void changeDone(List<Task> isCheckedList, int index, TaskCategory taskCategory) {
     isCheckedList[index].done = !isCheckedList[index].done;
     updateTask(
         docRef: isCheckedList[index].taskRef,
@@ -178,6 +179,6 @@ class _TasksScreenState extends State<TasksScreen> {
         dueDate: isCheckedList[index].dueDate,
         isDaily: isCheckedList[index].isDaily,
         name: isCheckedList[index].name,
-        taskCategory: isCheckedList[index].taskCategory);
+        taskCategory: taskCategory);
   }
 }

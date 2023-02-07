@@ -1,19 +1,16 @@
 
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:organizer_app/core/model/TaskCategory.dart';
 
 import '../app_export.dart';
 import 'FirebaseInstance.dart';
 
-Future<String?> getTaskCategoryName(
+Future<TaskCategory> getTaskCategoryName(
     String categoryRef) async {
-  DocumentReference categoryDocRef =
-  db.collection("taskCategory").doc(categoryRef);
-  var queryResult = await categoryDocRef.get();
-  String name = queryResult.get("name");
+  var queryResult = await db.collection("taskCategory").doc(categoryRef).get();
+  TaskCategory result = TaskCategory.fromDocumentSnapshot(doc: queryResult);
   if (kDebugMode) {
-    print("### Future getTaskCategoryName: $name");
+    print("### Future getTaskCategoryName: $result");
   }
-  return name;
+  return result;
 }
