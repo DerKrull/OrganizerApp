@@ -8,6 +8,7 @@ import 'package:organizer_app/widgets/CustomBottomAppBar.dart';
 import 'package:organizer_app/widgets/CustomTopAppBarMainPage.dart';
 import 'package:organizer_app/widgets/ThreePointPopUpMenu.dart';
 
+import '../core/FireStoreFutures/GetTasksFutures.dart';
 import '../core/model/Task.dart';
 import 'Tasks/AddTaskScreen.dart';
 
@@ -21,17 +22,41 @@ class TaskOverviewScreen extends StatefulWidget {
 }
 
 class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
-  final List<Task> dailyTaskList = <Task>[
-    Task(true, "Daily Task 1", DateTime(0), "", false),
-    Task(true, "Daily Task 2", DateTime(0), "", false),
-    Task(true, "Daily Task 3", DateTime(0), "", false),
-  ];
+  Stream<List<Task>> dailyTasksStream() {
+    try {
+      return db
+          .collection("task")
+          .where("isDaily", isEqualTo: true)
+          .snapshots()
+          .map((tasks) {
+        final List<Task> dailyTasksFromFirestore = <Task>[];
+        for (final DocumentSnapshot<Map<String, dynamic>> doc in tasks.docs) {
+          dailyTasksFromFirestore.add(Task.fromDocumentSnapshot(doc: doc));
+        }
+        return dailyTasksFromFirestore;
+      });
+    } catch (e) {
+      rethrow;
+    }
+  }
 
-  final List<Task> notDailyTaskList = <Task>[
-    Task(false, "Task 1", DateTime(2022, 1, 20), "Meeting 1", false),
-    Task(false, "Task 2", DateTime(2022, 1, 21), "Meeting 2", false),
-    Task(false, "Task 3", DateTime(2022, 1, 22), "Meeting 3", false),
-  ];
+  Stream<List<Task>> notDailyTasksStream() {
+    try {
+      return db
+          .collection("task")
+          .where("isDaily", isEqualTo: false)
+          .snapshots()
+          .map((tasks) {
+        final List<Task> dailyTasksFromFirestore = <Task>[];
+        for (final DocumentSnapshot<Map<String, dynamic>> doc in tasks.docs) {
+          dailyTasksFromFirestore.add(Task.fromDocumentSnapshot(doc: doc));
+        }
+        return dailyTasksFromFirestore;
+      });
+    } catch (e) {
+      rethrow;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,8 +94,8 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
                 padding: const EdgeInsets.only(top: 20.0),
                 child: GestureDetector(
                   onTap: () {
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => DailyTasksScreen()));
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => DailyTasksScreen()));
                   },
                   child: Column(
                     children: [
@@ -94,12 +119,23 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
                               ),
                             ),
                           )),
-                      ListView.builder(
-                          shrinkWrap: true,
-                          physics: const ClampingScrollPhysics(),
-                          itemCount: 3,
-                          itemBuilder: (context, index) {
-                            return _buildSingleTask(index, dailyTaskList);
+                      StreamBuilder(
+                          stream: dailyTasksStream(),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              return ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: const ClampingScrollPhysics(),
+                                  itemCount: 3,
+                                  itemBuilder: (context, index) {
+                                    return _buildSingleTask(
+                                        index, snapshot.data!);
+                                  });
+                            } else if (snapshot.hasError) {
+                              Text("${snapshot.error}");
+                            }
+                            return const Center(
+                                child: CircularProgressIndicator());
                           })
                     ],
                   ),
@@ -137,12 +173,23 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
                               ),
                             ),
                           )),
-                      ListView.builder(
-                          shrinkWrap: true,
-                          physics: const ClampingScrollPhysics(),
-                          itemCount: 3,
-                          itemBuilder: (context, index) {
-                            return _buildSingleTask(index, notDailyTaskList);
+                      StreamBuilder(
+                          stream: notDailyTasksStream(),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              return ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: const ClampingScrollPhysics(),
+                                  itemCount: 3,
+                                  itemBuilder: (context, index) {
+                                    return _buildSingleTask(
+                                        index, snapshot.data!);
+                                  });
+                            } else if (snapshot.hasError) {
+                              Text("${snapshot.error}");
+                            }
+                            return const Center(
+                                child: CircularProgressIndicator());
                           })
                     ],
                   ),
@@ -161,7 +208,45 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
     );
   }
 
-  Widget _buildSingleTask(int index, List isCheckedList) {
+  Widget _buildSingleTask(int index, List<Task> isCheckedList) {
+    if (index >= isCheckedList.length) {
+      if (index == 2) {
+        return Column(
+          children: [
+            Container(
+              width: MediaQuery.of(context).size.width - 20.0,
+              height: 2,
+              color: Colors.black,
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width - 20.0,
+              height: 75,
+              decoration: BoxDecoration(
+                color: CustomMaterialThemeColorConstant.dark.surface5,
+                borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(30.0),
+                    bottomRight: Radius.circular(30.0)),
+              ),
+            ),
+          ],
+        );
+      } else {
+        return Column(
+          children: [
+            Container(
+              width: MediaQuery.of(context).size.width - 20.0,
+              height: 2,
+              color: Colors.black,
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width - 20.0,
+              height: 75,
+              color: CustomMaterialThemeColorConstant.dark.surface5,
+            ),
+          ],
+        );
+      }
+    }
     if (index == 2) {
       return Column(
         children: [
@@ -202,7 +287,7 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
     }
   }
 
-  Row _createSingleTask(List<dynamic> isCheckedList, int index) {
+  Row _createSingleTask(List<Task> isCheckedList, int index) {
     if (isCheckedList[index].isDaily) {
       return Row(
         children: [
@@ -211,31 +296,57 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
             child: Checkbox(
               side: BorderSide(
                   color: CustomMaterialThemeColorConstant.dark.secondary,
-                  width: 1.5
-              ),
+                  width: 1.5),
               shape: const CircleBorder(),
               checkColor: Colors.white,
               activeColor: CustomMaterialThemeColorConstant.light.primary,
               value: isCheckedList[index].done,
               onChanged: (bool? value) {
                 setState(() {
-                  isCheckedList[index].done = !isCheckedList[index].done;
+                  changeDone(isCheckedList, index);
                 });
               },
             ),
           ),
-          Text(
-            isCheckedList[index].name,
-            style: isCheckedList[index].done
-                ? const TextStyle(
-                    fontSize: 20,
-                    decoration: TextDecoration.lineThrough,
-                    color: Colors.white,
-                  )
-                : const TextStyle(
-                    fontSize: 20,
-                    color: Colors.white,
-                  ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(
+                height: 12,
+              ),
+              Text(
+                isCheckedList[index].name,
+                style: isCheckedList[index].done
+                    ? const TextStyle(
+                        fontSize: 20,
+                        decoration: TextDecoration.lineThrough,
+                        decorationThickness: 3,
+                        color: Colors.white,
+                      )
+                    : const TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                      ),
+              ),
+              FutureBuilder(
+                future:
+                    getTaskCategoryName(isCheckedList[index].taskCategory.id),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return Text(
+                      "${snapshot.data}",
+                      style: TextStyle(
+                          color:
+                              CustomMaterialThemeColorConstant.dark.onSurface,
+                          fontSize: 16),
+                    );
+                  } else if (snapshot.hasError) {
+                    return Text("${snapshot.error}");
+                  }
+                  return const CircularProgressIndicator();
+                },
+              ),
+            ],
           ),
         ],
       );
@@ -247,35 +358,62 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
             child: Checkbox(
               side: BorderSide(
                   color: CustomMaterialThemeColorConstant.dark.secondary,
-                  width: 1.5
-              ),
+                  width: 1.5),
               shape: const CircleBorder(),
               checkColor: Colors.white,
               activeColor: CustomMaterialThemeColorConstant.light.primary,
               value: isCheckedList[index].done,
               onChanged: (bool? value) {
                 setState(() {
-                  isCheckedList[index].done = !isCheckedList[index].done;
+                  changeDone(isCheckedList, index);
                 });
               },
             ),
           ),
-          Text(
-            isCheckedList[index].name,
-            style: isCheckedList[index].done
-                ? const TextStyle(
-                    fontSize: 20,
-                    decoration: TextDecoration.lineThrough,
-                    color: Colors.white,
-                  )
-                : const TextStyle(
-                    fontSize: 20,
-                    color: Colors.white,
-                  ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(
+                height: 12,
+              ),
+              Text(
+                isCheckedList[index].name,
+                style: isCheckedList[index].done
+                    ? const TextStyle(
+                  fontSize: 20,
+                  decoration: TextDecoration.lineThrough,
+                  decorationThickness: 3,
+                  color: Colors.white,
+                )
+                    : const TextStyle(
+                  fontSize: 20,
+                  color: Colors.white,
+                ),
+              ),
+              FutureBuilder(
+                future:
+                getTaskCategoryName(isCheckedList[index].taskCategory.id),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return Text(
+                      "${snapshot.data}",
+                      style: TextStyle(
+                          color:
+                          CustomMaterialThemeColorConstant.dark.onSurface,
+                          fontSize: 16),
+                    );
+                  } else if (snapshot.hasError) {
+                    return Text("${snapshot.error}");
+                  }
+                  return const CircularProgressIndicator();
+                },
+              ),
+            ],
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(120.0, 15.0, 10.0, 10.0),
+            padding: const EdgeInsets.fromLTRB(130.0, 15.0, 10.0, 10.0),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
                   " ${DateFormat("dd.MM.yyyy").format(isCheckedList[index].dueDate)}",
@@ -297,5 +435,17 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
         ],
       );
     }
+  }
+
+  void changeDone(List<Task> isCheckedList, int index) {
+    isCheckedList[index].done = !isCheckedList[index].done;
+    updateTask(
+        docRef: isCheckedList[index].taskRef,
+        description: isCheckedList[index].description,
+        done: isCheckedList[index].done,
+        dueDate: isCheckedList[index].dueDate,
+        isDaily: isCheckedList[index].isDaily,
+        name: isCheckedList[index].name,
+        taskCategory: isCheckedList[index].taskCategory);
   }
 }

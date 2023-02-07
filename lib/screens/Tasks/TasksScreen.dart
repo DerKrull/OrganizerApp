@@ -1,9 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:organizer_app/core/app_export.dart';
 import 'package:organizer_app/screens/Tasks/TaskDetailScreen.dart';
 import 'package:organizer_app/widgets/CustomBottomAppBar.dart';
 
+import '../../core/FireStoreFutures/GetTasksFutures.dart';
 import '../../core/model/Task.dart';
 import '../../widgets/CustomTopAppBar.dart';
 import '../../widgets/ThreePointPopUpMenu.dart';
@@ -17,17 +19,23 @@ class TasksScreen extends StatefulWidget {
 }
 
 class _TasksScreenState extends State<TasksScreen> {
-  final List<Task> taskList = <Task>[
-    Task(false, "Task 1", DateTime(2022, 1, 20), "Meeting 1", false),
-    Task(false, "Task 2", DateTime(2022, 1, 21), "Meeting 2", false),
-    Task(false, "Task 3", DateTime(2022, 1, 22), "Meeting 3", false),
-    Task(false, "Task 3", DateTime(2022, 1, 22), "Meeting 3", false),
-    Task(false, "Task 3", DateTime(2022, 1, 22), "Meeting 3", false),
-    Task(false, "Task 3", DateTime(2022, 1, 22), "Meeting 3", false),
-    Task(false, "Task 3", DateTime(2022, 1, 22), "Meeting 3", false),
-    Task(false, "Task 3", DateTime(2022, 1, 22), "Meeting 3", false),
-    Task(false, "Task 3", DateTime(2022, 1, 22), "Meeting 3", false),
-  ];
+  Stream<List<Task>> tasksStream() {
+    try {
+      return db
+          .collection("task")
+          .where("isDaily", isEqualTo: false)
+          .snapshots()
+          .map((tasks) {
+        final List<Task> dailyTasksFromFirestore = <Task>[];
+        for (final DocumentSnapshot<Map<String, dynamic>> doc in tasks.docs) {
+          dailyTasksFromFirestore.add(Task.fromDocumentSnapshot(doc: doc));
+        }
+        return dailyTasksFromFirestore;
+      });
+    } catch (e) {
+      rethrow;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,165 +64,120 @@ class _TasksScreenState extends State<TasksScreen> {
       ),
       body: Column(
         children: [
-          Expanded(
-            child: ListView.builder(
-                itemCount: taskList.length,
-                itemBuilder: (context, index) {
-                  return _buildSingleTask(index, taskList);
-                }),
-          )
+          StreamBuilder(
+              stream: tasksStream(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return Expanded(
+                    child: ListView.builder(
+                        itemCount: snapshot.data!.length,
+                        itemBuilder: (context, index) {
+                          return _buildSingleTask(index, snapshot.data!);
+                        }),
+                  );
+                } else if (snapshot.hasError) {
+                  return Text("${snapshot.error}");
+                }
+                return const Center(child: CircularProgressIndicator());
+              })
         ],
       ),
     );
   }
 
   Widget _buildSingleTask(int index, List<Task> taskList) {
-    if(index == taskList.length - 1) {
-      return GestureDetector(
-        onTap: () {
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => TaskDetailScreen()));
-        },
-        child: Column(
-          children: [
-            SingleChildScrollView(
-              child: Row(
-                children: [
-                  Transform.scale(
-                    scale: 1.3,
-                    child: Checkbox(
-                      side: BorderSide(
-                          color: CustomMaterialThemeColorConstant.dark.secondary,
-                          width: 1.5
-                      ),
-                      shape: const CircleBorder(),
-                      checkColor: Colors.white,
-                      activeColor: CustomMaterialThemeColorConstant.light.primary,
-                      value: taskList[index].done,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          taskList[index].done = !taskList[index].done;
-                        });
-                      },
-                    ),
-                  ),
-                  Text(
-                    taskList[index].name,
-                    style: taskList[index].done
-                        ? const TextStyle(
-                      fontSize: 20,
+    return Card(
+      color: CustomMaterialThemeColorConstant.dark.surface5,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ListTile(
+            title: Text(
+              taskList[index].name,
+              style: taskList[index].done
+                  ? TextStyle(
                       decoration: TextDecoration.lineThrough,
-                      color: Colors.white,
-                    )
-                        : const TextStyle(
+                      decorationThickness: 3,
                       fontSize: 20,
-                      color: Colors.white,
+                      color: CustomMaterialThemeColorConstant.dark.onSurface,
+                    )
+                  : TextStyle(
+                      fontSize: 20,
+                      color: CustomMaterialThemeColorConstant.dark.onSurface,
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(120.0, 15.0, 10.0, 10.0),
-                    child: Column(
-                      children: [
-                        Text(
-                          " ${DateFormat("dd.MM.yyyy").format(taskList[index].dueDate)}",
-                          style: const TextStyle(
-                            fontSize: 16,
-                            color: Colors.white,
-                          ),
-                        ),
-                        Text(
-                          taskList[index].description,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
+            ),
+            subtitle: FutureBuilder(
+              future: getTaskCategoryName(taskList[index].taskCategory.id),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return Text(
+                    "${snapshot.data}",
+                    style: TextStyle(
+                        color: CustomMaterialThemeColorConstant.dark.onSurface,
+                        fontSize: 16),
+                  );
+                } else if (snapshot.hasError) {
+                  return Text("${snapshot.error}");
+                }
+                return const CircularProgressIndicator();
+              },
+            ),
+            trailing: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                const SizedBox(
+                  height: 5,
+                ),
+                Text(
+                  " ${DateFormat("dd.MM.yyyy").format(taskList[index].dueDate)}",
+                  style: TextStyle(
+                      fontSize: 16,
+                      color: CustomMaterialThemeColorConstant.dark.onSurface),
+                ),
+                Text(
+                  taskList[index].description,
+                  style: TextStyle(
+                      fontSize: 16,
+                      color: CustomMaterialThemeColorConstant.dark.onSurface),
+                ),
+              ],
+            ),
+            leading: Transform.scale(
+              scale: 1.3,
+              child: Checkbox(
+                side: BorderSide(
+                    color: CustomMaterialThemeColorConstant.dark.secondary,
+                    width: 1.5),
+                shape: const CircleBorder(),
+                checkColor: Colors.white,
+                activeColor: CustomMaterialThemeColorConstant.light.primary,
+                value: taskList[index].done,
+                onChanged: (bool? value) {
+                  setState(() {
+                    changeDone(taskList, index);
+                  });
+                },
               ),
             ),
-          ],
-        ),
-      );
-    } else {
-      return GestureDetector(
-        onTap: () {
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => TaskDetailScreen()));
-        },
-        child: Column(
-          children: [
-            SingleChildScrollView(
-              child: Row(
-                children: [
-                  Transform.scale(
-                    scale: 1.3,
-                    child: Checkbox(
-                      side: BorderSide(
-                          color: CustomMaterialThemeColorConstant.dark.secondary,
-                          width: 1.5
-                      ),
-                      shape: const CircleBorder(),
-                      checkColor: Colors.white,
-                      activeColor: CustomMaterialThemeColorConstant.light.primary,
-                      value: taskList[index].done,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          taskList[index].done = !taskList[index].done;
-                        });
-                      },
-                    ),
-                  ),
-                  Text(
-                    taskList[index].name,
-                    style: taskList[index].done
-                        ? const TextStyle(
-                      fontSize: 20,
-                      decoration: TextDecoration.lineThrough,
-                      color: Colors.white,
-                    )
-                        : const TextStyle(
-                      fontSize: 20,
-                      color: Colors.white,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(120.0, 15.0, 10.0, 10.0),
-                    child: SizedBox(
-                      height: 47,
-                      child: Column(
-                        children: [
-                          Text(
-                            " ${DateFormat("dd.MM.yyyy").format(taskList[index].dueDate)}",
-                            style: const TextStyle(
-                              fontSize: 16,
-                              color: Colors.white,
-                            ),
-                          ),
-                          Text(
-                            taskList[index].description,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ),
-            Container(
-              width: double.infinity,
-              height: 2,
-              color: CustomMaterialThemeColorConstant.dark.secondary,
-            ),
-          ],
-        ),
-      );
-    }
+            onTap: () {
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => TaskDetailScreen()));
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  void changeDone(List<Task> isCheckedList, int index) {
+    isCheckedList[index].done = !isCheckedList[index].done;
+    updateTask(
+        docRef: isCheckedList[index].taskRef,
+        description: isCheckedList[index].description,
+        done: isCheckedList[index].done,
+        dueDate: isCheckedList[index].dueDate,
+        isDaily: isCheckedList[index].isDaily,
+        name: isCheckedList[index].name,
+        taskCategory: isCheckedList[index].taskCategory);
   }
 }
