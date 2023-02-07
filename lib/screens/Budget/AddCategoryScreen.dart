@@ -80,7 +80,7 @@ class AddCategoryScreen extends StatelessWidget {
   Description:  ${description}
   Color:        ${color}
                   """);
-                      if (!name.isEmpty) {
+                      if (name.isNotEmpty) {
                         addCategory(
                             color: color.value,
                             categoryName: name,
