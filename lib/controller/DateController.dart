@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class DateController extends GetxController {
-  // move to own controller
   DateTime actualDate = DateTime.now();
   final dateTextController = TextEditingController();
 
@@ -18,6 +17,7 @@ class DateController extends GetxController {
 
   @override
   void onInit() {
+    super.onInit();
     dateTextController.text = DateFormat("dd.MM.yyyy").format(DateTime.now());
   }
 

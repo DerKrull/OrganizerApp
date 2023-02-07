@@ -1,45 +1,25 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:intl/intl.dart';
-import 'package:month_picker_dialog_2/month_picker_dialog_2.dart';
+import 'package:organizer_app/controller/MonthController.dart';
 
 import '../core/app_export.dart';
 import '../core/model/BudgetCategory.dart';
 import '../widgets/CustomBottomAppBar.dart';
+import '../widgets/CustomMonthPicker.dart';
 import '../widgets/CustomTopAppBarMainPage.dart';
 import '../widgets/ThreePointPopUpMenu.dart';
 import 'Budget/AddCategoryScreen.dart';
 import 'Budget/BudgetCategoryScreen.dart';
 
-
-
-class BudgetScreen extends StatefulWidget {
+class BudgetScreen extends StatelessWidget {
   final DateTime initialDate = DateTime.now();
 
   BudgetScreen({Key? key}) : super(key: key);
 
-  @override
-  State<BudgetScreen> createState() => _BudgetScreenState();
-}
-
-class _BudgetScreenState extends State<BudgetScreen> {
-  Future<void> dataReceived = initializeDateFormatting('de', null);
-
-  DateTime? selectedDate;
-  DateFormat format = DateFormat('MMMM', 'de');
-  Timestamp timestamp = Timestamp.fromDate(DateTime.now());
-
-  @override
-  void initState() {
-    super.initState();
-    selectedDate = widget.initialDate;
-  }
-
-  double usedBudget = 0.0;
-
-  double totalBudget = 0.0;
+  final MonthController monthController = Get.find();
 
   Stream<List<BudgetCategory>> budgetCategoryStream() {
     try {
@@ -58,6 +38,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
 
   @override
   Widget build(BuildContext context) {
+    initializeDateFormatting('de_DE');
     return SafeArea(
         child: Scaffold(
             appBar: CustomTopAppBarMainPage(
@@ -87,7 +68,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
               child: Column(
                 children: [
                   buildBarChartWithText(context),
-                  buildMonthPicker(context),
+                  CustomMonthPicker(),
                   StreamBuilder(
                       stream: budgetCategoryStream(),
                       builder: (context, snapshot) {
@@ -121,7 +102,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
                     subtitle: Text(entry.description),
                     leading: CircleAvatar(backgroundColor: Color(entry.color)),
                     trailing: FutureBuilder(
-                      future: getUsedBudgetPerCategory(entry.docRef, selectedDate!),
+                      future: getUsedBudgetPerCategory(entry.docRef, monthController.actualMonth),
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
                           return Text("${snapshot.data}");
@@ -138,7 +119,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
                           MaterialPageRoute(
                               builder: (context) => BudgetCategoryScreen(
                                     category: entry,
-                                    initialDate: selectedDate!,
+                                    initialDate: monthController.actualMonth,
                                   )));
                     },
                   ),
@@ -152,86 +133,25 @@ class _BudgetScreenState extends State<BudgetScreen> {
     );
   }
 
-  Padding buildMonthPicker(BuildContext context) {
-    return Padding(
-      padding: getPadding(right: 20, left: 20),
-      child: Container(
-        decoration: BoxDecoration(
-          color: CustomMaterialThemeColorConstant.dark.surface3,
-          borderRadius: BorderRadius.circular(28.0),
-        ),
-        child: Padding(
-          padding: getPadding(all: 20),
-          child: TextFormField(
-              key: Key(format.format(selectedDate!)),
-              initialValue: format.format(selectedDate!),
-              expands: false,
-              readOnly: true,
-              style: const TextStyle(color: Colors.white),
-              decoration: InputDecoration(
-                label: const Text("Monat"),
-                labelStyle: const TextStyle(color: Colors.white),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(4.0),
-                  borderSide: const BorderSide(color: Colors.white),
-                ),
-                enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(4.0),
-                    borderSide: const BorderSide(color: Colors.white)),
-              ),
-              onTap: () => {
-                    showMonthPicker(
-                      context: context,
-                      firstDate: DateTime(DateTime.now().year - 1, 5),
-                      lastDate: DateTime(DateTime.now().year + 1, 9),
-                      initialDate: selectedDate ?? widget.initialDate,
-                      headerColor: CustomMaterialThemeColorConstant
-                          .dark.primaryContainer,
-                      headerTextColor: CustomMaterialThemeColorConstant
-                          .dark.onPrimaryContainer,
-                      selectedMonthBackgroundColor:
-                          CustomMaterialThemeColorConstant
-                              .dark.primaryContainer,
-                      selectedMonthTextColor: CustomMaterialThemeColorConstant
-                          .dark.onPrimaryContainer,
-                      unselectedMonthTextColor:
-                          CustomMaterialThemeColorConstant.dark.onSecondary,
-                    ).then((date) {
-                      if (date != null) {
-                        setState(() {
-                          selectedDate = date;
-                          if (kDebugMode) {
-                            print(
-                                "Selected Date is: ${DateFormat("dd.MM.yyyy hh:mm", 'de').format(selectedDate!)}");
-                          }
-                        });
-                      }
-                    })
-                  }),
-        ),
-      ),
-    );
-  }
-
   Widget buildBarChartWithText(BuildContext context) {
     return Padding(
       padding: getPadding(left: 20, right: 20, bottom: 10, top: 20),
       child: FutureBuilder(
-        future: getUsedBudgetTotal(selectedDate!),
+        future: getUsedBudgetTotal(monthController.actualMonth),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Text("${snapshot.error}");
           } else if (snapshot.hasData) {
-            usedBudget = snapshot.data!;
+            double usedBudget = snapshot.data!;
             return FutureBuilder(
-                future: getTotalBudget(selectedDate!),
+                future: getTotalBudget(monthController.actualMonth),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
                     if (kDebugMode) {
                       print(snapshot.error);
                     }
                   } else if (snapshot.hasData) {
-                    totalBudget = snapshot.data!;
+                    double totalBudget = snapshot.data!;
                     double width = MediaQuery.of(context).size.width - 60;
                     double usedBudgetWidth = width * usedBudget / totalBudget;
                     double restBudgetWidth = width - usedBudgetWidth;

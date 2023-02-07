@@ -1,10 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:organizer_app/controller/DateController.dart';
 import 'package:organizer_app/controller/DropDownCategoryController.dart';
 import 'package:organizer_app/controller/DropDownTaskCategoryController.dart';
+import 'package:organizer_app/controller/MonthController.dart';
 import 'package:organizer_app/controller/SingleCategoryController.dart';
 import 'package:organizer_app/controller/SingleExpenditureController.dart';
 import 'package:organizer_app/controller/SingleTaskController.dart';
@@ -27,29 +27,12 @@ class MyApp extends StatelessWidget {
   final DropDownTaskCategoryController taskCategoryController = Get.put(DropDownTaskCategoryController());
   final SingleTaskController singleTaskController = Get.put(SingleTaskController());
   final TaskTypeController taskTypeController = Get.put(TaskTypeController());
+  final MonthController monthController = Get.put(MonthController());
 
   @override
   Widget build(BuildContext context) {
     initialiseFirebase();
     return MaterialApp(
-      localizationsDelegates: const [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: const [
-        Locale('en'),
-        Locale('zh'),
-        Locale('fr'),
-        Locale('es'),
-        Locale('de'),
-        Locale('ru'),
-        Locale('ja'),
-        Locale('ar'),
-        Locale('fa'),
-        Locale("es"),
-        Locale("it"),
-      ],
       title: 'Organizer App',
       theme: ThemeData(
         primarySwatch: Colors.grey,
