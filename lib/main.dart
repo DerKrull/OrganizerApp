@@ -4,8 +4,11 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:organizer_app/controller/DateController.dart';
 import 'package:organizer_app/controller/DropDownCategoryController.dart';
+import 'package:organizer_app/controller/DropDownTaskCategoryController.dart';
 import 'package:organizer_app/controller/SingleCategoryController.dart';
 import 'package:organizer_app/controller/SingleExpenditureController.dart';
+import 'package:organizer_app/controller/SingleTaskController.dart';
+import 'package:organizer_app/controller/TaskTypeController.dart';
 import 'package:organizer_app/firebase_options.dart';
 import 'package:organizer_app/screens/HomeScreen.dart';
 
@@ -21,6 +24,9 @@ class MyApp extends StatelessWidget {
   final DateController dateController = Get.put(DateController());
   final DropDownCategoryController ddcController = Get.put(DropDownCategoryController());
   final SingleCategoryController scController = Get.put(SingleCategoryController());
+  final DropDownTaskCategoryController taskCategoryController = Get.put(DropDownTaskCategoryController());
+  final SingleTaskController singleTaskController = Get.put(SingleTaskController());
+  final TaskTypeController taskTypeController = Get.put(TaskTypeController());
 
   @override
   Widget build(BuildContext context) {

@@ -1,4 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:organizer_app/core/model/TaskCategory.dart';
+
+import '../FireStoreFutures/FirebaseInstance.dart';
 
 class Task {
   String taskRef;
@@ -41,7 +44,7 @@ class Task {
       required dueDate,
       required description,
       required done,
-      required taskCategory}) {
+      required TaskCategory taskCategory}) {
     Timestamp timestamp = Timestamp.fromDate(dueDate);
     return {
       "name": name,
@@ -49,7 +52,7 @@ class Task {
       "isDaily": isDaily,
       "dueDate": timestamp,
       "done": done,
-      "taskCategory": taskCategory
+      "taskCategory": db.collection("taskCategory").doc(taskCategory.docRef)
     };
   }
 }

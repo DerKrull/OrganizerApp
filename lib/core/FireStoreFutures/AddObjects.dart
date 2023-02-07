@@ -1,4 +1,5 @@
 import 'package:organizer_app/core/model/Expenditure.dart';
+import 'package:organizer_app/core/model/TaskCategory.dart';
 
 import '../model/BudgetCategory.dart';
 import '../model/Task.dart';
@@ -42,7 +43,7 @@ void addTask(
     required dueDate,
     required description,
     required done,
-    required taskCategory}) {
+    required TaskCategory taskCategory}) {
   final data = Task.fromTask(
       isDaily: isDaily,
       name: name,

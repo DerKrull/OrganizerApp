@@ -1,42 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:organizer_app/controller/DateController.dart';
+import 'package:organizer_app/controller/DropDownTaskCategoryController.dart';
+import 'package:organizer_app/controller/SingleTaskController.dart';
+import 'package:organizer_app/controller/TaskTypeController.dart';
+import 'package:organizer_app/core/model/TaskCategory.dart';
+import 'package:organizer_app/widgets/CustomDatePicker.dart';
 import 'package:organizer_app/widgets/CustomTextField.dart';
 import 'package:organizer_app/widgets/CustomTopAppBar.dart';
 import 'package:material_segmented_control/material_segmented_control.dart';
+import 'package:organizer_app/widgets/TaskCategoryDropDownField.dart';
 
 import '../../core/app_export.dart';
 import '../../widgets/CustomBottomAppBar.dart';
 import '../../widgets/CustomButtons.dart';
 import '../../widgets/ThreePointPopUpMenu.dart';
 
+class AddTaskScreen extends StatelessWidget {
+  AddTaskScreen({Key? key}) : super(key: key);
 
-class AddTaskScreen extends StatefulWidget {
-  const AddTaskScreen({Key? key}) : super(key: key);
+  final DropDownTaskCategoryController ddtcController = Get.find();
+  final SingleTaskController singleTaskController = Get.find();
+  final TaskTypeController taskTypeController = Get.find();
+  final DateController dateController = Get.find();
 
-  @override
-  State<AddTaskScreen> createState() => _AddTaskScreenState();
-}
-
-class _AddTaskScreenState extends State<AddTaskScreen> {
-  String name = "";
-  bool isDaily = false;
-  DateTime dueDate = DateTime(0);
-  String description = "";
-
-  // TaskCategory taskCategory;
-  String category = "";
-
-  // Meeting meeting;
-  String meeting = "";
-
-  var nameController = TextEditingController();
-  var isDailyController = TextEditingController();
-  var dueDateController = TextEditingController();
-  var descriptionController = TextEditingController();
-
-  var categoryController = TextEditingController();
-  var meetingController = TextEditingController();
-
-  int _currentSelectionSegmentedControl = 0;
   final Map<int, Widget> _children = {
     0: const Text(
       "Normal",
@@ -47,40 +35,6 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       style: TextStyle(color: Colors.white),
     ),
   };
-
-  @override
-  void initState() {
-    super.initState();
-    nameController.addListener(() {
-      name = nameController.text;
-    });
-    isDailyController.addListener(() {
-      isDaily = isDailyController.value as bool;
-    });
-    dueDateController.addListener(() {
-      dueDate = dueDateController.value as DateTime;
-    });
-    descriptionController.addListener(() {
-      description = descriptionController.text;
-    });
-    categoryController.addListener(() {
-      category = categoryController.text;
-    });
-    meetingController.addListener(() {
-      meeting = meetingController.text;
-    });
-  }
-
-  @override
-  void dispose() {
-    nameController.dispose();
-    isDailyController.dispose();
-    dueDateController.dispose();
-    descriptionController.dispose();
-    categoryController.dispose();
-    meetingController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -103,27 +57,20 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
           child: Column(
             children: [
               CustomTextField(
-                controller: nameController,
+                controller: singleTaskController.nameController,
                 label: 'Name',
                 hintText: 'Name der Aufgabe',
               ),
               buildSegmentedControl(),
+              CustomDatePicker(label: "Datum"),
+              TaskCategoryDropDownField(),
               CustomTextField(
-                  controller: dueDateController,
-                  label: 'Fälligkeitstermin',
-                  hintText: 'dd.MM.yyyy'),
-              CustomTextField(
-                controller: categoryController,
-                label: 'Kategorie',
-                hintText: 'Name der Kategorie',
-              ),
-              CustomTextField(
-                controller: descriptionController,
+                controller: singleTaskController.descriptionController,
                 label: 'Beschreibung',
                 hintText: 'Beschreibung',
               ),
               CustomTextField(
-                controller: meetingController,
+                controller: singleTaskController.meetingController,
                 label: 'Termin',
                 hintText: 'Name des Termins',
               ),
@@ -141,11 +88,32 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                         }),
                       ),
                       SaveButton(onPressed: () {
-                        if (name != "" && isDaily != null && dueDate != "" && description != "" && meeting != "" && meeting != "") {
-                          // addCategory(color: selectedColor!.value, categoryName: categoryName!, categoryDescription: categoryDescription);
+                        TaskCategory taskCategory =
+                            ddtcController.category.value;
+                        String name = singleTaskController.nameController.text;
+                        String description = singleTaskController.descriptionController.text;
+                        String meeting = singleTaskController.meetingController.text;
+                        DateTime dueDate = dateController.actualDate;
+                        bool isDaily = taskTypeController.currentSelected.value == 1 ? true : false;
+                        if (name.isNotEmpty &&
+                            description.isNotEmpty &&
+                            meeting.isNotEmpty) {
                           print("SAVE");
                           //TODO: Implement add method to use the new stuff
-                          addTask(isDaily: isDaily, name: name, dueDate: dueDate, description: description, done: true, taskCategory: "");
+
+                          print(dueDate);
+                          print(taskCategory.name);
+                          addTask(
+                              isDaily: isDaily,
+                              name: name,
+                              dueDate: DateTime.now(),
+                              description: description,
+                              done: false,
+                              taskCategory: taskCategory);
+                          ddtcController.clear();
+                          singleTaskController.clear();
+                          dateController.clear();
+                          taskTypeController.clear();
                           Navigator.of(context).pop(context);
                         } else {
                           print("Values are null");
@@ -167,19 +135,18 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       padding: const EdgeInsets.all(8.0),
       child: Container(
         width: double.infinity,
-        child: MaterialSegmentedControl(
-                children: _children,
-                selectionIndex: _currentSelectionSegmentedControl,
-                selectedColor: Color.fromARGB(255, 74, 68, 88),
-                unselectedColor: CustomMaterialThemeColorConstant.dark.surface1,
-                borderColor: CustomMaterialThemeColorConstant.dark.outline,
-
-                onSegmentChosen: (index) {
-                  setState(() {
-                    _currentSelectionSegmentedControl = index;
-                  });
-                },
-              ),
+        child: Obx(
+          () => MaterialSegmentedControl(
+            children: _children,
+            selectionIndex: taskTypeController.currentSelected.value,
+            selectedColor: Color.fromARGB(255, 74, 68, 88),
+            unselectedColor: CustomMaterialThemeColorConstant.dark.surface1,
+            borderColor: CustomMaterialThemeColorConstant.dark.outline,
+            onSegmentChosen: (index) {
+              taskTypeController.changeCurrentSelected(index: index);
+            },
+          ),
+        ),
       ),
     );
   }

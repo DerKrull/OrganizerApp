@@ -1,4 +1,5 @@
 import 'package:organizer_app/core/model/Task.dart';
+import 'package:organizer_app/core/model/TaskCategory.dart';
 
 import '../model/BudgetCategory.dart';
 import 'FirebaseInstance.dart';
@@ -44,6 +45,19 @@ Future<List<Task>> getTasks() async {
     var query = await db.collection("task").where("isDaily", isEqualTo: false).get();
     query.docs.forEach((doc) {
       list.add(Task.fromDocumentSnapshot(doc: doc));
+    });
+    return list;
+  } catch (e) {
+    rethrow;
+  }
+}
+
+Future<List<TaskCategory>> getTaskCategories() async {
+  List<TaskCategory> list = [];
+  try {
+    var query = await db.collection("taskCategory").get();
+    query.docs.forEach((doc) {
+      list.add(TaskCategory.fromDocumentSnapshot(doc: doc));
     });
     return list;
   } catch (e) {
