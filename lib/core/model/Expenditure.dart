@@ -50,6 +50,12 @@ class Expenditure {
       required double value,
       required DateTime date}) {
     Timestamp timestamp = Timestamp.fromDate(date);
-    return {"category": db.collection("budgetCategory").doc(category.docRef), "description": description, "date": timestamp, "title": title, "value": value};
+    return {
+      "category": db.collection("budgetCategory").doc(category.docRef),
+      "description": description,
+      "date": timestamp,
+      "title": title,
+      "value": value
+    };
   }
 }
