@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:organizer_app/core/app_export.dart';
+import 'package:organizer_app/core/model/TaskCategory.dart';
 import 'package:organizer_app/screens/Tasks/DailyTasksScreen.dart';
 import 'package:organizer_app/screens/Tasks/TasksScreen.dart';
 import 'package:organizer_app/widgets/CustomBottomAppBar.dart';
@@ -287,157 +288,131 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
     }
   }
 
-  Row _createSingleTask(List<Task> isCheckedList, int index) {
+  Widget _createSingleTask(List<Task> isCheckedList, int index) {
     if (isCheckedList[index].isDaily) {
-      return Row(
-        children: [
-          Transform.scale(
-            scale: 1.3,
-            child: Checkbox(
-              side: BorderSide(
-                  color: CustomMaterialThemeColorConstant.dark.secondary,
-                  width: 1.5),
-              shape: const CircleBorder(),
-              checkColor: Colors.white,
-              activeColor: CustomMaterialThemeColorConstant.light.primary,
-              value: isCheckedList[index].done,
-              onChanged: (bool? value) {
-                setState(() {
-                  changeDone(isCheckedList, index);
-                });
-              },
-            ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(
-                height: 12,
-              ),
-              Text(
+      return FutureBuilder(
+        future: getTaskCategoryName(isCheckedList[index].taskCategory.id),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return ListTile(
+              title: Text(
                 isCheckedList[index].name,
                 style: isCheckedList[index].done
-                    ? const TextStyle(
-                        fontSize: 20,
-                        decoration: TextDecoration.lineThrough,
-                        decorationThickness: 3,
-                        color: Colors.white,
-                      )
-                    : const TextStyle(
-                        fontSize: 20,
-                        color: Colors.white,
-                      ),
-              ),
-              FutureBuilder(
-                future:
-                    getTaskCategoryName(isCheckedList[index].taskCategory.id),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return Text(
-                      "${snapshot.data}",
-                      style: TextStyle(
-                          color:
-                              CustomMaterialThemeColorConstant.dark.onSurface,
-                          fontSize: 16),
-                    );
-                  } else if (snapshot.hasError) {
-                    return Text("${snapshot.error}");
-                  }
-                  return const CircularProgressIndicator();
-                },
-              ),
-            ],
-          ),
-        ],
-      );
-    } else {
-      return Row(
-        children: [
-          Transform.scale(
-            scale: 1.3,
-            child: Checkbox(
-              side: BorderSide(
-                  color: CustomMaterialThemeColorConstant.dark.secondary,
-                  width: 1.5),
-              shape: const CircleBorder(),
-              checkColor: Colors.white,
-              activeColor: CustomMaterialThemeColorConstant.light.primary,
-              value: isCheckedList[index].done,
-              onChanged: (bool? value) {
-                setState(() {
-                  changeDone(isCheckedList, index);
-                });
-              },
-            ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(
-                height: 12,
-              ),
-              Text(
-                isCheckedList[index].name,
-                style: isCheckedList[index].done
-                    ? const TextStyle(
-                  fontSize: 20,
+                    ? TextStyle(
                   decoration: TextDecoration.lineThrough,
                   decorationThickness: 3,
-                  color: Colors.white,
-                )
-                    : const TextStyle(
                   fontSize: 20,
-                  color: Colors.white,
+                  color: CustomMaterialThemeColorConstant.dark.onSurface,
+                )
+                    : TextStyle(
+                  fontSize: 20,
+                  color: CustomMaterialThemeColorConstant.dark.onSurface,
                 ),
               ),
-              FutureBuilder(
-                future:
-                getTaskCategoryName(isCheckedList[index].taskCategory.id),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return Text(
-                      "${snapshot.data}",
-                      style: TextStyle(
-                          color:
-                          CustomMaterialThemeColorConstant.dark.onSurface,
-                          fontSize: 16),
-                    );
-                  } else if (snapshot.hasError) {
-                    return Text("${snapshot.error}");
-                  }
-                  return const CircularProgressIndicator();
-                },
+              leading: Transform.scale(
+                scale: 1.3,
+                child: Checkbox(
+                  side: BorderSide(
+                      color: CustomMaterialThemeColorConstant.dark.secondary,
+                      width: 1.5),
+                  shape: const CircleBorder(),
+                  checkColor: Colors.white,
+                  activeColor: CustomMaterialThemeColorConstant.light.primary,
+                  value: isCheckedList[index].done,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      changeDone(isCheckedList, index, snapshot.data!);
+                    });
+                  },
+                ),
               ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(130.0, 15.0, 10.0, 10.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  " ${DateFormat("dd.MM.yyyy").format(isCheckedList[index].dueDate)}",
-                  style: const TextStyle(
-                    fontSize: 16,
-                    color: Colors.white,
-                  ),
+              subtitle: Text(
+                "${snapshot.data?.name}",
+                style: TextStyle(
+                    color: CustomMaterialThemeColorConstant.dark.onSurface,
+                    fontSize: 16),
+              ),
+            );
+          } else if (snapshot.hasError) {
+            return Text("${snapshot.error}");
+          }
+          return const CircularProgressIndicator();
+        },
+      );
+    } else {
+      return FutureBuilder(
+        future: getTaskCategoryName(isCheckedList[index].taskCategory.id),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return ListTile(
+              title: Text(
+                isCheckedList[index].name,
+                style: isCheckedList[index].done
+                    ? TextStyle(
+                  decoration: TextDecoration.lineThrough,
+                  decorationThickness: 3,
+                  fontSize: 20,
+                  color: CustomMaterialThemeColorConstant.dark.onSurface,
+                )
+                    : TextStyle(
+                  fontSize: 20,
+                  color: CustomMaterialThemeColorConstant.dark.onSurface,
                 ),
-                Text(
-                  isCheckedList[index].description,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    color: Colors.white,
+              ),
+              subtitle: Text(
+                "${snapshot.data?.name}",
+                style: TextStyle(
+                    color: CustomMaterialThemeColorConstant.dark.onSurface,
+                    fontSize: 16),
+              ),
+              trailing: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  const SizedBox(
+                    height: 5,
                   ),
+                  Text(
+                    " ${DateFormat("dd.MM.yyyy").format(isCheckedList[index].dueDate)}",
+                    style: TextStyle(
+                        fontSize: 16,
+                        color: CustomMaterialThemeColorConstant.dark.onSurface),
+                  ),
+                  Text(
+                    isCheckedList[index].description,
+                    style: TextStyle(
+                        fontSize: 16,
+                        color: CustomMaterialThemeColorConstant.dark.onSurface),
+                  ),
+                ],
+              ),
+              leading: Transform.scale(
+                scale: 1.3,
+                child: Checkbox(
+                  side: BorderSide(
+                      color: CustomMaterialThemeColorConstant.dark.secondary,
+                      width: 1.5),
+                  shape: const CircleBorder(),
+                  checkColor: Colors.white,
+                  activeColor: CustomMaterialThemeColorConstant.light.primary,
+                  value: isCheckedList[index].done,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      changeDone(isCheckedList, index, snapshot.data!);
+                    });
+                  },
                 ),
-              ],
-            ),
-          )
-        ],
+              ),
+            );
+          } else if (snapshot.hasError) {
+            return Text("${snapshot.error}");
+          }
+          return const CircularProgressIndicator();
+        },
       );
     }
   }
 
-  void changeDone(List<Task> isCheckedList, int index) {
+  void changeDone(List<Task> isCheckedList, int index, TaskCategory taskCategory) {
     isCheckedList[index].done = !isCheckedList[index].done;
     updateTask(
         docRef: isCheckedList[index].taskRef,
@@ -446,6 +421,6 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
         dueDate: isCheckedList[index].dueDate,
         isDaily: isCheckedList[index].isDaily,
         name: isCheckedList[index].name,
-        taskCategory: isCheckedList[index].taskCategory);
+        taskCategory: taskCategory);
   }
 }
