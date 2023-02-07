@@ -55,12 +55,9 @@ class BudgetCategoryDropDownField extends StatelessWidget {
                                 .dark.onSurfaceVariant),
                         "Kategorie"),
                   ),
-                  onChanged: (docRef) {
-                    list.forEach((element) {
-                      if (docRef == element.docRef) {
-                        ddcController.changeCategory(budgetCategory: element);
-                      }
-                    });
+                  onChanged: (dropDownValue) {
+                    DropDownValueModel valueModel = dropDownValue;
+                    ddcController.changeCategory(budgetCategory: valueModel.value);
                   },
                   dropDownList: list.map<DropDownValueModel>((doc) {
                     return DropDownValueModel(name: doc.name, value: doc);
