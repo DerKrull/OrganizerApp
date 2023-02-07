@@ -1,9 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:get/get.dart';
 import 'package:organizer_app/screens/Budget/BudgetCategoryScreen.dart';
 import 'package:organizer_app/widgets/CustomTextField.dart';
 
+import '../../controller/SingleCategoryController.dart';
 import '../../core/app_export.dart';
 import '../../core/model/BudgetCategory.dart';
 import '../../widgets/CustomBottomAppBar.dart';
@@ -11,55 +13,18 @@ import '../../widgets/CustomButtons.dart';
 import '../../widgets/CustomTopAppBar.dart';
 import '../../widgets/ThreePointPopUpMenu.dart';
 
-
-class EditCategoryScreen extends StatefulWidget {
-  EditCategoryScreen({Key? key, required this.category})
-      : super(key: key);
+class EditCategoryScreen extends StatelessWidget {
+  EditCategoryScreen({Key? key, required this.category}) : super(key: key);
   BudgetCategory category;
 
-  @override
-  State<EditCategoryScreen> createState() => _EditCategoryScreenState();
-}
-
-class _EditCategoryScreenState extends State<EditCategoryScreen> {
-  Color? selectedColor;
-  String? categoryName;
-  String categoryDescription = "";
-
-  var nameController = TextEditingController();
-  var descriptionController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    categoryName = widget.category.name;
-    nameController.addListener(() {
-      categoryName = nameController.text;
-    });
-    descriptionController.addListener(() {
-      categoryDescription = descriptionController.text;
-    });
-  }
-
-  @override
-  void dispose() {
-    nameController.dispose();
-    descriptionController.dispose();
-    super.dispose();
-  }
-
-  void changeColor(Color color) {
-    setState(() {
-      selectedColor = color;
-    });
-  }
+  final SingleCategoryController scController = Get.find();
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
           appBar: CustomTopAppBar(
-              title: categoryName!,
+              title: category.name,
               showThreePoints: false,
               menu: ThreePointPopUpMenu(
                   onSelected: (int result) {},
@@ -70,18 +35,16 @@ class _EditCategoryScreenState extends State<EditCategoryScreen> {
           ),
           backgroundColor: CustomMaterialThemeColorConstant.dark.surface1,
           body: FutureBuilder<BudgetCategory>(
-              future: getBudgetCategory(widget.category.docRef),
+              future: getBudgetCategory(category.docRef),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   if (kDebugMode) {
                     print(snapshot.error);
                   }
                 } else if (snapshot.hasData) {
-                  categoryName = snapshot.data!.name;
-                  categoryDescription = snapshot.data!.description;
-                  selectedColor ??= Color(snapshot.data!.color);
-                  nameController.text = categoryName!;
-                  descriptionController.text = categoryDescription;
+                  scController.nameController.text = snapshot.data!.name;
+                  scController.descriptionController.text = snapshot.data!.description;
+                  scController.color.value = Color(snapshot.data!.color);
                   return Stack(
                     children: [
                       Column(
@@ -97,7 +60,7 @@ class _EditCategoryScreenState extends State<EditCategoryScreen> {
                                     padding: getPadding(left: 20),
                                     child: CustomTextField(
                                         hintText: "Name der Kategorie",
-                                        controller: nameController,
+                                        controller: scController.nameController,
                                         label: "Name"),
                                   ),
                                 )
@@ -109,7 +72,7 @@ class _EditCategoryScreenState extends State<EditCategoryScreen> {
                               child: CustomTextField(
                                   hintText: "Beschreibung",
                                   label: "Beschreibung",
-                                  controller: descriptionController,
+                                  controller: scController.descriptionController,
                                   multiline: true)),
                         ],
                       ),
@@ -126,17 +89,27 @@ class _EditCategoryScreenState extends State<EditCategoryScreen> {
                               }),
                             ),
                             SaveButton(onPressed: () {
-                              if (categoryName != null &&
-                                  selectedColor != null) {
-                                widget.category.name = categoryName!;
-                                widget.category.description = categoryDescription;
-                                widget.category.color = selectedColor!.value;
+                              String name = scController.nameController.text;
+                              String description = scController.descriptionController.text;
+                              Color selectedColor = scController.color.value;
+                              if (name.isNotEmpty) {
+                                category.name = name;
+                                category.description = description;
+                                category.color = selectedColor.value;
+                                scController.clear();
                                 updateCategory(
-                                    docRef: widget.category.docRef,
-                                    categoryName: categoryName!,
-                                    categoryDescription: categoryDescription,
-                                    color: selectedColor!.value);
-                                Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => BudgetCategoryScreen(initialDate: DateTime.now(), category: widget.category)));
+                                    docRef: category.docRef,
+                                    categoryName: name,
+                                    categoryDescription: description,
+                                    color: selectedColor.value);
+                                Navigator.of(context).pop(); // ToDo better way to reload BudgetCategoryScreen
+                                Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          BudgetCategoryScreen(
+                                              initialDate: DateTime.now(),
+                                              category: category)),
+                                );
                               } else {
                                 if (kDebugMode) {
                                   print("Values are null");
@@ -154,7 +127,7 @@ class _EditCategoryScreenState extends State<EditCategoryScreen> {
     );
   }
 
-  GestureDetector buildColorPicker(BuildContext context) {
+  Widget buildColorPicker(BuildContext context) {
     return GestureDetector(
       onTap: () {
         showDialog(
@@ -166,22 +139,18 @@ class _EditCategoryScreenState extends State<EditCategoryScreen> {
                 content: SingleChildScrollView(
                   child: HueRingPicker(
                       enableAlpha: false,
-                      pickerColor: selectedColor!,
-                      onColorChanged: changeColor),
+                      pickerColor: scController.color.value,
+                      onColorChanged: scController.changeColor),
                 ),
                 actions: [
                   SaveButton(onPressed: () {
-                    setState(() {
-                      categoryDescription = categoryDescription;
-                      categoryName = categoryName;
-                    });
                     Navigator.of(context).pop(context);
                   })
                 ],
               );
             });
       },
-      child: CircleAvatar(backgroundColor: selectedColor!, radius: getSize(25)),
-    );
+      child: Obx(() => CircleAvatar(backgroundColor: scController.color.value, radius: getSize(25)),
+    ));
   }
 }
