@@ -1,6 +1,7 @@
 import 'package:organizer_app/core/model/Expenditure.dart';
 import 'package:organizer_app/core/model/TaskCategory.dart';
 
+import '../model/Budget.dart';
 import '../model/BudgetCategory.dart';
 import '../model/Task.dart';
 import 'FirebaseInstance.dart';
@@ -35,6 +36,12 @@ void addExpenditure(
       .collection("expenditure")
       .add(data)
       .then((document) => print("Added data with id: ${document.id}"));
+}
+
+void addBudget(
+    {required value, required description, required date}) {
+  final data = Budget.fromBudget(value: value, description: description, date: date);
+  db.collection("budget").add(data).then((documentSnapshot) => print("Update data with id: ${documentSnapshot.id}"));
 }
 
 void addTask(

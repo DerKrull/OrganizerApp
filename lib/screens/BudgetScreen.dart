@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:organizer_app/controller/MonthController.dart';
+import 'package:organizer_app/screens/Budget/EditBudgetSreen.dart';
 
 import '../controller/DropDownCategoryController.dart';
 import '../core/app_export.dart';
@@ -48,7 +49,8 @@ class BudgetScreen extends StatelessWidget {
                 showThreePoints: true,
                 menu: ThreePointPopUpMenu(
                     onSelected: (int result) {
-
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => EditBudgetScreen()));
                     },
                     entries: const ["Budget-Einstellungen"]).build(context)),
             bottomNavigationBar: CustomBottomAppBar(
@@ -106,7 +108,7 @@ class BudgetScreen extends StatelessWidget {
                     subtitle: Text(entry.description),
                     leading: CircleAvatar(backgroundColor: Color(entry.color)),
                     trailing: FutureBuilder(
-                      future: getUsedBudgetPerCategory(entry.docRef, monthController.actualMonth),
+                      future: getUsedBudgetPerCategory(entry.docRef, monthController.actualMonth.value),
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
                           return Text("${snapshot.data}");
@@ -136,17 +138,17 @@ class BudgetScreen extends StatelessWidget {
   }
 
   Widget buildBarChartWithText(BuildContext context) {
-    return Padding(
+    return Obx(() => Padding(
       padding: getPadding(left: 20, right: 20, bottom: 10, top: 20),
       child: FutureBuilder(
-        future: getUsedBudgetTotal(monthController.actualMonth),
+        future: getUsedBudgetTotal(monthController.actualMonth.value),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Text("${snapshot.error}");
           } else if (snapshot.hasData) {
             double usedBudget = snapshot.data!;
             return FutureBuilder(
-                future: getTotalBudget(monthController.actualMonth),
+                future: getTotalBudget(monthController.actualMonth.value),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
                     if (kDebugMode) {
@@ -214,6 +216,6 @@ class BudgetScreen extends StatelessWidget {
           return const CircularProgressIndicator();
         },
       ),
-    );
+    ));
   }
 }

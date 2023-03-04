@@ -1,3 +1,4 @@
+import '../model/Budget.dart';
 import '../model/BudgetCategory.dart';
 import '../model/Task.dart';
 import 'FirebaseInstance.dart';
@@ -14,6 +15,12 @@ void updateCategory(
       .doc(docRef)
       .update(data)
       .then((documentSnapshot) => print("Updated data with id: ${docRef}"));
+}
+
+void updateBudget(
+    {required docRef, required value, required description, required date}) {
+  final data = Budget.fromBudget(value: value, description: description, date: date);
+  db.collection("budget").doc(docRef).update(data).then((documentSnapshot) => print("Update data with id: ${docRef}"));
 }
 
 void updateTask(

@@ -34,8 +34,8 @@ class BudgetCategoryScreen extends StatelessWidget {
           .collection("expenditure")
           .where("category", isEqualTo: categoryDocRef)
           .where("date",
-          isGreaterThanOrEqualTo: getFirstTimeOfMonth(monthController.actualMonth))
-          .where("date", isLessThanOrEqualTo: getLastTimeOfMonth(monthController.actualMonth))
+          isGreaterThanOrEqualTo: getFirstTimeOfMonth(monthController.actualMonth.value))
+          .where("date", isLessThanOrEqualTo: getLastTimeOfMonth(monthController.actualMonth.value))
           .snapshots()
           .map((notes) {
         final List<Expenditure> expendituresFromFirestore = <Expenditure>[];
@@ -149,7 +149,7 @@ class BudgetCategoryScreen extends StatelessWidget {
                         decoration: BoxDecoration(
                             color: CustomMaterialThemeColorConstant
                                 .dark.tertiaryContainer,
-                            borderRadius: BorderRadius.only(
+                            borderRadius: const BorderRadius.only(
                                 bottomLeft: Radius.circular(10),
                                 bottomRight: Radius.circular(10))),
                         child: Padding(
@@ -160,7 +160,7 @@ class BudgetCategoryScreen extends StatelessWidget {
                               Expanded(
                                   child: IconButton(
                                 onPressed: () {},
-                                icon: Icon(Icons.delete),
+                                icon: const Icon(Icons.delete),
                                 iconSize: getSize(30),
                                 color: CustomMaterialThemeColorConstant
                                     .dark.onTertiaryContainer,
@@ -168,7 +168,7 @@ class BudgetCategoryScreen extends StatelessWidget {
                               Expanded(
                                   child: IconButton(
                                       onPressed: () {},
-                                      icon: Icon(Icons.edit),
+                                      icon: const Icon(Icons.edit),
                                       iconSize: getSize(30),
                                       color: CustomMaterialThemeColorConstant
                                           .dark.onTertiaryContainer))
@@ -196,8 +196,8 @@ class BudgetCategoryScreen extends StatelessWidget {
         child: Padding(
           padding: getPadding(all: 20),
           child: TextFormField(
-              key: Key(format.format(monthController.actualMonth)),
-              initialValue: format.format(monthController.actualMonth),
+              key: Key(format.format(monthController.actualMonth.value)),
+              initialValue: format.format(monthController.actualMonth.value),
               expands: false,
               readOnly: true,
               style: const TextStyle(color: Colors.white),
@@ -217,7 +217,7 @@ class BudgetCategoryScreen extends StatelessWidget {
                       context: context,
                       firstDate: DateTime(DateTime.now().year - 1, 5),
                       lastDate: DateTime(DateTime.now().year + 1, 9),
-                      initialDate: monthController.actualMonth,
+                      initialDate: monthController.actualMonth.value,
                       headerColor: CustomMaterialThemeColorConstant
                           .dark.primaryContainer,
                       headerTextColor: CustomMaterialThemeColorConstant
@@ -244,14 +244,14 @@ class BudgetCategoryScreen extends StatelessWidget {
     return Padding(
       padding: getPadding(left: 20, right: 20, bottom: 10, top: 20),
       child: FutureBuilder(
-        future: getUsedBudgetPerCategory(dropDownController.category.value.docRef, monthController.actualMonth),
+        future: getUsedBudgetPerCategory(dropDownController.category.value.docRef, monthController.actualMonth.value),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Text("${snapshot.error}");
           } else if (snapshot.hasData) {
             double usedBudget = snapshot.data!;
             return FutureBuilder(
-                future: getTotalBudget(monthController.actualMonth),
+                future: getTotalBudget(monthController.actualMonth.value),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
                     if (kDebugMode) {

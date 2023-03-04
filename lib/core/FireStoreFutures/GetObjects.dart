@@ -1,8 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:organizer_app/core/model/Task.dart';
 import 'package:organizer_app/core/model/TaskCategory.dart';
 
+import '../app_export.dart';
 import '../model/BudgetCategory.dart';
-import 'FirebaseInstance.dart';
 
 Future<BudgetCategory> getBudgetCategory(String docRef) async {
   try {
@@ -21,6 +22,19 @@ Future<List<BudgetCategory>> getBudgetCategories() async {
       list.add(BudgetCategory.fromDocumentSnapshot(doc: doc));
     });
     return list;
+  } catch (e) {
+    rethrow;
+  }
+}
+
+Future<DocumentSnapshot<Map<String,dynamic>>> getBudget(DateTime selectedDate) async {
+  try {
+    var queryResult = await db
+        .collection("budget")
+        .where("date", isGreaterThanOrEqualTo: getFirstTimeOfMonth(selectedDate))
+        .where("date", isLessThanOrEqualTo: getLastTimeOfMonth(selectedDate))
+        .get();
+    return queryResult.docs.first;
   } catch (e) {
     rethrow;
   }

@@ -5,13 +5,13 @@ import 'package:intl/intl.dart';
 
 class MonthController extends GetxController {
 
-  DateTime actualMonth =
-      DateTime(DateTime.now().year, DateTime.now().month, 1, 12);
+  var actualMonth =
+      DateTime(DateTime.now().year, DateTime.now().month, 1, 12).obs;
   final monthTextController = TextEditingController();
 
   void updateSelectedMonth({required DateTime newMonth}) {
     monthTextController.text = DateFormat("MMMM", "de_DE").format(newMonth);
-    actualMonth = DateTime(newMonth.year, newMonth.month, 1, 12);
+    actualMonth.value = DateTime(newMonth.year, newMonth.month, 1, 12);
   }
 
   void clear() {

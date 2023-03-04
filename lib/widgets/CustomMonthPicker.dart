@@ -29,7 +29,7 @@ class CustomMonthPicker extends StatelessWidget {
           padding: getPadding(all: 20),
           child: TextFormField(
               controller: monthController.monthTextController,
-              key: Key(DateFormat("MMMM", "de_DE").format(monthController.actualMonth)),
+              key: Key(DateFormat("MMMM", "de_DE").format(monthController.actualMonth.value)),
               expands: false,
               readOnly: true,
               style: const TextStyle(color: Colors.white),
@@ -52,7 +52,7 @@ class CustomMonthPicker extends StatelessWidget {
                       customHeight: 250,
                       firstDate: DateTime(DateTime.now().year - 1, 5),
                       lastDate: DateTime(DateTime.now().year + 1, 9),
-                      initialDate: monthController.actualMonth,
+                      initialDate: monthController.actualMonth.value,
                       headerColor: CustomMaterialThemeColorConstant
                           .dark.primaryContainer,
                       headerTextColor: CustomMaterialThemeColorConstant
@@ -69,7 +69,7 @@ class CustomMonthPicker extends StatelessWidget {
                         monthController.updateSelectedMonth(newMonth: date);
                         if (kDebugMode) {
                           print(
-                              "Selected Date is: ${DateFormat("dd.MM.yyyy hh:mm", 'de_DE').format(monthController.actualMonth)}");
+                              "Selected Date is: ${DateFormat("dd.MM.yyyy hh:mm", 'de_DE').format(monthController.actualMonth.value)}");
                         }
                       }
                     })

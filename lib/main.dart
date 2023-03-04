@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:organizer_app/controller/Budget/SingleBudgetController.dart';
 import 'package:organizer_app/firebase_options.dart';
 import 'package:organizer_app/screens/HomeScreen.dart';
 
@@ -21,6 +22,7 @@ class MyApp extends StatelessWidget {
 
   MyApp({super.key});
 
+  final SingleBudgetController sbController = Get.put(SingleBudgetController());
   final SingleExpenditureController seController = Get.put(SingleExpenditureController());
   final DateController dateController = Get.put(DateController());
   final DropDownCategoryController ddcController = Get.put(DropDownCategoryController());
