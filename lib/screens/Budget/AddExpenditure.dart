@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -81,16 +82,9 @@ class AddExpenditure extends StatelessWidget {
                       DateTime date = dateController.actualDate;
                       if(title.isNotEmpty && valueStr.isNotEmpty && dateStr.isNotEmpty ) {
                         double value = double.parse(valueStr);
-                        print("""
-                        Category: ${category}
-                        title: ${title}
-                        value: ${value}
-                        date: ${date}
-                        description: ${description}""");
                         addExpenditure(category: category, title: title, value: value, date: date, description: description);
                         seController.clear();
                         dateController.clear();
-                        ddcController.clear();
                         Navigator.of(context).pop();
                       } else {
                         print("Values are empty");

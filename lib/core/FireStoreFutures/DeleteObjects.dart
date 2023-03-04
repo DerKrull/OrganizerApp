@@ -7,3 +7,11 @@ void deleteCategory({required String docRef}) {
       .delete()
       .then((documentSnapshot) => print("Deleted data with id: ${docRef}"));
 }
+
+void deleteExpenditure({required String docRef}) {
+  db
+      .collection("expenditure")
+      .doc(docRef)
+      .delete()
+      .then((documentSnapshot) => print("Deleted data with id: ${docRef}"));
+}

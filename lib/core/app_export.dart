@@ -11,5 +11,6 @@ export '/core/FireStoreFutures/GetBudgetFutures.dart';
 export '/core/FireStoreFutures/AddObjects.dart';
 export '/core/FireStoreFutures/UpdateObjects.dart';
 export '/core/FireStoreFutures/GetObjects.dart';
+export '/core/FireStoreFutures/DeleteObjects.dart';
 
 export '/widgets/custom_image_view.dart';
