@@ -156,9 +156,19 @@ class BudgetScreen extends StatelessWidget {
                     }
                   } else if (snapshot.hasData) {
                     double totalBudget = snapshot.data!;
-                    double width = MediaQuery.of(context).size.width - 60;
-                    double usedBudgetWidth = width * usedBudget / totalBudget;
-                    double restBudgetWidth = width - usedBudgetWidth;
+                    double usedBudgetWidth = 0;
+                    double restBudgetWidth = 0;
+                    Color color = CustomMaterialThemeColorConstant.dark.inversePrimary;
+                    if (usedBudget > totalBudget) {
+                      double width = MediaQuery.of(context).size.width - 60;
+                      usedBudgetWidth = width;
+                      restBudgetWidth = 0;
+                      color = CustomMaterialThemeColorConstant.dark.errorContainer;
+                    } else {
+                      double width = MediaQuery.of(context).size.width - 60;
+                      usedBudgetWidth = width * usedBudget / totalBudget;
+                      restBudgetWidth = width - usedBudgetWidth;
+                    }
                     return Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -170,8 +180,7 @@ class BudgetScreen extends StatelessWidget {
                                 width: usedBudgetWidth,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
-                                  color: CustomMaterialThemeColorConstant
-                                      .dark.inversePrimary,
+                                  color: color,
                                 ),
                               ),
                               const SizedBox(
