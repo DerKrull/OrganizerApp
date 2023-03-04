@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:organizer_app/controller/MonthController.dart';
 
+import '../controller/DropDownCategoryController.dart';
 import '../core/app_export.dart';
 import '../core/model/BudgetCategory.dart';
 import '../widgets/CustomBottomAppBar.dart';
@@ -20,6 +21,7 @@ class BudgetScreen extends StatelessWidget {
   BudgetScreen({Key? key}) : super(key: key);
 
   final MonthController monthController = Get.find();
+  final DropDownCategoryController dropDownController = Get.find();
 
   Stream<List<BudgetCategory>> budgetCategoryStream() {
     try {
@@ -45,8 +47,10 @@ class BudgetScreen extends StatelessWidget {
                 title: "Budget",
                 showThreePoints: true,
                 menu: ThreePointPopUpMenu(
-                    onSelected: (int result) {},
-                    entries: const ["Kategorie-Einstellungen"]).build(context)),
+                    onSelected: (int result) {
+
+                    },
+                    entries: const ["Budget-Einstellungen"]).build(context)),
             bottomNavigationBar: CustomBottomAppBar(
               mainPage: MainPages.BudgetScreen,
               isMainPage: true,
@@ -114,13 +118,11 @@ class BudgetScreen extends StatelessWidget {
                     ),
                     textColor: CustomMaterialThemeColorConstant.dark.onSurface,
                     onTap: () {
+                      dropDownController.changeCategory(budgetCategory: entry);
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => BudgetCategoryScreen(
-                                    category: entry,
-                                    initialDate: monthController.actualMonth,
-                                  )));
+                              builder: (context) => BudgetCategoryScreen()));
                     },
                   ),
                 );

@@ -5,10 +5,10 @@ import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:month_picker_dialog_2/month_picker_dialog_2.dart';
-import 'package:organizer_app/controller/DropDownCategoryController.dart';
 
+import '../../controller/DropDownCategoryController.dart';
+import '../../controller/MonthController.dart';
 import '../../core/app_export.dart';
-import '../../core/model/BudgetCategory.dart';
 import '../../core/model/Expenditure.dart';
 import '../../widgets/CustomBottomAppBar.dart';
 import '../../widgets/CustomTopAppBar.dart';
@@ -16,46 +16,26 @@ import '../../widgets/ThreePointPopUpMenu.dart';
 import 'AddExpenditure.dart';
 import 'EditCategoryScreen.dart';
 
-class BudgetCategoryScreen extends StatefulWidget {
-  BudgetCategory category;
-  final DateTime initialDate;
+class BudgetCategoryScreen extends StatelessWidget {
 
   BudgetCategoryScreen(
-      {Key? key, required this.initialDate, required this.category})
+      {Key? key})
       : super(key: key);
 
-  @override
-  State<BudgetCategoryScreen> createState() => _BudgetCategoryScreenState();
-}
-
-class _BudgetCategoryScreenState extends State<BudgetCategoryScreen> {
-  Future<void> dataReceived = initializeDateFormatting('de', null);
-
-  DateTime? selectedDate;
-  DateFormat format = DateFormat('MMMM', 'de');
-  Timestamp timestamp = Timestamp.fromDate(DateTime.now());
-
-  double usedBudget = 0;
-  double totalBudget = 0;
-
-  DropDownCategoryController ddcController = Get.find();
-
-  @override
-  void initState() {
-    super.initState();
-    selectedDate = widget.initialDate;
-  }
+  final MonthController monthController = Get.find();
+  final DropDownCategoryController dropDownController = Get.find();
+  final format = DateFormat("MMMM", "de_DE");
 
   Stream<List<Expenditure>> expenditureStream() {
     DocumentReference categoryDocRef =
-        db.collection("budgetCategory").doc(widget.category.docRef);
+    db.collection("budgetCategory").doc(dropDownController.category.value.docRef);
     try {
       return db
           .collection("expenditure")
           .where("category", isEqualTo: categoryDocRef)
           .where("date",
-              isGreaterThanOrEqualTo: getFirstTimeOfMonth(selectedDate!))
-          .where("date", isLessThanOrEqualTo: getLastTimeOfMonth(selectedDate!))
+          isGreaterThanOrEqualTo: getFirstTimeOfMonth(monthController.actualMonth))
+          .where("date", isLessThanOrEqualTo: getLastTimeOfMonth(monthController.actualMonth))
           .snapshots()
           .map((notes) {
         final List<Expenditure> expendituresFromFirestore = <Expenditure>[];
@@ -72,10 +52,11 @@ class _BudgetCategoryScreenState extends State<BudgetCategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    initializeDateFormatting('de_DE');
     return SafeArea(
-      child: Scaffold(
+      child: Obx (() => Scaffold(
         appBar: CustomTopAppBar(
-            title: widget.category.name, //ToDo Use getx controller
+            title: dropDownController.category.value.name,
             showThreePoints: true,
             menu: ThreePointPopUpMenu(
                 onSelected: (int result) {
@@ -84,7 +65,7 @@ class _BudgetCategoryScreenState extends State<BudgetCategoryScreen> {
                         context,
                         MaterialPageRoute(
                             builder: (context) =>
-                                EditCategoryScreen(category: widget.category)));
+                                EditCategoryScreen(category: dropDownController.category.value)));
                   }
                 },
                 entries: const ["Kategorie-Einstellungen"]).build(context)),
@@ -95,9 +76,9 @@ class _BudgetCategoryScreenState extends State<BudgetCategoryScreen> {
         backgroundColor: CustomMaterialThemeColorConstant.dark.surface1,
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            ddcController.changeCategory(budgetCategory: widget.category);
+            dropDownController.changeCategory(budgetCategory: dropDownController.category.value);
             if (kDebugMode) {
-              print("Category:${widget.category.name}");
+              print("Category:${dropDownController.category.value.name}");
             }
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => AddExpenditure()));
@@ -119,7 +100,7 @@ class _BudgetCategoryScreenState extends State<BudgetCategoryScreen> {
           ),
         ),
       ),
-    );
+    ));
   }
 
   StreamBuilder<List<Expenditure>> buildExpenditureStreamBuilder() {
@@ -215,8 +196,8 @@ class _BudgetCategoryScreenState extends State<BudgetCategoryScreen> {
         child: Padding(
           padding: getPadding(all: 20),
           child: TextFormField(
-              key: Key(format.format(selectedDate!)),
-              initialValue: format.format(selectedDate!),
+              key: Key(format.format(monthController.actualMonth)),
+              initialValue: format.format(monthController.actualMonth),
               expands: false,
               readOnly: true,
               style: const TextStyle(color: Colors.white),
@@ -236,7 +217,7 @@ class _BudgetCategoryScreenState extends State<BudgetCategoryScreen> {
                       context: context,
                       firstDate: DateTime(DateTime.now().year - 1, 5),
                       lastDate: DateTime(DateTime.now().year + 1, 9),
-                      initialDate: selectedDate ?? widget.initialDate,
+                      initialDate: monthController.actualMonth,
                       headerColor: CustomMaterialThemeColorConstant
                           .dark.primaryContainer,
                       headerTextColor: CustomMaterialThemeColorConstant
@@ -250,13 +231,7 @@ class _BudgetCategoryScreenState extends State<BudgetCategoryScreen> {
                           CustomMaterialThemeColorConstant.dark.onSecondary,
                     ).then((date) {
                       if (date != null) {
-                        setState(() {
-                          selectedDate = date;
-                          if (kDebugMode) {
-                            print(
-                                "Selected Date is: ${DateFormat("dd.MM.yyyy hh:mm", 'de').format(selectedDate!)}");
-                          }
-                        });
+
                       }
                     })
                   }),
@@ -269,21 +244,21 @@ class _BudgetCategoryScreenState extends State<BudgetCategoryScreen> {
     return Padding(
       padding: getPadding(left: 20, right: 20, bottom: 10, top: 20),
       child: FutureBuilder(
-        future: getUsedBudgetPerCategory(widget.category.docRef, selectedDate!),
+        future: getUsedBudgetPerCategory(dropDownController.category.value.docRef, monthController.actualMonth),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Text("${snapshot.error}");
           } else if (snapshot.hasData) {
-            usedBudget = snapshot.data!;
+            double usedBudget = snapshot.data!;
             return FutureBuilder(
-                future: getTotalBudget(selectedDate!),
+                future: getTotalBudget(monthController.actualMonth),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
                     if (kDebugMode) {
                       print(snapshot.error);
                     }
                   } else if (snapshot.hasData) {
-                    totalBudget = snapshot.data!;
+                    double totalBudget = snapshot.data!;
                     double width = MediaQuery.of(context).size.width - 60;
                     double usedBudgetWidth = width * usedBudget / totalBudget;
                     double restBudgetWidth = width - usedBudgetWidth;

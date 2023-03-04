@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:get/get.dart';
-import 'package:organizer_app/controller/SingleCategoryController.dart';
+import 'package:organizer_app/controller/Budget/SingleCategoryController.dart';
 import 'package:organizer_app/widgets/CustomTextField.dart';
 
 import '../../core/app_export.dart';
