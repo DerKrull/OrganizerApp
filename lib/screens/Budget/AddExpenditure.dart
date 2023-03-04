@@ -27,6 +27,7 @@ class AddExpenditure extends StatelessWidget {
     return Scaffold(
       appBar: CustomTopAppBar(
           title: "Aufgabe hinzufügen",
+          showDelete: false,
           showThreePoints: true,
           menu: ThreePointPopUpMenu(
               onSelected: (int result) {},
@@ -80,6 +81,12 @@ class AddExpenditure extends StatelessWidget {
                       DateTime date = dateController.actualDate;
                       if(title.isNotEmpty && valueStr.isNotEmpty && dateStr.isNotEmpty ) {
                         double value = double.parse(valueStr);
+                        print("""
+                        Category: ${category}
+                        title: ${title}
+                        value: ${value}
+                        date: ${date}
+                        description: ${description}""");
                         addExpenditure(category: category, title: title, value: value, date: date, description: description);
                         seController.clear();
                         dateController.clear();

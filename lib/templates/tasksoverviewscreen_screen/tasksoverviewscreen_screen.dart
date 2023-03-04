@@ -12,6 +12,7 @@ class TasksoverviewscreenScreen extends StatelessWidget {
       child: Scaffold(
         appBar: CustomTopAppBar(
             title: "Tasks",
+            showDelete: false,
             showThreePoints: true,
             menu: ThreePointPopUpMenu(
                 onSelected: (int result) {}, entries: ["Test"]).build(context)),

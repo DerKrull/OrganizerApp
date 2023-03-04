@@ -57,6 +57,7 @@ class BudgetCategoryScreen extends StatelessWidget {
       child: Obx (() => Scaffold(
         appBar: CustomTopAppBar(
             title: dropDownController.category.value.name,
+            showDelete: false,
             showThreePoints: true,
             menu: ThreePointPopUpMenu(
                 onSelected: (int result) {

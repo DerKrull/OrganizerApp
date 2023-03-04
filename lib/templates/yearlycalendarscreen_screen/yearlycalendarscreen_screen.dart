@@ -15,9 +15,14 @@ class YearlycalendarscreenScreen extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         backgroundColor: ColorConstant.gray900,
-        appBar: CustomTopAppBar(title: "Month ...",showThreePoints: true,                 menu: ThreePointPopUpMenu(
-            onSelected: (int result) {},
-            entries: ["Kategorie-Einstellungen"]).build(context),),
+        appBar: CustomTopAppBar(
+          title: "Month ...",
+          showThreePoints: true,
+          showDelete: false,
+          menu: ThreePointPopUpMenu(
+              onSelected: (int result) {},
+              entries: ["Kategorie-Einstellungen"]).build(context),
+        ),
         body: SizedBox(
           width: size.width,
           child: SingleChildScrollView(

@@ -22,6 +22,7 @@ class AddCategoryScreen extends StatelessWidget {
       child: Scaffold(
           appBar: CustomTopAppBar(
               title: "Add Category",
+              showDelete: false,
               showThreePoints: false,
               menu: ThreePointPopUpMenu(
                   onSelected: (int result) {},

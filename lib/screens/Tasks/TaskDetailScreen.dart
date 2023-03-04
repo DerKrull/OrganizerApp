@@ -85,6 +85,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
     return Scaffold(
       appBar: CustomTopAppBar(
           title: "<<Name der Aufgabe>>",
+          showDelete: false,
           showThreePoints: true,
           menu: ThreePointPopUpMenu(
               onSelected: (int result) {},

@@ -30,6 +30,7 @@ class EditBudgetScreen extends StatelessWidget {
       child: Scaffold(
           appBar: CustomTopAppBar(
               title: "Budget - ${format.format(monthController.actualMonth.value)}",
+              showDelete: false,
               showThreePoints: false,
               menu: ThreePointPopUpMenu(
                   onSelected: (int result) {},

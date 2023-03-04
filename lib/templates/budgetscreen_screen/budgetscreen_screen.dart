@@ -11,6 +11,7 @@ class BudgetscreenScreen extends StatelessWidget {
       child: Scaffold(
         appBar: CustomTopAppBar(
           title: "Budget",
+          showDelete: false,
           showThreePoints: true,
           menu: ThreePointPopUpMenu(
               onSelected: (int result) {}, entries: ["Test"]).build(context),

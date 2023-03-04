@@ -13,6 +13,7 @@ class AdddailytaskscreenScreen extends StatelessWidget {
         //appBar: buildAppBar(title: "Add Daily Task", context: context),
         appBar: CustomTopAppBar(
             title: "Add daily task",
+            showDelete: false,
             showThreePoints: true,
             menu: ThreePointPopUpMenu(
                 onSelected: (int result) {}, entries: ["Test"]).build(context)),

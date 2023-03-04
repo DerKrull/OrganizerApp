@@ -89,6 +89,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
     return Scaffold(
       appBar: CustomTopAppBar(
           title: "Aufgabe bearbeiten",
+          showDelete: false,
           showThreePoints: true,
           menu: ThreePointPopUpMenu(
               onSelected: (int result) {},

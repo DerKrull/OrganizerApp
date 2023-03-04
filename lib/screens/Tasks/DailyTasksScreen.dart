@@ -42,6 +42,7 @@ class _DailyTasksScreenState extends State<DailyTasksScreen> {
     return Scaffold(
       appBar: CustomTopAppBar(
           title: "Aufgaben",
+          showDelete: false,
           showThreePoints: true,
           menu: ThreePointPopUpMenu(
               onSelected: (int result) {},

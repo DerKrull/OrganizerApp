@@ -7,12 +7,14 @@ import 'package:organizer_app/widgets/CustomTextField.dart';
 
 import '../../controller/Budget/SingleCategoryController.dart';
 import '../../controller/DropDownCategoryController.dart';
+import '../../core/FireStoreFutures/DeleteObjects.dart';
 import '../../core/app_export.dart';
 import '../../core/model/BudgetCategory.dart';
 import '../../widgets/CustomBottomAppBar.dart';
 import '../../widgets/CustomButtons.dart';
 import '../../widgets/CustomTopAppBar.dart';
 import '../../widgets/ThreePointPopUpMenu.dart';
+import '../BudgetScreen.dart';
 
 class EditCategoryScreen extends StatelessWidget {
   EditCategoryScreen({Key? key, required this.category}) : super(key: key);
@@ -28,6 +30,15 @@ class EditCategoryScreen extends StatelessWidget {
           appBar: CustomTopAppBar(
               title: category.name,
               showThreePoints: false,
+              showDelete: true,
+              onPressed: () {
+                deleteCategory(docRef: category.docRef);
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          BudgetScreen()),
+                );
+              },
               menu: ThreePointPopUpMenu(
                   onSelected: (int result) {},
                   entries: const ["Kategorie-Einstellungen"]).build(context)),
@@ -69,8 +80,8 @@ class EditCategoryScreen extends StatelessWidget {
                                             padding: getPadding(left: 20),
                                             child: CustomTextField(
                                                 hintText: "Name der Kategorie",
-                                                controller: scController
-                                                    .nameController,
+                                                controller:
+                                                    scController.nameController,
                                                 label: "Name"),
                                           ),
                                         )
@@ -94,20 +105,19 @@ class EditCategoryScreen extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Padding(
-                                      padding:
-                                      getPadding(
+                                      padding: getPadding(
                                           right: 20, top: 10, bottom: 10),
                                       child: AbortButton(onPressed: () {
                                         Navigator.of(context).pop();
                                       }),
                                     ),
                                     SaveButton(onPressed: () {
-                                      String name = scController.nameController
-                                          .text;
+                                      String name =
+                                          scController.nameController.text;
                                       String description = scController
                                           .descriptionController.text;
-                                      Color selectedColor = scController.color
-                                          .value;
+                                      Color selectedColor =
+                                          scController.color.value;
                                       if (name.isNotEmpty) {
                                         category.name = name;
                                         category.description = description;
@@ -138,9 +148,9 @@ class EditCategoryScreen extends StatelessWidget {
                               ),
                             ],
                           )));
-                  }
-                      return const CircularProgressIndicator();
-                })),
+                }
+                return const CircularProgressIndicator();
+              })),
     );
   }
 
@@ -152,7 +162,7 @@ class EditCategoryScreen extends StatelessWidget {
               builder: (BuildContext context) {
                 return AlertDialog(
                   backgroundColor:
-                  CustomMaterialThemeColorConstant.dark.secondaryContainer,
+                      CustomMaterialThemeColorConstant.dark.secondaryContainer,
                   content: SingleChildScrollView(
                     child: HueRingPicker(
                         enableAlpha: false,
@@ -167,8 +177,9 @@ class EditCategoryScreen extends StatelessWidget {
                 );
               });
         },
-        child: Obx(() => CircleAvatar(
-            backgroundColor: scController.color.value, radius: getSize(25)),
+        child: Obx(
+          () => CircleAvatar(
+              backgroundColor: scController.color.value, radius: getSize(25)),
         ));
   }
 }

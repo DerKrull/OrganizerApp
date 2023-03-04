@@ -43,6 +43,7 @@ class _TasksScreenState extends State<TasksScreen> {
     return Scaffold(
       appBar: CustomTopAppBar(
           title: "Aufgaben",
+          showDelete: false,
           showThreePoints: true,
           menu: ThreePointPopUpMenu(
               onSelected: (int result) {},

@@ -41,6 +41,7 @@ class AddTaskScreen extends StatelessWidget {
     return Scaffold(
       appBar: CustomTopAppBar(
           title: "Aufgabe hinzufügen",
+          showDelete: false,
           showThreePoints: true,
           menu: ThreePointPopUpMenu(
               onSelected: (int result) {},
