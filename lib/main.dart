@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:organizer_app/controller/Budget/SingleBudgetController.dart';
 import 'package:organizer_app/controller/Calendar/TableCalendarController.dart';
 import 'package:organizer_app/firebase_options.dart';
-import 'package:organizer_app/screens/HomeScreen.dart';
+import 'package:organizer_app/screens/DataPrivacyScreen.dart';
 
 import 'controller/Budget/SingleCategoryController.dart';
 import 'controller/Budget/SingleExpenditureController.dart';
@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.grey,
           useMaterial3: true),
-      home: HomeScreen(),
+      home: DataPrivacyScreen(),
     );
   }
 

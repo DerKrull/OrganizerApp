@@ -336,7 +336,13 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
           } else if (snapshot.hasError) {
             return Text("${snapshot.error}");
           }
-          return const CircularProgressIndicator();
+          return Center(
+            child: Container(
+              width: 20,
+              height: 20,
+              child: const CircularProgressIndicator(),
+            ),
+          );
         },
       );
     } else {
@@ -406,7 +412,13 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
           } else if (snapshot.hasError) {
             return Text("${snapshot.error}");
           }
-          return const CircularProgressIndicator();
+          return Center(
+            child: Container(
+              width: 20,
+              height: 20,
+              child: const CircularProgressIndicator(),
+            ),
+          );
         },
       );
     }

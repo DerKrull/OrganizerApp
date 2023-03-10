@@ -41,7 +41,7 @@ class _DailyTasksScreenState extends State<DailyTasksScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomTopAppBar(
-          title: "Aufgaben",
+          title: "Tägliche Aufgaben",
           showDelete: false,
           showThreePoints: true,
           menu: ThreePointPopUpMenu(
