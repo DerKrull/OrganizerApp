@@ -100,6 +100,14 @@ class EditExpenditureScreen extends StatelessWidget {
                               description: description);
                           seController.clear();
                           dateController.clear();
+                          /* TODO Fix back button after saving edited data
+                          - edit data
+                          - save data
+                          - your on budgetcategoryscreen
+                          - press back in the top left corner
+                          -> you get to a previous budgetcategoryscreen
+                          -> Fix that !!!
+                           */
                           Navigator.of(context).pop;
                           Navigator.of(context).pushReplacement(
                               MaterialPageRoute(
