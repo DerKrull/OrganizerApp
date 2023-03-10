@@ -70,7 +70,7 @@ class BudgetScreen extends StatelessWidget {
                 color: CustomMaterialThemeColorConstant.dark.onSurface,
               ),
             ),
-            body: SingleChildScrollView(
+            body: Obx(() => SingleChildScrollView(
               child: Column(
                 children: [
                   buildBarChartWithText(context),
@@ -87,7 +87,7 @@ class BudgetScreen extends StatelessWidget {
                       }),
                 ],
               ),
-            )));
+            ))));
   }
 
   Widget buildListView(AsyncSnapshot<List<BudgetCategory>> snapshot) {
@@ -138,7 +138,7 @@ class BudgetScreen extends StatelessWidget {
   }
 
   Widget buildBarChartWithText(BuildContext context) {
-    return Obx(() => Padding(
+    return Padding(
       padding: getPadding(left: 20, right: 20, bottom: 10, top: 20),
       child: FutureBuilder(
         future: getUsedBudgetTotal(monthController.actualMonth.value),
@@ -225,6 +225,6 @@ class BudgetScreen extends StatelessWidget {
           return const CircularProgressIndicator();
         },
       ),
-    ));
+    );
   }
 }
