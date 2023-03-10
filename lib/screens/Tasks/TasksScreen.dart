@@ -80,7 +80,13 @@ class _TasksScreenState extends State<TasksScreen> {
                 } else if (snapshot.hasError) {
                   return Text("${snapshot.error}");
                 }
-                return const Center(child: CircularProgressIndicator());
+                return Center(
+                  child: Container(
+                    width: 20,
+                    height: 20,
+                    child: const CircularProgressIndicator(),
+                  ),
+                );
               })
         ],
       ),
@@ -102,15 +108,17 @@ class _TasksScreenState extends State<TasksScreen> {
                     taskList[index].name,
                     style: taskList[index].done
                         ? TextStyle(
-                      decoration: TextDecoration.lineThrough,
-                      decorationThickness: 3,
-                      fontSize: 20,
-                      color: CustomMaterialThemeColorConstant.dark.onSurface,
-                    )
+                            decoration: TextDecoration.lineThrough,
+                            decorationThickness: 3,
+                            fontSize: 20,
+                            color:
+                                CustomMaterialThemeColorConstant.dark.onSurface,
+                          )
                         : TextStyle(
-                      fontSize: 20,
-                      color: CustomMaterialThemeColorConstant.dark.onSurface,
-                    ),
+                            fontSize: 20,
+                            color:
+                                CustomMaterialThemeColorConstant.dark.onSurface,
+                          ),
                   ),
                   subtitle: Text(
                     "${snapshot.data?.name}",
@@ -128,13 +136,15 @@ class _TasksScreenState extends State<TasksScreen> {
                         " ${DateFormat("dd.MM.yyyy").format(taskList[index].dueDate)}",
                         style: TextStyle(
                             fontSize: 16,
-                            color: CustomMaterialThemeColorConstant.dark.onSurface),
+                            color: CustomMaterialThemeColorConstant
+                                .dark.onSurface),
                       ),
                       Text(
                         taskList[index].description,
                         style: TextStyle(
                             fontSize: 16,
-                            color: CustomMaterialThemeColorConstant.dark.onSurface),
+                            color: CustomMaterialThemeColorConstant
+                                .dark.onSurface),
                       ),
                     ],
                   ),
@@ -142,11 +152,13 @@ class _TasksScreenState extends State<TasksScreen> {
                     scale: 1.3,
                     child: Checkbox(
                       side: BorderSide(
-                          color: CustomMaterialThemeColorConstant.dark.secondary,
+                          color:
+                              CustomMaterialThemeColorConstant.dark.secondary,
                           width: 1.5),
                       shape: const CircleBorder(),
                       checkColor: Colors.white,
-                      activeColor: CustomMaterialThemeColorConstant.light.primary,
+                      activeColor:
+                          CustomMaterialThemeColorConstant.light.primary,
                       value: taskList[index].done,
                       onChanged: (bool? value) {
                         setState(() {
@@ -156,14 +168,20 @@ class _TasksScreenState extends State<TasksScreen> {
                     ),
                   ),
                   onTap: () {
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => TaskDetailScreen()));
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => TaskDetailScreen()));
                   },
                 );
               } else if (snapshot.hasError) {
                 return Text("${snapshot.error}");
               }
-              return const CircularProgressIndicator();
+              return Center(
+                child: Container(
+                  width: 20,
+                  height: 20,
+                  child: const CircularProgressIndicator(),
+                ),
+              );
             },
           ),
         ],
@@ -171,7 +189,8 @@ class _TasksScreenState extends State<TasksScreen> {
     );
   }
 
-  void changeDone(List<Task> isCheckedList, int index, TaskCategory taskCategory) {
+  void changeDone(
+      List<Task> isCheckedList, int index, TaskCategory taskCategory) {
     isCheckedList[index].done = !isCheckedList[index].done;
     updateTask(
         docRef: isCheckedList[index].taskRef,
