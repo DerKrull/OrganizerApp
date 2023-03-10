@@ -16,8 +16,8 @@ import '../../widgets/CustomTextField.dart';
 import '../../widgets/ThreePointPopUpMenu.dart';
 import '../../widgets/CustomNumberField.dart';
 
-class AddExpenditure extends StatelessWidget {
-  AddExpenditure({Key? key}) : super(key: key);
+class AddExpenditureScreen extends StatelessWidget {
+  AddExpenditureScreen({Key? key}) : super(key: key);
 
   final SingleExpenditureController seController = Get.find();
   final DateController dateController = Get.find();
