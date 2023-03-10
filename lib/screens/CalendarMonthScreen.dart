@@ -55,7 +55,7 @@ class _CalendarMontHScreenState extends State<CalendarMontHScreen> {
                 // TODO AddEventScreen here
               },
               backgroundColor:
-              CustomMaterialThemeColorConstant.dark.primaryContainer,
+                  CustomMaterialThemeColorConstant.dark.primaryContainer,
               child: Icon(
                 Icons.add,
                 color: CustomMaterialThemeColorConstant.dark.onSurface,
@@ -68,21 +68,17 @@ class _CalendarMontHScreenState extends State<CalendarMontHScreen> {
                     return Text('${snapshot.error}');
                   } else if (snapshot.hasData) {
                     events = snapshot.data!;
-                    tableCalendarController.changeSelectedEvents(eventLoader(tableCalendarController.selectedDay.value));
-                    return
-                        Padding(
-                          padding: getPadding(left: 8, right: 8),
-                          child: Column(
-                            children: [
-                              Obx(() => TableCalendar(
-                                firstDay: DateTime(DateTime
-                                    .now()
-                                    .year - 10),
-                                lastDay: DateTime(DateTime
-                                    .now()
-                                    .year + 10),
+                    tableCalendarController.changeSelectedEvents(
+                        eventLoader(tableCalendarController.selectedDay.value));
+                    return Padding(
+                      padding: getPadding(left: 8, right: 8),
+                      child: Column(
+                        children: [
+                          TableCalendar(
+                                firstDay: DateTime(DateTime.now().year - 10),
+                                lastDay: DateTime(DateTime.now().year + 10),
                                 focusedDay:
-                                tableCalendarController.focusedDay.value,
+                                    tableCalendarController.focusedDay.value,
                                 calendarFormat: tableCalendarController
                                     .calendarFormat.value,
                                 calendarStyle: getCalendarStyle(),
@@ -104,13 +100,13 @@ class _CalendarMontHScreenState extends State<CalendarMontHScreen> {
                                         .changeSelectedDay(selectedDay);
                                     tableCalendarController
                                         .changeSelectedEvents(
-                                        eventLoader(selectedDay));
+                                            eventLoader(selectedDay));
                                     setState(() {});
                                   }
                                 },
                                 onFormatChanged: (format) {
                                   if (tableCalendarController
-                                      .calendarFormat.value !=
+                                          .calendarFormat.value !=
                                       format) {
                                     tableCalendarController
                                         .changeCalendarFormat(format);
@@ -121,56 +117,52 @@ class _CalendarMontHScreenState extends State<CalendarMontHScreen> {
                                   tableCalendarController
                                       .changeFocusedDay(focusedDay);
                                 },
-                              )),
-                              const SizedBox(height: 8.0),
-                              Expanded(
-                                  child: ValueListenableBuilder<List<Event>>(
-                                      valueListenable: tableCalendarController
-                                          .selectedEvents,
-                                      child: Text("Here should be something"),
-                                      builder: (context, value, _) {
-                                        return ListView.builder(
-                                            itemCount: value.length,
-                                            itemBuilder: (context, index) {
-                                              return Container(
-                                                  margin: const EdgeInsets
-                                                      .symmetric(
-                                                    horizontal: 6.0,
-                                                    vertical: 2.0,
-                                                  ),
-                                                  decoration: BoxDecoration(
-                                                    color:
+                              ),
+                          const SizedBox(height: 8.0),
+                          Expanded(
+                              child: ValueListenableBuilder<List<Event>>(
+                                  valueListenable:
+                                      tableCalendarController.selectedEvents,
+                                  child: Text("Here should be something"),
+                                  builder: (context, value, _) {
+                                    return ListView.builder(
+                                        itemCount: value.length,
+                                        itemBuilder: (context, index) {
+                                          return Container(
+                                              margin:
+                                                  const EdgeInsets.symmetric(
+                                                horizontal: 6.0,
+                                                vertical: 2.0,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                color:
                                                     CustomMaterialThemeColorConstant
                                                         .dark
                                                         .secondaryContainer,
-                                                    borderRadius:
-                                                    BorderRadius.circular(
-                                                        12.0),
-                                                  ),
-                                                  child: ListTile(
-                                                    onTap: () {
-                                                      // TODO open the single Event here
-                                                    },
-                                                    title: Text(
-                                                        value[index].title),
-                                                    textColor:
+                                                borderRadius:
+                                                    BorderRadius.circular(12.0),
+                                              ),
+                                              child: ListTile(
+                                                onTap: () {
+                                                  // TODO open the single Event here
+                                                },
+                                                title: Text(value[index].title),
+                                                textColor:
                                                     CustomMaterialThemeColorConstant
                                                         .dark.onSurface,
-                                                    subtitle: Text(value[index]
-                                                        .description),
-                                                    trailing: Text(
-                                                      "at ${DateFormat("hh:mm")
-                                                          .format(value[index]
-                                                          .dateTime)}",
-                                                      style: TextStyle(
-                                                          fontSize: 16.0),
-                                                    ),
-                                                  ));
-                                            });
-                                      }))
-                            ],
-                          ),
-                        );
+                                                subtitle: Text(
+                                                    value[index].description),
+                                                trailing: Text(
+                                                  "at ${DateFormat("hh:mm").format(value[index].dateTime)}",
+                                                  style:
+                                                      TextStyle(fontSize: 16.0),
+                                                ),
+                                              ));
+                                        });
+                                  }))
+                        ],
+                      ),
+                    );
                   }
                   return const CircularProgressIndicator();
                 })));
@@ -182,7 +174,7 @@ class _CalendarMontHScreenState extends State<CalendarMontHScreen> {
         defaultTextStyle: TextStyle(
             color: CustomMaterialThemeColorConstant.dark.onBackground),
         outsideTextStyle:
-        TextStyle(color: CustomMaterialThemeColorConstant.dark.outline),
+            TextStyle(color: CustomMaterialThemeColorConstant.dark.outline),
         todayTextStyle: TextStyle(
             color: CustomMaterialThemeColorConstant.dark.onTertiaryContainer),
         todayDecoration: BoxDecoration(
@@ -191,12 +183,12 @@ class _CalendarMontHScreenState extends State<CalendarMontHScreen> {
                 width: 3.0),
             shape: BoxShape.circle),
         selectedTextStyle:
-        TextStyle(color: CustomMaterialThemeColorConstant.dark.onPrimary),
+            TextStyle(color: CustomMaterialThemeColorConstant.dark.onPrimary),
         selectedDecoration: BoxDecoration(
             shape: BoxShape.circle,
             color: CustomMaterialThemeColorConstant.dark.onPrimaryContainer),
         weekendTextStyle:
-        TextStyle(color: CustomMaterialThemeColorConstant.dark.tertiary),
+            TextStyle(color: CustomMaterialThemeColorConstant.dark.tertiary),
         weekNumberTextStyle: TextStyle(
             color: CustomMaterialThemeColorConstant.dark.errorContainer,
             fontSize: 10.0),
