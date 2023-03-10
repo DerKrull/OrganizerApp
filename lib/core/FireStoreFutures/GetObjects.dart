@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:organizer_app/core/model/Expenditure.dart';
 import 'package:organizer_app/core/model/Task.dart';
 import 'package:organizer_app/core/model/TaskCategory.dart';
 
@@ -22,6 +23,15 @@ Future<List<BudgetCategory>> getBudgetCategories() async {
       list.add(BudgetCategory.fromDocumentSnapshot(doc: doc));
     });
     return list;
+  } catch (e) {
+    rethrow;
+  }
+}
+
+Future<Expenditure> getExpenditure(String docRef) async {
+  try {
+    var query = await db.collection("expenditure").doc(docRef).get();
+    return Expenditure.fromDocumentSnapshot(doc: query);
   } catch (e) {
     rethrow;
   }

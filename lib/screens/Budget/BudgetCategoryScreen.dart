@@ -11,10 +11,12 @@ import '../../controller/MonthController.dart';
 import '../../core/app_export.dart';
 import '../../core/model/Expenditure.dart';
 import '../../widgets/CustomBottomAppBar.dart';
+import '../../widgets/CustomMonthPicker.dart';
 import '../../widgets/CustomTopAppBar.dart';
 import '../../widgets/ThreePointPopUpMenu.dart';
-import 'AddExpenditure.dart';
+import 'AddExpenditureScreen.dart';
 import 'EditCategoryScreen.dart';
+import 'EditExpenditureScreen.dart';
 
 class BudgetCategoryScreen extends StatelessWidget {
 
@@ -82,7 +84,7 @@ class BudgetCategoryScreen extends StatelessWidget {
               print("Category:${dropDownController.category.value.name}");
             }
             Navigator.push(context,
-                MaterialPageRoute(builder: (context) => AddExpenditure()));
+                MaterialPageRoute(builder: (context) => AddExpenditureScreen()));
           },
           backgroundColor:
               CustomMaterialThemeColorConstant.dark.primaryContainer,
@@ -91,30 +93,26 @@ class BudgetCategoryScreen extends StatelessWidget {
             color: CustomMaterialThemeColorConstant.dark.onSurface,
           ),
         ),
-        body: SingleChildScrollView(
+        body: Obx (() => SingleChildScrollView(
           child: Column(
             children: [
               buildBarChartWithText(context),
-              buildMonthPicker(context),
-              buildExpenditureStreamBuilder(),
+              CustomMonthPicker(),
+              StreamBuilder(
+                  stream: expenditureStream(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return buildListView(snapshot);
+                    } else if (snapshot.hasError) {
+                      return Text("${snapshot.error}");
+                    }
+                    return const CircularProgressIndicator();
+                  }),
             ],
           ),
-        ),
+        )),
       ),
     ));
-  }
-
-  StreamBuilder<List<Expenditure>> buildExpenditureStreamBuilder() {
-    return StreamBuilder(
-        stream: expenditureStream(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return buildListView(snapshot);
-          } else if (snapshot.hasError) {
-            return Text("${snapshot.error}");
-          }
-          return const CircularProgressIndicator();
-        });
   }
 
   Widget buildListView(AsyncSnapshot<List<Expenditure>> snapshot) {
@@ -170,7 +168,13 @@ class BudgetCategoryScreen extends StatelessWidget {
                               )),
                               Expanded(
                                   child: IconButton(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    EditExpenditureScreen(expenditure: entry)));
+                                      },
                                       icon: const Icon(Icons.edit),
                                       iconSize: getSize(30),
                                       color: CustomMaterialThemeColorConstant
