@@ -47,6 +47,7 @@ dependencies:
   material_segmented_control: ^4.0.0
   dropdown_textfield: ^1.0.7
   get: ^4.6.5
+  table_calendar: ^3.0.8
 
 dev_dependencies:
   flutter_test:
