@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:organizer_app/controller/Budget/SingleBudgetController.dart';
 import 'package:organizer_app/controller/Calendar/TableCalendarController.dart';
@@ -16,6 +17,11 @@ import 'controller/SingleTaskController.dart';
 import 'controller/TaskTypeController.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitDown,
+    DeviceOrientation.portraitUp
+  ]);
   runApp(MyApp());
 }
 
