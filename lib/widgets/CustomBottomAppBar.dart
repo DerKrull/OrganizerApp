@@ -47,7 +47,7 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const HomeScreen()));
+                        builder: (context) => HomeScreen()));
               }
               setState(() {
                 activePage = MainPages.HomeScreen;
