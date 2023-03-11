@@ -12,14 +12,14 @@ import '../widgets/CustomBottomAppBar.dart';
 import '../widgets/CustomTopAppBarMainPage.dart';
 import '../widgets/ThreePointPopUpMenu.dart';
 
-class CalendarMontHScreen extends StatefulWidget {
-  CalendarMontHScreen({Key? key}) : super(key: key);
+class CalendarMonthScreen extends StatefulWidget {
+  CalendarMonthScreen({Key? key}) : super(key: key);
 
   @override
-  State<CalendarMontHScreen> createState() => _CalendarMontHScreenState();
+  State<CalendarMonthScreen> createState() => _CalendarMonthScreenState();
 }
 
-class _CalendarMontHScreenState extends State<CalendarMontHScreen> {
+class _CalendarMonthScreenState extends State<CalendarMonthScreen> {
   TableCalendarController tableCalendarController = Get.find();
 
   late List<Event> events;
