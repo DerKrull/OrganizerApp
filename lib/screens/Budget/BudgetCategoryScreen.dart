@@ -35,11 +35,11 @@ class BudgetCategoryScreen extends StatelessWidget {
           .collection("expenditure")
           .where("category", isEqualTo: categoryDocRef)
           .where("date",
-              isGreaterThanOrEqualTo:
-                  getFirstTimeOfMonth(monthController.actualMonth.value))
+          isGreaterThanOrEqualTo:
+          getFirstTimeOfMonth(monthController.actualMonth.value))
           .where("date",
-              isLessThanOrEqualTo:
-                  getLastTimeOfMonth(monthController.actualMonth.value))
+          isLessThanOrEqualTo:
+          getLastTimeOfMonth(monthController.actualMonth.value))
           .snapshots()
           .map((notes) {
         final List<Expenditure> expendituresFromFirestore = <Expenditure>[];
@@ -59,67 +59,73 @@ class BudgetCategoryScreen extends StatelessWidget {
     initializeDateFormatting('de_DE');
     return SafeArea(
         child: Obx(
-      () => Scaffold(
-        appBar: CustomTopAppBar(
-            title: dropDownController.category.value.name,
-            showDelete: false,
-            overrideBackButton: BudgetScreen(),
-            showThreePoints: true,
-            menu: ThreePointPopUpMenu(
-                onSelected: (int result) {
-                  if (result == 0) {
+              () =>
+              Scaffold(
+                appBar: CustomTopAppBar(
+                    title: dropDownController.category.value.name,
+                    showDelete: false,
+                    overrideBackButton: BudgetScreen(),
+                    showThreePoints: true,
+                    menu: ThreePointPopUpMenu(
+                        onSelected: (int result) {
+                          if (result == 0) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        EditCategoryScreen(
+                                            category: dropDownController
+                                                .category.value)));
+                          }
+                        },
+                        entries: const ["Kategorie-Einstellungen"]).build(
+                        context)),
+                bottomNavigationBar: CustomBottomAppBar(
+                  mainPage: MainPages.BudgetScreen,
+                  isMainPage: false,
+                ),
+                backgroundColor: CustomMaterialThemeColorConstant.dark.surface1,
+                floatingActionButton: FloatingActionButton(
+                  onPressed: () {
+                    dropDownController.changeCategory(
+                        budgetCategory: dropDownController.category.value);
+                    if (kDebugMode) {
+                      print(
+                          "Category:${dropDownController.category.value.name}");
+                    }
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => EditCategoryScreen(
-                                category: dropDownController.category.value)));
-                  }
-                },
-                entries: const ["Kategorie-Einstellungen"]).build(context)),
-        bottomNavigationBar: CustomBottomAppBar(
-          mainPage: MainPages.BudgetScreen,
-          isMainPage: false,
-        ),
-        backgroundColor: CustomMaterialThemeColorConstant.dark.surface1,
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            dropDownController.changeCategory(
-                budgetCategory: dropDownController.category.value);
-            if (kDebugMode) {
-              print("Category:${dropDownController.category.value.name}");
-            }
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => AddExpenditureScreen()));
-          },
-          backgroundColor:
-              CustomMaterialThemeColorConstant.dark.primaryContainer,
-          child: Icon(
-            Icons.add,
-            color: CustomMaterialThemeColorConstant.dark.onSurface,
-          ),
-        ),
-        body: Obx(() => SingleChildScrollView(
-              child: Column(
-                children: [
-                  buildBarChartWithText(context),
-                  CustomMonthPicker(),
-                  StreamBuilder(
-                      stream: expenditureStream(),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          return buildListView(snapshot);
-                        } else if (snapshot.hasError) {
-                          return Text("${snapshot.error}");
-                        }
-                        return const CircularProgressIndicator();
-                      }),
-                ],
+                            builder: (context) => AddExpenditureScreen()));
+                  },
+                  backgroundColor:
+                  CustomMaterialThemeColorConstant.dark.primaryContainer,
+                  child: Icon(
+                    Icons.add,
+                    color: CustomMaterialThemeColorConstant.dark.onSurface,
+                  ),
+                ),
+                body: Obx(() =>
+                    SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          buildBarChartWithText(context),
+                          CustomMonthPicker(),
+                          StreamBuilder(
+                              stream: expenditureStream(),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  return buildListView(snapshot);
+                                } else if (snapshot.hasError) {
+                                  return Text("${snapshot.error}");
+                                }
+                                return const CircularProgressIndicator();
+                              }),
+                        ],
+                      ),
+                    )),
               ),
-            )),
-      ),
-    ));
+        ));
   }
 
   Widget buildListView(AsyncSnapshot<List<Expenditure>> snapshot) {
@@ -142,7 +148,7 @@ class BudgetCategoryScreen extends StatelessWidget {
                             color: CustomMaterialThemeColorConstant
                                 .dark.onSurface)),
                     subtitle: Text(
-                        "${entry.description}\n${DateFormat('dd.MM.yyyy').format(entry.date)}",
+                        "${entry.description}",
                         style: TextStyle(
                             color: CustomMaterialThemeColorConstant
                                 .dark.onSurface)),
@@ -151,6 +157,20 @@ class BudgetCategoryScreen extends StatelessWidget {
                             color: CustomMaterialThemeColorConstant
                                 .dark.onSurface)),
                     children: [
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: Padding(
+                          padding: getPadding(left: 15, right: 15, top: 5, bottom: 5),
+                          child: Container(
+                            color: CustomMaterialThemeColorConstant.dark.surface5,
+                            child: Text("vom ${DateFormat('dd.MM.yyyy').format(
+                                entry.date)}",
+                                style: TextStyle(
+                                    color: CustomMaterialThemeColorConstant
+                                        .dark.onSurface)),
+                          ),
+                        ),
+                      ),
                       Container(
                         decoration: BoxDecoration(
                             color: CustomMaterialThemeColorConstant
@@ -165,14 +185,14 @@ class BudgetCategoryScreen extends StatelessWidget {
                             children: [
                               Expanded(
                                   child: IconButton(
-                                onPressed: () {
-                                  deleteExpenditure(docRef: entry.docRef);
-                                },
-                                icon: const Icon(Icons.delete),
-                                iconSize: getSize(30),
-                                color: CustomMaterialThemeColorConstant
-                                    .dark.onTertiaryContainer,
-                              )),
+                                    onPressed: () {
+                                      deleteExpenditure(docRef: entry.docRef);
+                                    },
+                                    icon: const Icon(Icons.delete),
+                                    iconSize: getSize(30),
+                                    color: CustomMaterialThemeColorConstant
+                                        .dark.onTertiaryContainer,
+                                  )),
                               Expanded(
                                   child: IconButton(
                                       onPressed: () {
@@ -227,27 +247,32 @@ class BudgetCategoryScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(4.0),
                     borderSide: const BorderSide(color: Colors.white)),
               ),
-              onTap: () => {
-                    showMonthPicker(
-                      context: context,
-                      firstDate: DateTime(DateTime.now().year - 1, 5),
-                      lastDate: DateTime(DateTime.now().year + 1, 9),
-                      initialDate: monthController.actualMonth.value,
-                      headerColor: CustomMaterialThemeColorConstant
-                          .dark.primaryContainer,
-                      headerTextColor: CustomMaterialThemeColorConstant
-                          .dark.onPrimaryContainer,
-                      selectedMonthBackgroundColor:
-                          CustomMaterialThemeColorConstant
-                              .dark.primaryContainer,
-                      selectedMonthTextColor: CustomMaterialThemeColorConstant
-                          .dark.onPrimaryContainer,
-                      unselectedMonthTextColor:
-                          CustomMaterialThemeColorConstant.dark.onSecondary,
-                    ).then((date) {
-                      if (date != null) {}
-                    })
-                  }),
+              onTap: () =>
+              {
+                showMonthPicker(
+                  context: context,
+                  firstDate: DateTime(DateTime
+                      .now()
+                      .year - 1, 5),
+                  lastDate: DateTime(DateTime
+                      .now()
+                      .year + 1, 9),
+                  initialDate: monthController.actualMonth.value,
+                  headerColor: CustomMaterialThemeColorConstant
+                      .dark.primaryContainer,
+                  headerTextColor: CustomMaterialThemeColorConstant
+                      .dark.onPrimaryContainer,
+                  selectedMonthBackgroundColor:
+                  CustomMaterialThemeColorConstant
+                      .dark.primaryContainer,
+                  selectedMonthTextColor: CustomMaterialThemeColorConstant
+                      .dark.onPrimaryContainer,
+                  unselectedMonthTextColor:
+                  CustomMaterialThemeColorConstant.dark.onSecondary,
+                ).then((date) {
+                  if (date != null) {}
+                })
+              }),
         ),
       ),
     );
@@ -279,13 +304,19 @@ class BudgetCategoryScreen extends StatelessWidget {
                     Color color =
                         CustomMaterialThemeColorConstant.dark.inversePrimary;
                     if (usedBudget > totalBudget) {
-                      double width = MediaQuery.of(context).size.width - 60;
+                      double width = MediaQuery
+                          .of(context)
+                          .size
+                          .width - 60;
                       usedBudgetWidth = width;
                       restBudgetWidth = 0;
                       color =
                           CustomMaterialThemeColorConstant.dark.errorContainer;
                     } else {
-                      double width = MediaQuery.of(context).size.width - 60;
+                      double width = MediaQuery
+                          .of(context)
+                          .size
+                          .width - 60;
                       usedBudgetWidth = width * usedBudget / totalBudget;
                       restBudgetWidth = width - usedBudgetWidth;
                     }
@@ -326,7 +357,9 @@ class BudgetCategoryScreen extends StatelessWidget {
                                   fontSize: 30.0,
                                   fontWeight: FontWeight.bold,
                                 ),
-                                "${usedBudget.toStringAsFixed(2)}€   /   ${totalBudget.toStringAsFixed(2)}€"),
+                                "${usedBudget.toStringAsFixed(
+                                    2)}€   /   ${totalBudget.toStringAsFixed(
+                                    2)}€"),
                           ),
                         )
                       ],
