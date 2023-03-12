@@ -18,6 +18,7 @@ class AddCategoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    scController.clearErrors();
     return SafeArea(
       child: Scaffold(
           appBar: CustomTopAppBar(
@@ -32,71 +33,79 @@ class AddCategoryScreen extends StatelessWidget {
             isMainPage: false,
           ),
           backgroundColor: CustomMaterialThemeColorConstant.dark.surface1,
-          body: Column(
-            children: [
-              Padding(
-                padding:
-                    getPadding(top: 20, left: 20, right: 20, bottom: 10),
-                child: Row(
-                  children: [
-                    buildColorPicker(context),
-                    Expanded(
-                      child: Padding(
-                        padding: getPadding(left: 20),
-                        child: CustomTextField(
-                            hintText: "Name der Kategorie",
-                            controller: scController.nameController,
-                            label: "Name"),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              Padding(
-                  padding: getPadding(left: 20, right: 20, top: 20),
-                  child: CustomTextField(
-                      hintText: "Beschreibung",
-                      label: "Beschreibung",
-                      controller: scController.descriptionController,
-                      multiline: true)),
-              Padding(
-                padding: getPadding(top: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: getPadding(right: 20, top: 10, bottom: 10),
-                      child: AbortButton(onPressed: () {
-                        scController.clear();
-                        Navigator.of(context).pop();
-                      }),
+          body: Obx(() => Column(
+                children: [
+                  Padding(
+                    padding:
+                        getPadding(top: 20, left: 20, right: 20, bottom: 10),
+                    child: Row(
+                      children: [
+                        buildColorPicker(context),
+                        Expanded(
+                          child: Padding(
+                            padding: getPadding(left: 20),
+                            child: CustomTextField(
+                              hintText: "Name der Kategorie",
+                              controller: scController.nameController,
+                              label: "Name",
+                              errorMessage: scController.nameError.value.isEmpty
+                                  ? null
+                                  : scController.nameError.value,
+                            ),
+                          ),
+                        )
+                      ],
                     ),
-                    SaveButton(onPressed: () {
-                      String name = scController.nameController.text;
-                      String description =
-                          scController.descriptionController.text;
-                      Color color = scController.color.value;
-                      print("""Controller Data:
-  Name:         ${name}
-  Description:  ${description}
-  Color:        ${color}
-                  """);
-                      if (name.isNotEmpty) {
-                        addCategory(
-                            color: color.value,
-                            categoryName: name,
-                            categoryDescription: description);
-                        scController.clear();
-                        Navigator.of(context).pop(context);
-                      } else {
-                        print("no name set");
-                      }
-                    })
-                  ],
-                ),
-              )
-            ],
-          )),
+                  ),
+                  Padding(
+                      padding: getPadding(left: 20, right: 20, top: 20),
+                      child: CustomTextField(
+                        hintText: "Beschreibung",
+                        label: "Beschreibung",
+                        controller: scController.descriptionController,
+                        multiline: true,
+                        errorMessage:
+                            scController.descriptionError.value.isEmpty
+                                ? null
+                                : scController.descriptionError.value,
+                      )),
+                  Padding(
+                    padding: getPadding(top: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: getPadding(right: 20, top: 10, bottom: 10),
+                          child: AbortButton(onPressed: () {
+                            scController.clear();
+                            Navigator.of(context).pop();
+                          }),
+                        ),
+                        SaveButton(onPressed: () {
+                          String name = scController.nameController.text;
+                          String description =
+                              scController.descriptionController.text;
+                          Color color = scController.color.value;
+                          if (name.isNotEmpty) {
+                            scController.clearErrors();
+                            addCategory(
+                                color: color.value,
+                                categoryName: name,
+                                categoryDescription: description);
+                            scController.clear();
+                            Navigator.of(context).pop(context);
+                          } else {
+                            scController.clearErrors();
+                            if (name.isEmpty) {
+                              scController.displayError(name: "Namen eingeben");
+                            }
+                          }
+                        })
+                      ],
+                    ),
+                  )
+                ],
+              ))),
     );
   }
 
