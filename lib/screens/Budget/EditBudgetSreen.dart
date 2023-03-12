@@ -26,10 +26,12 @@ class EditBudgetScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bgController.clearErrors();
     return SafeArea(
       child: Scaffold(
           appBar: CustomTopAppBar(
-              title: "Budget - ${format.format(monthController.actualMonth.value)}",
+              title:
+                  "Budget - ${format.format(monthController.actualMonth.value)}",
               showDelete: false,
               showThreePoints: false,
               menu: ThreePointPopUpMenu(
@@ -48,16 +50,16 @@ class EditBudgetScreen extends StatelessWidget {
                     print(snapshot.error);
                   }
                 } else if (snapshot.hasData) {
-                  Budget budget = Budget.fromDocumentSnapshot(doc: snapshot.data!);
+                  Budget budget =
+                      Budget.fromDocumentSnapshot(doc: snapshot.data!);
                   bgController.valueController.text = budget.value.toString();
-                  bgController.descriptionController.text =
-                      budget.description;
+                  bgController.descriptionController.text = budget.description;
                   return SingleChildScrollView(
                       child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Column(
                             children: [
-                              Column(
+                              Obx( () => Column(
                                 children: [
                                   Padding(
                                     padding: getPadding(
@@ -65,19 +67,13 @@ class EditBudgetScreen extends StatelessWidget {
                                         left: 20,
                                         right: 20,
                                         bottom: 10),
-                                    child: Row(
-                                      children: [
-                                        Expanded(
-                                          child: Padding(
-                                            padding: getPadding(left: 20),
-                                            child: CustomTextField(
-                                                hintText: "Betrag für den aktuellen Monat",
-                                                controller: bgController.valueController,
-                                                label: "Betrag"),
-                                          ),
-                                        )
-                                      ],
-                                    ),
+                                    child: CustomTextField(
+                                        hintText:
+                                            "Betrag für den aktuellen Monat",
+                                        controller:
+                                            bgController.valueController,
+                                        label: "Betrag",
+                                    errorMessage: bgController.valueError.value.isEmpty ? null : bgController.valueError.value,),
                                   ),
                                   Padding(
                                       padding: getPadding(
@@ -89,33 +85,33 @@ class EditBudgetScreen extends StatelessWidget {
                                               .descriptionController,
                                           multiline: true)),
                                 ],
-                              ),
+                              )),
                               Align(
                                 alignment: Alignment.bottomCenter,
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Padding(
-                                      padding:
-                                      getPadding(
+                                      padding: getPadding(
                                           right: 20, top: 10, bottom: 10),
                                       child: AbortButton(onPressed: () {
                                         Navigator.of(context).pop();
                                       }),
                                     ),
                                     SaveButton(onPressed: () {
-                                      String tmp = bgController.valueController
-                                          .text;
-                                      double value = double.parse(tmp);
+                                      String tmp =
+                                          bgController.valueController.text;
                                       String description = bgController
                                           .descriptionController.text;
                                       if (tmp.isNotEmpty) {
+                                        double value = double.parse(tmp);
+                                        bgController.clearErrors();
                                         updateBudget(
-                                          date: monthController.actualMonth.value,
-                                          description: description,
-                                          value: value,
-                                          docRef: snapshot.data!.id
-                                        );
+                                            date: monthController
+                                                .actualMonth.value,
+                                            description: description,
+                                            value: value,
+                                            docRef: snapshot.data!.id);
                                         bgController.clear();
                                         Navigator.of(context).pushReplacement(
                                           MaterialPageRoute(
@@ -123,9 +119,8 @@ class EditBudgetScreen extends StatelessWidget {
                                                   BudgetScreen()),
                                         );
                                       } else {
-                                        if (kDebugMode) {
-                                          print("Values are null");
-                                        }
+                                        bgController.clearErrors();
+                                        if(tmp.isEmpty) bgController.displayError(value: "Betrag eingeben");
                                       }
                                     })
                                   ],
@@ -143,18 +138,17 @@ class EditBudgetScreen extends StatelessWidget {
                               children: [
                                 Padding(
                                   padding: getPadding(
-                                      top: 20,
-                                      left: 20,
-                                      right: 20,
-                                      bottom: 10),
+                                      top: 20, left: 20, right: 20, bottom: 10),
                                   child: Row(
                                     children: [
                                       Expanded(
                                         child: Padding(
                                           padding: getPadding(left: 20),
                                           child: CustomTextField(
-                                              hintText: "Betrag für den aktuellen Monat",
-                                              controller: bgController.valueController,
+                                              hintText:
+                                                  "Betrag für den aktuellen Monat",
+                                              controller:
+                                                  bgController.valueController,
                                               label: "Betrag"),
                                         ),
                                       )
@@ -167,8 +161,8 @@ class EditBudgetScreen extends StatelessWidget {
                                     child: CustomTextField(
                                         hintText: "Beschreibung",
                                         label: "Beschreibung",
-                                        controller: bgController
-                                            .descriptionController,
+                                        controller:
+                                            bgController.descriptionController,
                                         multiline: true)),
                               ],
                             ),
@@ -178,24 +172,23 @@ class EditBudgetScreen extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Padding(
-                                    padding:
-                                    getPadding(
+                                    padding: getPadding(
                                         right: 20, top: 10, bottom: 10),
                                     child: AbortButton(onPressed: () {
                                       Navigator.of(context).pop();
                                     }),
                                   ),
                                   SaveButton(onPressed: () {
-                                    String tmp = bgController.valueController
-                                        .text;
+                                    String tmp =
+                                        bgController.valueController.text;
                                     double value = double.parse(tmp);
-                                    String description = bgController
-                                        .descriptionController.text;
+                                    String description =
+                                        bgController.descriptionController.text;
                                     if (tmp.isNotEmpty) {
                                       addBudget(
-                                          date: monthController.actualMonth.value,
-                                          description: description,
-                                          value: value,
+                                        date: monthController.actualMonth.value,
+                                        description: description,
+                                        value: value,
                                       );
                                       bgController.clear();
                                       Navigator.of(context).pushReplacement(
