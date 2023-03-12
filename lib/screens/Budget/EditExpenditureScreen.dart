@@ -29,6 +29,7 @@ class EditExpenditureScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    seController.clearErrors();
     seController.titleController.text = expenditure.title;
     seController.descriptionController.text = expenditure.description;
     seController.valueController.text = expenditure.value.toString();
@@ -110,17 +111,8 @@ class EditExpenditureScreen extends StatelessWidget {
                           builder: (context) => BudgetCategoryScreen()));
                     } else {
                       seController.clearErrors();
-                      if (title.isEmpty) {
-                        seController.displayError(title: "Titel eingeben");
-                        print(seController.titleError.value);
-                      } else {
-                        seController.displayError(title: "");
-                      }
-                      if (valueStr.isEmpty) {
-                        seController.displayError(value: "Betrag eingeben");
-                      } else {
-                        seController.displayError(value: "");
-                      }
+                      if (title.isEmpty) seController.displayError(title: "Titel eingeben");
+                      if (valueStr.isEmpty) seController.displayError(value: "Betrag eingeben");
                     }
                   })
                 ],
