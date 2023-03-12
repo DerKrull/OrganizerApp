@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:month_picker_dialog_2/month_picker_dialog_2.dart';
+import 'package:organizer_app/screens/BudgetScreen.dart';
 
 import '../../controller/DropDownCategoryController.dart';
 import '../../controller/MonthController.dart';
@@ -19,25 +20,26 @@ import 'EditCategoryScreen.dart';
 import 'EditExpenditureScreen.dart';
 
 class BudgetCategoryScreen extends StatelessWidget {
-
-  BudgetCategoryScreen(
-      {Key? key})
-      : super(key: key);
+  BudgetCategoryScreen({Key? key}) : super(key: key);
 
   final MonthController monthController = Get.find();
   final DropDownCategoryController dropDownController = Get.find();
   final format = DateFormat("MMMM", "de_DE");
 
   Stream<List<Expenditure>> expenditureStream() {
-    DocumentReference categoryDocRef =
-    db.collection("budgetCategory").doc(dropDownController.category.value.docRef);
+    DocumentReference categoryDocRef = db
+        .collection("budgetCategory")
+        .doc(dropDownController.category.value.docRef);
     try {
       return db
           .collection("expenditure")
           .where("category", isEqualTo: categoryDocRef)
           .where("date",
-          isGreaterThanOrEqualTo: getFirstTimeOfMonth(monthController.actualMonth.value))
-          .where("date", isLessThanOrEqualTo: getLastTimeOfMonth(monthController.actualMonth.value))
+              isGreaterThanOrEqualTo:
+                  getFirstTimeOfMonth(monthController.actualMonth.value))
+          .where("date",
+              isLessThanOrEqualTo:
+                  getLastTimeOfMonth(monthController.actualMonth.value))
           .snapshots()
           .map((notes) {
         final List<Expenditure> expendituresFromFirestore = <Expenditure>[];
@@ -56,10 +58,12 @@ class BudgetCategoryScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     initializeDateFormatting('de_DE');
     return SafeArea(
-      child: Obx (() => Scaffold(
+        child: Obx(
+      () => Scaffold(
         appBar: CustomTopAppBar(
             title: dropDownController.category.value.name,
             showDelete: false,
+            overrideBackButton: BudgetScreen(),
             showThreePoints: true,
             menu: ThreePointPopUpMenu(
                 onSelected: (int result) {
@@ -67,8 +71,8 @@ class BudgetCategoryScreen extends StatelessWidget {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) =>
-                                EditCategoryScreen(category: dropDownController.category.value)));
+                            builder: (context) => EditCategoryScreen(
+                                category: dropDownController.category.value)));
                   }
                 },
                 entries: const ["Kategorie-Einstellungen"]).build(context)),
@@ -79,12 +83,15 @@ class BudgetCategoryScreen extends StatelessWidget {
         backgroundColor: CustomMaterialThemeColorConstant.dark.surface1,
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            dropDownController.changeCategory(budgetCategory: dropDownController.category.value);
+            dropDownController.changeCategory(
+                budgetCategory: dropDownController.category.value);
             if (kDebugMode) {
               print("Category:${dropDownController.category.value.name}");
             }
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => AddExpenditureScreen()));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => AddExpenditureScreen()));
           },
           backgroundColor:
               CustomMaterialThemeColorConstant.dark.primaryContainer,
@@ -93,24 +100,24 @@ class BudgetCategoryScreen extends StatelessWidget {
             color: CustomMaterialThemeColorConstant.dark.onSurface,
           ),
         ),
-        body: Obx (() => SingleChildScrollView(
-          child: Column(
-            children: [
-              buildBarChartWithText(context),
-              CustomMonthPicker(),
-              StreamBuilder(
-                  stream: expenditureStream(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return buildListView(snapshot);
-                    } else if (snapshot.hasError) {
-                      return Text("${snapshot.error}");
-                    }
-                    return const CircularProgressIndicator();
-                  }),
-            ],
-          ),
-        )),
+        body: Obx(() => SingleChildScrollView(
+              child: Column(
+                children: [
+                  buildBarChartWithText(context),
+                  CustomMonthPicker(),
+                  StreamBuilder(
+                      stream: expenditureStream(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return buildListView(snapshot);
+                        } else if (snapshot.hasError) {
+                          return Text("${snapshot.error}");
+                        }
+                        return const CircularProgressIndicator();
+                      }),
+                ],
+              ),
+            )),
       ),
     ));
   }
@@ -173,7 +180,8 @@ class BudgetCategoryScreen extends StatelessWidget {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    EditExpenditureScreen(expenditure: entry)));
+                                                    EditExpenditureScreen(
+                                                        expenditure: entry)));
                                       },
                                       icon: const Icon(Icons.edit),
                                       iconSize: getSize(30),
@@ -237,9 +245,7 @@ class BudgetCategoryScreen extends StatelessWidget {
                       unselectedMonthTextColor:
                           CustomMaterialThemeColorConstant.dark.onSecondary,
                     ).then((date) {
-                      if (date != null) {
-
-                      }
+                      if (date != null) {}
                     })
                   }),
         ),
@@ -251,7 +257,9 @@ class BudgetCategoryScreen extends StatelessWidget {
     return Padding(
       padding: getPadding(left: 20, right: 20, bottom: 10, top: 20),
       child: FutureBuilder(
-        future: getUsedBudgetPerCategory(dropDownController.category.value.docRef, monthController.actualMonth.value),
+        future: getUsedBudgetPerCategory(
+            dropDownController.category.value.docRef,
+            monthController.actualMonth.value),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Text("${snapshot.error}");
@@ -268,12 +276,14 @@ class BudgetCategoryScreen extends StatelessWidget {
                     double totalBudget = snapshot.data!;
                     double usedBudgetWidth = 0;
                     double restBudgetWidth = 0;
-                    Color color = CustomMaterialThemeColorConstant.dark.inversePrimary;
+                    Color color =
+                        CustomMaterialThemeColorConstant.dark.inversePrimary;
                     if (usedBudget > totalBudget) {
                       double width = MediaQuery.of(context).size.width - 60;
                       usedBudgetWidth = width;
                       restBudgetWidth = 0;
-                      color = CustomMaterialThemeColorConstant.dark.errorContainer;
+                      color =
+                          CustomMaterialThemeColorConstant.dark.errorContainer;
                     } else {
                       double width = MediaQuery.of(context).size.width - 60;
                       usedBudgetWidth = width * usedBudget / totalBudget;
