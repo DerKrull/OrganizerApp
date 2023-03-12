@@ -18,25 +18,24 @@ import '../BudgetScreen.dart';
 
 class EditCategoryScreen extends StatelessWidget {
   EditCategoryScreen({Key? key, required this.category}) : super(key: key);
-  BudgetCategory category;
+  final BudgetCategory category;
 
   final SingleCategoryController scController = Get.find();
   final DropDownCategoryController dropDownController = Get.find();
 
   @override
   Widget build(BuildContext context) {
+    scController.clearErrors();
     return SafeArea(
       child: Scaffold(
           appBar: CustomTopAppBar(
               title: category.name,
               showThreePoints: false,
               showDelete: true,
-              onPressed: () {
+              deleteOnPressed: () {
                 deleteCategory(docRef: category.docRef);
                 Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          BudgetScreen()),
+                  MaterialPageRoute(builder: (context) => BudgetScreen()),
                 );
               },
               menu: ThreePointPopUpMenu(
@@ -64,41 +63,57 @@ class EditCategoryScreen extends StatelessWidget {
                           padding: const EdgeInsets.all(8.0),
                           child: Column(
                             children: [
-                              Column(
-                                children: [
-                                  Padding(
-                                    padding: getPadding(
-                                        top: 20,
-                                        left: 20,
-                                        right: 20,
-                                        bottom: 10),
-                                    child: Row(
-                                      children: [
-                                        buildColorPicker(context),
-                                        Expanded(
-                                          child: Padding(
-                                            padding: getPadding(left: 20),
-                                            child: CustomTextField(
-                                                hintText: "Name der Kategorie",
-                                                controller:
-                                                    scController.nameController,
-                                                label: "Name"),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  Padding(
-                                      padding: getPadding(
-                                          left: 20, right: 20, top: 20),
-                                      child: CustomTextField(
-                                          hintText: "Beschreibung",
-                                          label: "Beschreibung",
-                                          controller: scController
-                                              .descriptionController,
-                                          multiline: true)),
-                                ],
-                              ),
+                              Obx(() => Column(
+                                    children: [
+                                      Padding(
+                                        padding: getPadding(
+                                            top: 20,
+                                            left: 20,
+                                            right: 20,
+                                            bottom: 10),
+                                        child: Row(
+                                          children: [
+                                            buildColorPicker(context),
+                                            Expanded(
+                                              child: Padding(
+                                                padding: getPadding(left: 20),
+                                                child: CustomTextField(
+                                                    hintText:
+                                                        "Name der Kategorie",
+                                                    controller: scController
+                                                        .nameController,
+                                                    label: "Name",
+                                                    errorMessage: scController
+                                                            .nameError
+                                                            .value
+                                                            .isEmpty
+                                                        ? null
+                                                        : scController
+                                                            .nameError.value),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                      Padding(
+                                          padding: getPadding(
+                                              left: 20, right: 20, top: 20),
+                                          child: CustomTextField(
+                                            hintText: "Beschreibung",
+                                            label: "Beschreibung",
+                                            controller: scController
+                                                .descriptionController,
+                                            multiline: true,
+                                            errorMessage: scController
+                                                    .descriptionError
+                                                    .value
+                                                    .isEmpty
+                                                ? null
+                                                : scController
+                                                    .descriptionError.value,
+                                          )),
+                                    ],
+                                  )),
                               Align(
                                 alignment: Alignment.bottomCenter,
                                 child: Row(
@@ -118,6 +133,7 @@ class EditCategoryScreen extends StatelessWidget {
                                           .descriptionController.text;
                                       Color selectedColor =
                                           scController.color.value;
+                                      scController.clearErrors();
                                       if (name.isNotEmpty) {
                                         category.name = name;
                                         category.description = description;
@@ -130,17 +146,16 @@ class EditCategoryScreen extends StatelessWidget {
                                             color: selectedColor.value);
                                         dropDownController.changeCategory(
                                             budgetCategory: category);
-                                        Navigator.of(context)
-                                            .pop(); // ToDo better way to reload BudgetCategoryScreen
                                         Navigator.of(context).pushReplacement(
                                           MaterialPageRoute(
                                               builder: (context) =>
                                                   BudgetCategoryScreen()),
                                         );
                                       } else {
-                                        if (kDebugMode) {
-                                          print("Values are null");
-                                        }
+                                        scController.clearErrors();
+                                        if (name.isEmpty)
+                                          scController.displayError(
+                                              name: "Namen eingeben");
                                       }
                                     })
                                   ],
