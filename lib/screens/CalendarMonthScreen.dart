@@ -153,7 +153,7 @@ class _CalendarMonthScreenState extends State<CalendarMonthScreen> {
                                                 subtitle: Text(
                                                     value[index].description),
                                                 trailing: Text(
-                                                  "at ${DateFormat("hh:mm").format(value[index].dateTime)}",
+                                                  "um ${DateFormat("hh:mm").format(value[index].dateTime)}",
                                                   style:
                                                       TextStyle(fontSize: 16.0),
                                                 ),

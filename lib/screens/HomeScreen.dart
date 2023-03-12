@@ -8,12 +8,15 @@ import 'package:intl/intl.dart';
 import 'package:material_segmented_control/material_segmented_control.dart';
 import 'package:organizer_app/core/app_export.dart';
 import 'package:organizer_app/screens/BudgetScreen.dart';
+import 'package:organizer_app/screens/CalendarMonthScreen.dart';
 import 'package:organizer_app/screens/TasksOverviewScreen.dart';
 import 'package:organizer_app/widgets/CustomBottomAppBar.dart';
 
+import '../controller/Calendar/TableCalendarController.dart';
 import '../controller/MonthController.dart';
 import '../controller/TaskTypeController.dart';
 import '../core/FireStoreFutures/GetTasksFutures.dart';
+import '../core/model/Event.dart';
 import '../core/model/Task.dart';
 import '../core/model/TaskCategory.dart';
 import '../widgets/CustomTopAppBarHome.dart';
@@ -26,6 +29,7 @@ class HomeScreen extends StatelessWidget {
 
   final MonthController monthController = Get.find();
   final TaskTypeController taskTypeController = Get.find();
+  final TableCalendarController tableCalendarController = Get.find();
 
   final Map<int, Widget> _children = {
     0: const Text(
@@ -78,8 +82,7 @@ class HomeScreen extends StatelessWidget {
                       buildTaskSelect(),
                       buildTasksBox(context),
                       addSeparationLine(height: 10.0),
-                      // ToDo: Add only events to Home Screen
-                      // buildTodaysEvents(),
+                      buildTodaysEvents(context),
                     ],
                   ),
                 ))));
@@ -90,8 +93,8 @@ class HomeScreen extends StatelessWidget {
       padding: getPadding(left: 20, right: 20, bottom: 10, top: 20),
       child: GestureDetector(
         onTap: () {
-          Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => BudgetScreen()));
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => BudgetScreen()));
         },
         child: FutureBuilder(
           future: getUsedBudgetTotal(monthController.actualMonth.value),
@@ -117,8 +120,8 @@ class HomeScreen extends StatelessWidget {
                         double width = MediaQuery.of(context).size.width - 60;
                         usedBudgetWidth = width;
                         restBudgetWidth = 0;
-                        color =
-                            CustomMaterialThemeColorConstant.dark.errorContainer;
+                        color = CustomMaterialThemeColorConstant
+                            .dark.errorContainer;
                       } else {
                         double width = MediaQuery.of(context).size.width - 60;
                         usedBudgetWidth = width * usedBudget / totalBudget;
@@ -169,7 +172,8 @@ class HomeScreen extends StatelessWidget {
                     }
                     return Text(
                         style: TextStyle(
-                          color: CustomMaterialThemeColorConstant.dark.onSurface,
+                          color:
+                              CustomMaterialThemeColorConstant.dark.onSurface,
                           fontSize: 30.0,
                           fontWeight: FontWeight.bold,
                         ),
@@ -194,7 +198,7 @@ class HomeScreen extends StatelessWidget {
 
   Widget buildTaskSelect() {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(10.0),
       child: Container(
         width: double.infinity,
         child: Obx(
@@ -215,7 +219,7 @@ class HomeScreen extends StatelessWidget {
 
   Widget buildTasksBox(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
+      padding: const EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 10.0),
       child: GestureDetector(
         onTap: () {
           Navigator.of(context).push(
@@ -504,4 +508,79 @@ class HomeScreen extends StatelessWidget {
     }
   }
 
+  Widget buildTodaysEvents(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: GestureDetector(
+        onTap: () {
+          Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => CalendarMonthScreen()));
+        },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 4.0),
+              child: Text(
+                "Termine Heute",
+                style: TextStyle(
+                  fontSize: 22,
+                  color: CustomMaterialThemeColorConstant.dark.onSurface,
+                ),
+              ),
+            ),
+            FutureBuilder<List<Event>>(
+              future: getEventsForDay(DateTime.now()),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Text('${snapshot.error}');
+                } else if (snapshot.hasData) {
+                  List<Event> events = snapshot.data!;
+                  return SizedBox(
+                    height: events.length * 80,
+                    child: ListView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
+                        itemCount: events.length,
+                        itemBuilder: (context, index) {
+                          return _buildSingleEvent(index, events);
+                        }),
+                  );
+                }
+                return const CircularProgressIndicator();
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSingleEvent(int index, List<Event> events) {
+    return Card(
+      color: CustomMaterialThemeColorConstant.dark.surface5,
+      child: ListTile(
+        title: Text(
+          events[index].title,
+          style: TextStyle(
+            fontSize: 20,
+            color: CustomMaterialThemeColorConstant.dark.onSurface,
+          ),
+        ),
+        subtitle: Text(
+          events[index].description,
+          style: TextStyle(
+            fontSize: 16,
+            color: CustomMaterialThemeColorConstant.dark.onSurface,
+          ),
+        ),
+        trailing: Text(
+          "um ${DateFormat("hh:mm").format(events[index].dateTime)}",
+          style: TextStyle(
+            fontSize: 16,
+            color: CustomMaterialThemeColorConstant.dark.onSurface,
+          ),
+        ),
+      ),
+    );
+  }
 }
