@@ -8,13 +8,15 @@ class CustomNumberField extends StatelessWidget {
   final String label;
   final String hintText;
   final bool multiline;
+  final String? errorMessage;
 
   const CustomNumberField(
       {Key? key,
       required this.controller,
       required this.label,
       required this.hintText,
-      this.multiline = false})
+      this.multiline = false,
+      this.errorMessage})
       : super(key: key);
 
   @override
@@ -43,6 +45,7 @@ class CustomNumberField extends StatelessWidget {
           color: CustomMaterialThemeColorConstant.dark.onSurface,
         ),
         decoration: InputDecoration(
+            errorText: errorMessage,
             hintText: hintText,
             hintStyle: TextStyle(
                 color: CustomMaterialThemeColorConstant.dark.onSurface),

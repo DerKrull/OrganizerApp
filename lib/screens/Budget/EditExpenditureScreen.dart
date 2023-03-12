@@ -21,7 +21,7 @@ import '../../widgets/CustomNumberField.dart';
 class EditExpenditureScreen extends StatelessWidget {
   EditExpenditureScreen({Key? key, required this.expenditure})
       : super(key: key);
-  Expenditure expenditure;
+  final Expenditure expenditure;
 
   final SingleExpenditureController seController = Get.find();
   final DateController dateController = Get.find();
@@ -34,95 +34,101 @@ class EditExpenditureScreen extends StatelessWidget {
     seController.valueController.text = expenditure.value.toString();
     dateController.updateSelectedDate(newDate: expenditure.date);
     return Scaffold(
-        appBar: CustomTopAppBar(
-            title: "Aufgabe hinzufügen",
-            showDelete: false,
-            showThreePoints: true,
-            menu: ThreePointPopUpMenu(
-                onSelected: (int result) {},
-                entries: const ["Kategorie-Einstellungen"]).build(context)),
-        bottomNavigationBar: CustomBottomAppBar(
-          isMainPage: false,
-          mainPage: MainPages.TaskScreen,
-        ),
-        backgroundColor: CustomMaterialThemeColorConstant.dark.surface1,
-        body: SingleChildScrollView(
+      appBar: CustomTopAppBar(
+          title: "Aufgabe hinzufügen",
+          showDelete: false,
+          showThreePoints: true,
+          menu: ThreePointPopUpMenu(
+              onSelected: (int result) {},
+              entries: const ["Kategorie-Einstellungen"]).build(context)),
+      bottomNavigationBar: CustomBottomAppBar(
+        isMainPage: false,
+        mainPage: MainPages.TaskScreen,
+      ),
+      backgroundColor: CustomMaterialThemeColorConstant.dark.surface1,
+      body: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                CustomTextField(
+        padding: const EdgeInsets.all(8.0),
+        child: Obx(() => Column(
+          children: [
+            CustomTextField(
                   controller: seController.titleController,
                   label: 'Titel',
                   hintText: 'Titel der Ausgabe',
+                  errorMessage: seController.titleError.value.isEmpty ? null : seController.titleError.value,
                 ),
-                CustomDatePicker(label: "Datum"),
-                BudgetCategoryDropDownField(),
-                CustomTextField(
-                  controller: seController.descriptionController,
-                  label: 'Beschreibung',
-                  hintText: 'Beschreibung',
-                ),
-                CustomNumberField(
-                  controller: seController.valueController,
-                  label: 'Betrag',
-                  hintText: 'Betrag der Ausgabe',
-                ),
-                Padding(
-                  padding: getPadding(top: 30),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: getPadding(right: 20, top: 10, bottom: 10),
-                        child: AbortButton(onPressed: () {
-                          Navigator.of(context).pop();
-                        }),
-                      ),
-                      SaveButton(onPressed: () {
-                        String title = seController.titleController.text;
-                        String description =
-                            seController.descriptionController.text;
-                        String valueStr = seController.valueController.text;
-                        BudgetCategory category = ddcController.category.value;
-                        String dateStr = dateController.dateTextController.text;
-                        DateTime date = dateController.actualDate;
-                        if (title.isNotEmpty &&
-                            valueStr.isNotEmpty &&
-                            dateStr.isNotEmpty) {
-                          double value = double.parse(valueStr);
-                          updateExpenditure(
-                              docRef: expenditure.docRef,
-                              category: category,
-                              title: title,
-                              value: value,
-                              date: date,
-                              description: description);
-                          seController.clear();
-                          dateController.clear();
-                          /* TODO Fix back button after saving edited data
-                          - edit data
-                          - save data
-                          - your on budgetcategoryscreen
-                          - press back in the top left corner
-                          -> you get to a previous budgetcategoryscreen
-                          -> Fix that !!!
-                           */
-                          Navigator.of(context).pop;
-                          Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      BudgetCategoryScreen()));
-                        } else {
-                          print("Values are empty");
-                        }
-                      })
-                    ],
-                  ),
-                ),
-              ],
+            CustomDatePicker(label: "Datum"),
+            BudgetCategoryDropDownField(),
+            CustomTextField(
+              controller: seController.descriptionController,
+              label: 'Beschreibung',
+              hintText: 'Beschreibung',
+              errorMessage: seController.descriptionError.value.isEmpty ? null : seController.descriptionError.value,
             ),
-          ),
-        ));
+            CustomNumberField(
+              controller: seController.valueController,
+              label: 'Betrag',
+              hintText: 'Betrag der Ausgabe',
+              errorMessage: seController.valueError.value.isEmpty ? null : seController.valueError.value,
+            ),
+            Padding(
+              padding: getPadding(top: 30),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: getPadding(right: 20, top: 10, bottom: 10),
+                    child: AbortButton(onPressed: () {
+                      Navigator.of(context).pop();
+                    }),
+                  ),
+                  SaveButton(onPressed: () {
+                    // Get values
+                    String title = seController.titleController.text;
+                    String description =
+                        seController.descriptionController.text;
+                    String valueStr = seController.valueController.text;
+                    BudgetCategory category = ddcController.category.value;
+                    String dateStr = dateController.dateTextController.text;
+                    DateTime date = dateController.actualDate;
+                    if (title.isNotEmpty &&
+                        valueStr.isNotEmpty &&
+                        dateStr.isNotEmpty) {
+                      double value = double.parse(valueStr);
+                      // clear Error message
+                      seController.clearErrors();
+                      updateExpenditure(
+                          docRef: expenditure.docRef,
+                          category: category,
+                          title: title,
+                          value: value,
+                          date: date,
+                          description: description);
+                      seController.clear();
+                      dateController.clear();
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                          builder: (context) => BudgetCategoryScreen()));
+                    } else {
+                      seController.clearErrors();
+                      if (title.isEmpty) {
+                        seController.displayError(title: "Titel eingeben");
+                        print(seController.titleError.value);
+                      } else {
+                        seController.displayError(title: "");
+                      }
+                      if (valueStr.isEmpty) {
+                        seController.displayError(value: "Betrag eingeben");
+                      } else {
+                        seController.displayError(value: "");
+                      }
+                    }
+                  })
+                ],
+              ),
+            ),
+          ],
+        )),
+      )),
+    );
   }
 }
