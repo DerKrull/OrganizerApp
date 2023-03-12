@@ -59,33 +59,37 @@ class EditBudgetScreen extends StatelessWidget {
                           padding: const EdgeInsets.all(8.0),
                           child: Column(
                             children: [
-                              Obx( () => Column(
-                                children: [
-                                  Padding(
-                                    padding: getPadding(
-                                        top: 20,
-                                        left: 20,
-                                        right: 20,
-                                        bottom: 10),
-                                    child: CustomTextField(
-                                        hintText:
-                                            "Betrag für den aktuellen Monat",
-                                        controller:
-                                            bgController.valueController,
-                                        label: "Betrag",
-                                    errorMessage: bgController.valueError.value.isEmpty ? null : bgController.valueError.value,),
-                                  ),
-                                  Padding(
-                                      padding: getPadding(
-                                          left: 20, right: 20, top: 20),
-                                      child: CustomTextField(
-                                          hintText: "Beschreibung",
-                                          label: "Beschreibung",
-                                          controller: bgController
-                                              .descriptionController,
-                                          multiline: true)),
-                                ],
-                              )),
+                              Obx(() => Column(
+                                    children: [
+                                      Padding(
+                                        padding: getPadding(
+                                            top: 20,
+                                            left: 20,
+                                            right: 20,
+                                            bottom: 10),
+                                        child: CustomTextField(
+                                          hintText:
+                                              "Betrag für den aktuellen Monat",
+                                          controller:
+                                              bgController.valueController,
+                                          label: "Betrag",
+                                          errorMessage: bgController
+                                                  .valueError.value.isEmpty
+                                              ? null
+                                              : bgController.valueError.value,
+                                        ),
+                                      ),
+                                      Padding(
+                                          padding: getPadding(
+                                              left: 20, right: 20, top: 20),
+                                          child: CustomTextField(
+                                              hintText: "Beschreibung",
+                                              label: "Beschreibung",
+                                              controller: bgController
+                                                  .descriptionController,
+                                              multiline: true,)),
+                                    ],
+                                  )),
                               Align(
                                 alignment: Alignment.bottomCenter,
                                 child: Row(
@@ -120,7 +124,9 @@ class EditBudgetScreen extends StatelessWidget {
                                         );
                                       } else {
                                         bgController.clearErrors();
-                                        if(tmp.isEmpty) bgController.displayError(value: "Betrag eingeben");
+                                        if (tmp.isEmpty)
+                                          bgController.displayError(
+                                              value: "Betrag eingeben");
                                       }
                                     })
                                   ],
@@ -134,38 +140,37 @@ class EditBudgetScreen extends StatelessWidget {
                         padding: const EdgeInsets.all(8.0),
                         child: Column(
                           children: [
-                            Column(
-                              children: [
-                                Padding(
-                                  padding: getPadding(
-                                      top: 20, left: 20, right: 20, bottom: 10),
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                        child: Padding(
-                                          padding: getPadding(left: 20),
-                                          child: CustomTextField(
-                                              hintText:
-                                                  "Betrag für den aktuellen Monat",
-                                              controller:
-                                                  bgController.valueController,
-                                              label: "Betrag"),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                Padding(
-                                    padding: getPadding(
-                                        left: 20, right: 20, top: 20),
-                                    child: CustomTextField(
-                                        hintText: "Beschreibung",
-                                        label: "Beschreibung",
+                            Obx(() => Column(
+                                  children: [
+                                    Padding(
+                                      padding: getPadding(
+                                          top: 20,
+                                          left: 20,
+                                          right: 20,
+                                          bottom: 10),
+                                      child: CustomTextField(
+                                        hintText:
+                                            "Betrag für den aktuellen Monat",
                                         controller:
-                                            bgController.descriptionController,
-                                        multiline: true)),
-                              ],
-                            ),
+                                            bgController.valueController,
+                                        label: "Betrag",
+                                        errorMessage: bgController
+                                                .valueError.value.isEmpty
+                                            ? null
+                                            : bgController.valueError.value,
+                                      ),
+                                    ),
+                                    Padding(
+                                        padding: getPadding(
+                                            left: 20, right: 20, top: 20),
+                                        child: CustomTextField(
+                                            hintText: "Beschreibung",
+                                            label: "Beschreibung",
+                                            controller: bgController
+                                                .descriptionController,
+                                            multiline: true)),
+                                  ],
+                                )),
                             Align(
                               alignment: Alignment.bottomCenter,
                               child: Row(
@@ -181,10 +186,12 @@ class EditBudgetScreen extends StatelessWidget {
                                   SaveButton(onPressed: () {
                                     String tmp =
                                         bgController.valueController.text;
-                                    double value = double.parse(tmp);
+
                                     String description =
                                         bgController.descriptionController.text;
                                     if (tmp.isNotEmpty) {
+                                      bgController.clearErrors();
+                                      double value = double.parse(tmp);
                                       addBudget(
                                         date: monthController.actualMonth.value,
                                         description: description,
@@ -197,9 +204,10 @@ class EditBudgetScreen extends StatelessWidget {
                                                 BudgetScreen()),
                                       );
                                     } else {
-                                      if (kDebugMode) {
-                                        print("Values are null");
-                                      }
+                                      bgController.clearErrors();
+                                      if (tmp.isEmpty)
+                                        bgController.displayError(
+                                            value: "Betrag eingeben");
                                     }
                                   })
                                 ],
