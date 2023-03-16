@@ -3,12 +3,14 @@ import 'package:material_segmented_control/material_segmented_control.dart';
 import 'package:organizer_app/screens/Tasks/EditTaskScreen.dart';
 
 import '../../core/app_export.dart';
+import '../../core/model/Task.dart';
 import '../../widgets/CustomBottomAppBar.dart';
 import '../../widgets/CustomTopAppBar.dart';
 import '../../widgets/ThreePointPopUpMenu.dart';
 
 class TaskDetailScreen extends StatefulWidget {
-  const TaskDetailScreen({Key? key}) : super(key: key);
+  const TaskDetailScreen({Key? key, required this.task}) : super(key: key);
+  final Task task;
 
   @override
   State<TaskDetailScreen> createState() => _TaskDetailScreenState();
@@ -45,6 +47,8 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
       style: TextStyle(color: Colors.white),
     ),
   };
+
+  // get task => task;
 
   @override
   void initState() {
@@ -98,7 +102,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => EditTaskScreen()));
+              .push(MaterialPageRoute(builder: (context) => EditTaskScreen(task: widget.task,)));
         },
         backgroundColor: CustomMaterialThemeColorConstant.dark.primaryContainer,
         child: Icon(

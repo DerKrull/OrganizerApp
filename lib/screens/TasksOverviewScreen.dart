@@ -299,15 +299,15 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
                 isCheckedList[index].name,
                 style: isCheckedList[index].done
                     ? TextStyle(
-                  decoration: TextDecoration.lineThrough,
-                  decorationThickness: 3,
-                  fontSize: 20,
-                  color: CustomMaterialThemeColorConstant.dark.onSurface,
-                )
+                        decoration: TextDecoration.lineThrough,
+                        decorationThickness: 3,
+                        fontSize: 20,
+                        color: CustomMaterialThemeColorConstant.dark.onSurface,
+                      )
                     : TextStyle(
-                  fontSize: 20,
-                  color: CustomMaterialThemeColorConstant.dark.onSurface,
-                ),
+                        fontSize: 20,
+                        color: CustomMaterialThemeColorConstant.dark.onSurface,
+                      ),
               ),
               leading: Transform.scale(
                 scale: 1.3,
@@ -355,15 +355,15 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
                 isCheckedList[index].name,
                 style: isCheckedList[index].done
                     ? TextStyle(
-                  decoration: TextDecoration.lineThrough,
-                  decorationThickness: 3,
-                  fontSize: 20,
-                  color: CustomMaterialThemeColorConstant.dark.onSurface,
-                )
+                        decoration: TextDecoration.lineThrough,
+                        decorationThickness: 3,
+                        fontSize: 20,
+                        color: CustomMaterialThemeColorConstant.dark.onSurface,
+                      )
                     : TextStyle(
-                  fontSize: 20,
-                  color: CustomMaterialThemeColorConstant.dark.onSurface,
-                ),
+                        fontSize: 20,
+                        color: CustomMaterialThemeColorConstant.dark.onSurface,
+                      ),
               ),
               subtitle: Text(
                 "${snapshot.data?.name}",
@@ -424,7 +424,8 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
     }
   }
 
-  void changeDone(List<Task> isCheckedList, int index, TaskCategory taskCategory) {
+  void changeDone(
+      List<Task> isCheckedList, int index, TaskCategory taskCategory) {
     isCheckedList[index].done = !isCheckedList[index].done;
     updateTask(
         docRef: isCheckedList[index].taskRef,
@@ -433,6 +434,7 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
         dueDate: isCheckedList[index].dueDate,
         isDaily: isCheckedList[index].isDaily,
         name: isCheckedList[index].name,
-        taskCategory: taskCategory);
+        taskCategory: taskCategory,
+        event: isCheckedList[index].event);
   }
 }

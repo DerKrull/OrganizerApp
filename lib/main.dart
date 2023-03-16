@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:organizer_app/controller/Budget/SingleBudgetController.dart';
 import 'package:organizer_app/controller/Calendar/TableCalendarController.dart';
+import 'package:organizer_app/controller/DropDownEventController.dart';
 import 'package:organizer_app/firebase_options.dart';
 import 'package:organizer_app/screens/DataPrivacyScreen.dart';
 
@@ -13,8 +14,9 @@ import 'controller/DateController.dart';
 import 'controller/DropDownCategoryController.dart';
 import 'controller/DropDownTaskCategoryController.dart';
 import 'controller/MonthController.dart';
-import 'controller/SingleTaskController.dart';
-import 'controller/TaskTypeController.dart';
+import 'controller/SegmentedControlController.dart';
+import 'controller/Tasks/SingleTaskController.dart';
+import 'controller/Tasks/TaskTypeController.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,6 +41,8 @@ class MyApp extends StatelessWidget {
   final SingleTaskController singleTaskController = Get.put(SingleTaskController());
   final TaskTypeController taskTypeController = Get.put(TaskTypeController());
   final MonthController monthController = Get.put(MonthController());
+  final DropDownEventController dropDownEventController = Get.put(DropDownEventController());
+  final SegmentedControlController segmentedControlController = Get.put(SegmentedControlController());
 
   @override
   Widget build(BuildContext context) {

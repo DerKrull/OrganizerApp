@@ -59,14 +59,16 @@ void updateTask(
     required dueDate,
     required description,
     required done,
-    required taskCategory}) {
+    required taskCategory,
+    required event}) {
   final data = Task.fromTask(
       isDaily: isDaily,
       name: name,
       dueDate: dueDate,
       description: description,
       done: done,
-      taskCategory: taskCategory);
+      taskCategory: taskCategory,
+      event: event);
   db
       .collection("task")
       .doc(docRef)

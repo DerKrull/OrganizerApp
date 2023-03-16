@@ -73,7 +73,8 @@ class _DailyTasksScreenState extends State<DailyTasksScreen> {
                     child: ListView.builder(
                         itemCount: snapshot.data!.length,
                         itemBuilder: (context, index) {
-                          return _buildSingleTask(index, snapshot.data!);
+                          final entry = snapshot.data![index];
+                          return _buildSingleTask(index, snapshot.data!, entry);
                         }),
                   );
                 } else if (snapshot.hasError) {
@@ -86,20 +87,20 @@ class _DailyTasksScreenState extends State<DailyTasksScreen> {
     );
   }
 
-  Widget _buildSingleTask(int index, List<Task> taskList) {
+  Widget _buildSingleTask(int index, List<Task> taskList, Task entry) {
     return Card(
       color: CustomMaterialThemeColorConstant.dark.surface5,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           FutureBuilder(
-            future: getTaskCategoryName(taskList[index].taskCategory.id),
+            future: getTaskCategoryName(entry.taskCategory.id),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return ListTile(
                   title: Text(
-                    taskList[index].name,
-                    style: taskList[index].done
+                    entry.name,
+                    style: entry.done
                         ? TextStyle(
                       decoration: TextDecoration.lineThrough,
                       decorationThickness: 3,
@@ -120,9 +121,10 @@ class _DailyTasksScreenState extends State<DailyTasksScreen> {
                       shape: const CircleBorder(),
                       checkColor: Colors.white,
                       activeColor: CustomMaterialThemeColorConstant.light.primary,
-                      value: taskList[index].done,
+                      value: entry.done,
                       onChanged: (bool? value) {
                         setState(() {
+                          //TODO only entry needed?
                           changeDone(taskList, index, snapshot.data!);
                         });
                       },
@@ -136,7 +138,7 @@ class _DailyTasksScreenState extends State<DailyTasksScreen> {
                   ),
                   onTap: () {
                     Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => TaskDetailScreen()));
+                        MaterialPageRoute(builder: (context) => TaskDetailScreen(task: entry,)));
                   },
                 );
               } else if (snapshot.hasError) {
@@ -159,6 +161,7 @@ class _DailyTasksScreenState extends State<DailyTasksScreen> {
         dueDate: isCheckedList[index].dueDate,
         isDaily: isCheckedList[index].isDaily,
         name: isCheckedList[index].name,
-        taskCategory: taskCategory);
+        taskCategory: taskCategory,
+        event: isCheckedList[index].event);
   }
 }

@@ -14,7 +14,7 @@ import 'package:organizer_app/widgets/CustomBottomAppBar.dart';
 
 import '../controller/Calendar/TableCalendarController.dart';
 import '../controller/MonthController.dart';
-import '../controller/TaskTypeController.dart';
+import '../controller/Tasks/TaskTypeController.dart';
 import '../core/FireStoreFutures/GetTasksFutures.dart';
 import '../core/model/Event.dart';
 import '../core/model/Task.dart';
@@ -485,7 +485,7 @@ class HomeScreen extends StatelessWidget {
         dueDate: isCheckedList[index].dueDate,
         isDaily: isCheckedList[index].isDaily,
         name: isCheckedList[index].name,
-        taskCategory: taskCategory);
+        taskCategory: taskCategory, event: isCheckedList[index].event);
   }
 
   Text buildHeadingOfTaskBox() {

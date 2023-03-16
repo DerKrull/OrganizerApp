@@ -74,7 +74,8 @@ class _TasksScreenState extends State<TasksScreen> {
                     child: ListView.builder(
                         itemCount: snapshot.data!.length,
                         itemBuilder: (context, index) {
-                          return _buildSingleTask(index, snapshot.data!);
+                          final entry = snapshot.data![index];
+                          return _buildSingleTask(index, snapshot.data!, entry);
                         }),
                   );
                 } else if (snapshot.hasError) {
@@ -93,20 +94,20 @@ class _TasksScreenState extends State<TasksScreen> {
     );
   }
 
-  Widget _buildSingleTask(int index, List<Task> taskList) {
+  Widget _buildSingleTask(int index, List<Task> taskList, Task entry) {
     return Card(
       color: CustomMaterialThemeColorConstant.dark.surface5,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           FutureBuilder(
-            future: getTaskCategoryName(taskList[index].taskCategory.id),
+            future: getTaskCategoryName(entry.taskCategory.id),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return ListTile(
                   title: Text(
-                    taskList[index].name,
-                    style: taskList[index].done
+                    entry.name,
+                    style: entry.done
                         ? TextStyle(
                             decoration: TextDecoration.lineThrough,
                             decorationThickness: 3,
@@ -133,14 +134,14 @@ class _TasksScreenState extends State<TasksScreen> {
                         height: 5,
                       ),
                       Text(
-                        " ${DateFormat("dd.MM.yyyy").format(taskList[index].dueDate)}",
+                        " ${DateFormat("dd.MM.yyyy").format(entry.dueDate)}",
                         style: TextStyle(
                             fontSize: 16,
                             color: CustomMaterialThemeColorConstant
                                 .dark.onSurface),
                       ),
                       Text(
-                        taskList[index].description,
+                        entry.description,
                         style: TextStyle(
                             fontSize: 16,
                             color: CustomMaterialThemeColorConstant
@@ -159,7 +160,7 @@ class _TasksScreenState extends State<TasksScreen> {
                       checkColor: Colors.white,
                       activeColor:
                           CustomMaterialThemeColorConstant.light.primary,
-                      value: taskList[index].done,
+                      value: entry.done,
                       onChanged: (bool? value) {
                         setState(() {
                           changeDone(taskList, index, snapshot.data!);
@@ -169,7 +170,7 @@ class _TasksScreenState extends State<TasksScreen> {
                   ),
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => TaskDetailScreen()));
+                        builder: (context) => TaskDetailScreen(task: entry,)));
                   },
                 );
               } else if (snapshot.hasError) {
@@ -199,6 +200,7 @@ class _TasksScreenState extends State<TasksScreen> {
         dueDate: isCheckedList[index].dueDate,
         isDaily: isCheckedList[index].isDaily,
         name: isCheckedList[index].name,
-        taskCategory: taskCategory);
+        taskCategory: taskCategory,
+        event: isCheckedList[index].event);
   }
 }

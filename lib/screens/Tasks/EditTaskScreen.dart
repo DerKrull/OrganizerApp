@@ -1,44 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:organizer_app/controller/DateController.dart';
+import 'package:organizer_app/controller/DropDownTaskCategoryController.dart';
+import 'package:organizer_app/controller/SegmentedControlController.dart';
+import 'package:organizer_app/controller/Tasks/SingleTaskController.dart';
+import 'package:organizer_app/core/model/Event.dart';
+import 'package:organizer_app/core/model/Task.dart';
+import 'package:organizer_app/core/model/TaskCategory.dart';
+import 'package:organizer_app/widgets/CustomDatePicker.dart';
 import 'package:organizer_app/widgets/CustomTextField.dart';
 import 'package:organizer_app/widgets/CustomTopAppBar.dart';
 import 'package:material_segmented_control/material_segmented_control.dart';
+import 'package:organizer_app/widgets/DropDownFields/TaskEventDropDownField.dart';
 
+import '../../controller/DropDownEventController.dart';
 import '../../core/app_export.dart';
-import '../../core/constants/constants.dart';
-import '../../core/utils/materialThemeColorConstant.dart';
 import '../../widgets/CustomBottomAppBar.dart';
 import '../../widgets/CustomButtons.dart';
+import '../../widgets/DropDownFields/TaskCategoryDropDownField.dart';
 import '../../widgets/ThreePointPopUpMenu.dart';
 
-class EditTaskScreen extends StatefulWidget {
-  const EditTaskScreen({Key? key}) : super(key: key);
+class EditTaskScreen extends StatelessWidget {
+  EditTaskScreen({Key? key, required this.task}) : super(key: key);
+  final Task task;
 
-  @override
-  State<EditTaskScreen> createState() => _EditTaskScreenState();
-}
+  final SingleTaskController taskController = Get.find();
+  final DropDownTaskCategoryController taskCategoryController = Get.find();
+  final DropDownEventController taskEventController = Get.find();
+  final DateController taskDueDateController = Get.find();
+  final SegmentedControlController segmentedControlController = Get.find();
 
-class _EditTaskScreenState extends State<EditTaskScreen> {
-
-  String name = "";
-  bool isDaily = false;
-  DateTime dueDate = DateTime(0);
-  String description = "";
-
-  // TaskCategory taskCategory;
-  String category = "";
-
-  // Meeting meeting;
-  String meeting = "";
-
-  var nameController = TextEditingController();
-  var isDailyController = TextEditingController();
-  var dueDateController = TextEditingController();
-  var descriptionController = TextEditingController();
-
-  var categoryController = TextEditingController();
-  var meetingController = TextEditingController();
-
-  int _currentSelectionSegmentedControl = 0;
   final Map<int, Widget> _children = {
     0: const Text(
       "Normal",
@@ -51,41 +42,12 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
   };
 
   @override
-  void initState() {
-    super.initState();
-    nameController.addListener(() {
-      name = nameController.text;
-    });
-    isDailyController.addListener(() {
-      isDaily = isDailyController.value as bool;
-    });
-    dueDateController.addListener(() {
-      dueDate = dueDateController.value as DateTime;
-    });
-    descriptionController.addListener(() {
-      description = descriptionController.text;
-    });
-    categoryController.addListener(() {
-      category = categoryController.text;
-    });
-    meetingController.addListener(() {
-      meeting = meetingController.text;
-    });
-  }
-
-  @override
-  void dispose() {
-    nameController.dispose();
-    isDailyController.dispose();
-    dueDateController.dispose();
-    descriptionController.dispose();
-    categoryController.dispose();
-    meetingController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    taskController.clearErrors();
+    taskController.nameController.text = task.name;
+    taskController.descriptionController.text = task.description;
+    taskDueDateController.updateSelectedDate(newDate: task.dueDate);
+    //TODO: How to fill DropDowns init Value?
     return Scaffold(
       appBar: CustomTopAppBar(
           title: "Aufgabe bearbeiten",
@@ -101,62 +63,87 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
       backgroundColor: CustomMaterialThemeColorConstant.dark.surface1,
       body: SingleChildScrollView(
         physics: NeverScrollableScrollPhysics(),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              CustomTextField(
-                controller: nameController,
-                label: 'Name',
-                hintText: 'Name der Aufgabe',
-              ),
-              buildSegmentedControl(),
-              CustomTextField(
-                  controller: dueDateController,
+        child: Obx(
+          () => Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                CustomTextField(
+                  controller: taskController.nameController,
+                  label: 'Name',
+                  hintText: 'Name der Aufgabe',
+                  errorMessage: taskController.valueError.value.isEmpty
+                      ? null
+                      : taskController.valueError.value,
+                ),
+                buildSegmentedControl(),
+                CustomDatePicker(
                   label: 'Fälligkeitstermin',
-                  hintText: 'dd.MM.yyyy'),
-              CustomTextField(
-                controller: categoryController,
-                label: 'Kategorie',
-                hintText: 'Name der Kategorie',
-              ),
-              CustomTextField(
-                controller: descriptionController,
-                label: 'Beschreibung',
-                hintText: 'Beschreibung',
-              ),
-              CustomTextField(
-                controller: meetingController,
-                label: 'Termin',
-                hintText: 'Name des Termins',
-              ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Padding(
-                  padding: getPadding(top: 30),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: getPadding(right: 20, top: 10, bottom: 10),
-                        child: AbortButton(onPressed: () {
-                          Navigator.of(context).pop();
-                        }),
-                      ),
-                      SaveButton(onPressed: () {
-                        if (name != "" && isDaily != null && dueDate != "" && description != "" && meeting != "" && meeting != "") {
-                          // addCategory(color: selectedColor!.value, categoryName: categoryName!, categoryDescription: categoryDescription);
-                          print("SAVE");
-                          Navigator.of(context).pop(context);
-                        } else {
-                          print("Values are null");
-                        }
-                      })
-                    ],
+                ),
+                TaskCategoryDropDownField(),
+                CustomTextField(
+                  controller: taskController.descriptionController,
+                  label: 'Beschreibung',
+                  hintText: 'Beschreibung der Aufgabe',
+                  errorMessage: taskController.valueError.value.isEmpty
+                      ? null
+                      : taskController.valueError.value,
+                ),
+                TaskEventDropDownField(),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Padding(
+                    padding: getPadding(top: 30),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: getPadding(right: 20, top: 10, bottom: 10),
+                          child: AbortButton(onPressed: () {
+                            Navigator.of(context).pop();
+                          }),
+                        ),
+                        SaveButton(onPressed: () {
+                          String name = taskController.nameController.text;
+                          String description =
+                              taskController.descriptionController.text;
+                          //TODO Save Button
+
+                          DateTime dueDate = taskDueDateController.actualDate;
+                          bool isDaily =
+                              (segmentedControlController.selectedIndex.value == 1)
+                                  ? true
+                                  : false;
+                          TaskCategory category =
+                              taskCategoryController.category.value;
+                          Event event = taskEventController.event.value;
+
+                          if (name != "" &&
+                              isDaily != null &&
+                              dueDate != "" &&
+                              description != "") {
+                            taskController.clearErrors();
+                            updateTask(
+                                docRef: task.taskRef,
+                                isDaily: isDaily,
+                                name: name,
+                                dueDate: dueDate,
+                                description: description,
+                                done: task.done,
+                                taskCategory: category,
+                                event: event);
+                            print("SAVE");
+                            Navigator.of(context).pop(context);
+                          } else {
+                            print("Values are null");
+                          }
+                        })
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -170,15 +157,12 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
         width: double.infinity,
         child: MaterialSegmentedControl(
           children: _children,
-          selectionIndex: _currentSelectionSegmentedControl,
+          selectionIndex: segmentedControlController.selectedIndex.value,
           selectedColor: Color.fromARGB(255, 74, 68, 88),
           unselectedColor: CustomMaterialThemeColorConstant.dark.surface1,
           borderColor: CustomMaterialThemeColorConstant.dark.outline,
-
           onSegmentChosen: (index) {
-            setState(() {
-              _currentSelectionSegmentedControl = index;
-            });
+            segmentedControlController.onIndexChange(index);
           },
         ),
       ),

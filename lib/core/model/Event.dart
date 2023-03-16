@@ -1,12 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart' show DocumentSnapshot, Timestamp;
 
 class Event {
+  String docRef;
   String title;
   String description;
   DateTime dateTime;
 
   Event(
-      {required this.title, required this.description, required this.dateTime});
+      {required this.title, required this.description, required this.dateTime, required this.docRef});
 
   factory Event.fromDocumentSnapshot(
       {required DocumentSnapshot<Map<String, dynamic>> doc}) {
@@ -15,7 +16,8 @@ class Event {
         title: doc.data()!['title'],
         description: doc.data()!['description'],
         dateTime: DateTime.fromMillisecondsSinceEpoch(
-            timestamp.millisecondsSinceEpoch));
+            timestamp.millisecondsSinceEpoch),
+        docRef: doc.id);
   }
 
   static Map<String, dynamic> fromExpenditure(

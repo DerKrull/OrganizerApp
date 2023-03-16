@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:organizer_app/core/model/Event.dart';
 import 'package:organizer_app/core/model/TaskCategory.dart';
 
 import '../FireStoreFutures/FirebaseInstance.dart';
@@ -13,7 +14,7 @@ class Task {
 
   DocumentReference taskCategory;
 
-  // Meeting meeting;
+  DocumentReference event;
 
   Task(
       {required this.taskRef,
@@ -22,7 +23,8 @@ class Task {
       required this.dueDate,
       required this.description,
       required this.done,
-      required this.taskCategory});
+      required this.taskCategory,
+      required this.event});
 
   factory Task.fromDocumentSnapshot(
       {required DocumentSnapshot<Map<String, dynamic>> doc}) {
@@ -35,7 +37,8 @@ class Task {
             timestamp.millisecondsSinceEpoch),
         done: doc.data()!["done"],
         taskCategory: doc.data()!["taskCategory"],
-        taskRef: doc.id);
+        taskRef: doc.id,
+        event: doc.data()!["event"]);
   }
 
   static Map<String, dynamic> fromTask(
@@ -44,7 +47,8 @@ class Task {
       required dueDate,
       required description,
       required done,
-      required TaskCategory taskCategory}) {
+      required TaskCategory taskCategory,
+      required Event event}) {
     Timestamp timestamp = Timestamp.fromDate(dueDate);
     return {
       "name": name,
@@ -52,7 +56,8 @@ class Task {
       "isDaily": isDaily,
       "dueDate": timestamp,
       "done": done,
-      "taskCategory": db.collection("taskCategory").doc(taskCategory.docRef)
+      "taskCategory": db.collection("taskCategory").doc(taskCategory.docRef),
+      "event": db.collection("event").doc(event.docRef)
     };
   }
 }

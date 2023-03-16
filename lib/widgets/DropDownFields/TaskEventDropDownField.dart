@@ -2,28 +2,32 @@ import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:organizer_app/core/model/TaskCategory.dart';
-import '../controller/DropDownTaskCategoryController.dart';
-import '../core/FireStoreFutures/GetObjects.dart';
-import '../core/utils/materialThemeColorConstant.dart';
+import 'package:organizer_app/controller/DropDownEventController.dart';
+import 'package:organizer_app/core/model/Event.dart';
 
-class TaskCategoryDropDownField extends StatelessWidget {
-  TaskCategoryDropDownField({Key? key}) : super(key: key);
-  final DropDownTaskCategoryController ddtcController = Get.find();
+import '../../core/FireStoreFutures/GetObjects.dart';
+import '../../core/utils/materialThemeColorConstant.dart';
+
+class TaskEventDropDownField extends StatelessWidget {
+  TaskEventDropDownField({
+    Key? key,
+  }) : super(key: key);
+
+  final DropDownEventController eventController = Get.find();
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: FutureBuilder(
-          future: getTaskCategories(),
+          future: getEvents(),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               if (kDebugMode) {
                 print(snapshot.error);
               }
             } else if (snapshot.hasData) {
-              List<TaskCategory> list = snapshot.data!;
+              List<Event> list = snapshot.data!;
               return Obx(
                     () => DropDownTextField(
                   dropDownIconProperty: IconProperty(
@@ -34,13 +38,14 @@ class TaskCategoryDropDownField extends StatelessWidget {
                       color: CustomMaterialThemeColorConstant.dark.onSurface
                   ),
                   readOnly: true,
-                  initialValue: ddtcController.category.value.name,
+                  //TODO init Value not working
+                  initialValue: eventController.event.value.title,
                   enableSearch: true,
                   listTextStyle: TextStyle(color: CustomMaterialThemeColorConstant.dark.background,),
                   textStyle: TextStyle(color: CustomMaterialThemeColorConstant.dark.onSurface,),
                   listSpace: 2,
                   textFieldDecoration: InputDecoration(
-                    hintText: "Kategorie",
+                    hintText: "Event",
                     hintStyle: TextStyle(
                         color: CustomMaterialThemeColorConstant.dark.onSurface),
                     filled: true,
@@ -50,14 +55,14 @@ class TaskCategoryDropDownField extends StatelessWidget {
                         style: TextStyle(
                             color: CustomMaterialThemeColorConstant
                                 .dark.onSurfaceVariant),
-                        "Kategorie"),
+                        "Event"),
                   ),
-                  onChanged: (docRef) {
-                      DropDownValueModel downValueModel = docRef;
-                        ddtcController.changeCategory(taskCategory: downValueModel.value);
+                  onChanged: (dropDownValue) {
+                    DropDownValueModel valueModel = dropDownValue;
+                    eventController.changeEvent(taskEvent: valueModel.value);
                   },
                   dropDownList: list.map<DropDownValueModel>((doc) {
-                    return DropDownValueModel(name: doc.name, value: doc);
+                    return DropDownValueModel(name: doc.title, value: doc);
                   }).toList(),
                 ),
               );
