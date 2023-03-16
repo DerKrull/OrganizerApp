@@ -537,13 +537,24 @@ class HomeScreen extends StatelessWidget {
                 } else if (snapshot.hasData) {
                   List<Event> events = snapshot.data!;
                   return SizedBox(
-                    height: events.length * 80,
-                    child: ListView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                        itemCount: events.length,
-                        itemBuilder: (context, index) {
-                          return _buildSingleEvent(index, events);
-                        }),
+                    height: (events.isEmpty) ? 50 : events.length * 80,
+                    child: (events.isEmpty)
+                        ? Center(
+                            child: Text(
+                              "Keine Termine",
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: CustomMaterialThemeColorConstant
+                                    .dark.onSurface,
+                              ),
+                            ),
+                          )
+                        : ListView.builder(
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: events.length,
+                            itemBuilder: (context, index) {
+                              return _buildSingleEvent(index, events);
+                            }),
                   );
                 }
                 return const CircularProgressIndicator();
