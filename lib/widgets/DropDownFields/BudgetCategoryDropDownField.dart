@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:organizer_app/controller/DropDownCategoryController.dart';
 import 'package:organizer_app/core/model/BudgetCategory.dart';
 
-import '../core/app_export.dart';
+import '../../core/app_export.dart';
 
 class BudgetCategoryDropDownField extends StatelessWidget {
   BudgetCategoryDropDownField({
