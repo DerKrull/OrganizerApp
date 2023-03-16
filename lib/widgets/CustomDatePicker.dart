@@ -6,8 +6,10 @@ import 'package:organizer_app/controller/DateController.dart';
 import '../core/app_export.dart';
 
 class CustomDatePicker extends StatelessWidget {
+  final bool enabled;
+
   CustomDatePicker({
-    Key? key, required this.label
+    Key? key, required this.label, this.enabled = true
   }) : super(key: key);
 
   final String label;
@@ -29,6 +31,7 @@ class CustomDatePicker extends StatelessWidget {
               key: Key(dateController.dateTextController.text),
               expands: false,
               readOnly: true,
+              enabled: enabled,
               style: const TextStyle(color: Colors.white),
               decoration: InputDecoration(
                 label:  Text(label),

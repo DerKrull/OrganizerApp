@@ -47,6 +47,7 @@ class EditTaskScreen extends StatelessWidget {
     taskController.nameController.text = task.name;
     taskController.descriptionController.text = task.description;
     taskDueDateController.updateSelectedDate(newDate: task.dueDate);
+    segmentedControlController.onIndexChange((task.isDaily) ? 1 : 0);
     //TODO: How to fill DropDowns init Value?
     return Scaffold(
       appBar: CustomTopAppBar(
