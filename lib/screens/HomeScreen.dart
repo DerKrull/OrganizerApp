@@ -6,6 +6,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:material_segmented_control/material_segmented_control.dart';
+import 'package:organizer_app/controller/SegmentedControlController.dart';
 import 'package:organizer_app/core/app_export.dart';
 import 'package:organizer_app/screens/BudgetScreen.dart';
 import 'package:organizer_app/screens/CalendarMonthScreen.dart';
@@ -14,7 +15,6 @@ import 'package:organizer_app/widgets/CustomBottomAppBar.dart';
 
 import '../controller/Calendar/TableCalendarController.dart';
 import '../controller/MonthController.dart';
-import '../controller/Tasks/TaskTypeController.dart';
 import '../core/FireStoreFutures/GetTasksFutures.dart';
 import '../core/model/Event.dart';
 import '../core/model/Task.dart';
@@ -28,7 +28,7 @@ class HomeScreen extends StatelessWidget {
   HomeScreen({Key? key}) : super(key: key);
 
   final MonthController monthController = Get.find();
-  final TaskTypeController taskTypeController = Get.find();
+  final SegmentedControlController segmentedControlController = Get.find();
   final TableCalendarController tableCalendarController = Get.find();
 
   final Map<int, Widget> _children = {
@@ -47,7 +47,7 @@ class HomeScreen extends StatelessWidget {
       return db
           .collection("task")
           .where("isDaily",
-              isEqualTo: (taskTypeController.currentSelected.value == 0)
+              isEqualTo: (segmentedControlController.selectedIndex.value == 0)
                   ? false
                   : true)
           .snapshots()
@@ -204,12 +204,12 @@ class HomeScreen extends StatelessWidget {
         child: Obx(
           () => MaterialSegmentedControl(
             children: _children,
-            selectionIndex: taskTypeController.currentSelected.value,
+            selectionIndex: segmentedControlController.selectedIndex.value,
             selectedColor: Color.fromARGB(255, 74, 68, 88),
             unselectedColor: CustomMaterialThemeColorConstant.dark.surface1,
             borderColor: CustomMaterialThemeColorConstant.dark.outline,
             onSegmentChosen: (index) {
-              taskTypeController.changeCurrentSelected(index: index);
+              segmentedControlController.onIndexChange(index);
             },
           ),
         ),
@@ -489,7 +489,7 @@ class HomeScreen extends StatelessWidget {
   }
 
   Text buildHeadingOfTaskBox() {
-    if (taskTypeController.currentSelected.value == 0) {
+    if (segmentedControlController.selectedIndex.value == 0) {
       return const Text(
         "Aufgaben",
         style: TextStyle(

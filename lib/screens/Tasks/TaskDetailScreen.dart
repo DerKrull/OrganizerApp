@@ -88,20 +88,18 @@ class TaskDetailScreen extends StatelessWidget {
                   enabled: false,
                 ),
                 buildSegmentedControl(),
-                CustomDatePicker(
-                  label: 'Fälligkeitstermin',
-                  enabled: false,
-                ),
+                if (segmentedControlController.selectedIndex.value == 0) ...[
+                  CustomDatePicker(label: "Datum"),
+                ],
                 TaskCategoryDropDownField(),
-                CustomTextField(
-                  controller: taskController.descriptionController,
-                  label: 'Beschreibung',
-                  hintText: 'Beschreibung der Aufgabe',
-                  errorMessage: taskController.valueError.value.isEmpty
-                      ? null
-                      : taskController.valueError.value,
-                ),
-                TaskEventDropDownField(),
+                if (segmentedControlController.selectedIndex.value == 0) ...[
+                  CustomTextField(
+                    controller: taskController.descriptionController,
+                    label: 'Beschreibung',
+                    hintText: 'Beschreibung',
+                  ),
+                  TaskEventDropDownField(),
+                ],
               ],
             ),
           ),

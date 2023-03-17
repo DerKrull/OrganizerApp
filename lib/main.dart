@@ -16,7 +16,6 @@ import 'controller/DropDownTaskCategoryController.dart';
 import 'controller/MonthController.dart';
 import 'controller/SegmentedControlController.dart';
 import 'controller/Tasks/SingleTaskController.dart';
-import 'controller/Tasks/TaskTypeController.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,7 +38,6 @@ class MyApp extends StatelessWidget {
   final SingleCategoryController scController = Get.put(SingleCategoryController());
   final DropDownTaskCategoryController taskCategoryController = Get.put(DropDownTaskCategoryController());
   final SingleTaskController singleTaskController = Get.put(SingleTaskController());
-  final TaskTypeController taskTypeController = Get.put(TaskTypeController());
   final MonthController monthController = Get.put(MonthController());
   final DropDownEventController dropDownEventController = Get.put(DropDownEventController());
   final SegmentedControlController segmentedControlController = Get.put(SegmentedControlController());

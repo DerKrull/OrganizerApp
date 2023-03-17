@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 class SingleTaskController extends GetxController {
   final nameController = TextEditingController();
   final descriptionController = TextEditingController();
-  final meetingController = TextEditingController();
 
   var valueError = "".obs;
 
@@ -17,7 +16,6 @@ class SingleTaskController extends GetxController {
   void onClose() {
     nameController.dispose();
     descriptionController.dispose();
-    meetingController.dispose();
   }
 
   void displayError({String value = ""}) {
@@ -31,6 +29,5 @@ class SingleTaskController extends GetxController {
   void clear() {
     nameController.clear();
     descriptionController.clear();
-    meetingController.clear();
   }
 }

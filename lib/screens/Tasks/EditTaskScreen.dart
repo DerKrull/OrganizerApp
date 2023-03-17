@@ -29,6 +29,7 @@ class EditTaskScreen extends StatelessWidget {
   final DropDownEventController taskEventController = Get.find();
   final DateController taskDueDateController = Get.find();
   final SegmentedControlController segmentedControlController = Get.find();
+  // final TaskTypeController taskTypeController = Get.find();
 
   final Map<int, Widget> _children = {
     0: const Text(
@@ -78,19 +79,18 @@ class EditTaskScreen extends StatelessWidget {
                       : taskController.valueError.value,
                 ),
                 buildSegmentedControl(),
-                CustomDatePicker(
-                  label: 'Fälligkeitstermin',
-                ),
+                if (segmentedControlController.selectedIndex.value == 0) ...[
+                  CustomDatePicker(label: "Datum"),
+                ],
                 TaskCategoryDropDownField(),
-                CustomTextField(
-                  controller: taskController.descriptionController,
-                  label: 'Beschreibung',
-                  hintText: 'Beschreibung der Aufgabe',
-                  errorMessage: taskController.valueError.value.isEmpty
-                      ? null
-                      : taskController.valueError.value,
-                ),
-                TaskEventDropDownField(),
+                if (segmentedControlController.selectedIndex.value == 0) ...[
+                  CustomTextField(
+                    controller: taskController.descriptionController,
+                    label: 'Beschreibung',
+                    hintText: 'Beschreibung',
+                  ),
+                  TaskEventDropDownField(),
+                ],
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: Padding(
