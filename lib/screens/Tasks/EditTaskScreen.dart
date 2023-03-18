@@ -52,7 +52,7 @@ class EditTaskScreen extends StatelessWidget {
     //TODO: How to fill DropDowns init Value?
     return Scaffold(
       appBar: CustomTopAppBar(
-          title: "Aufgabe bearbeiten",
+          title: task.name,
           showDelete: false,
           showThreePoints: true,
           menu: ThreePointPopUpMenu(
@@ -105,38 +105,57 @@ class EditTaskScreen extends StatelessWidget {
                           }),
                         ),
                         SaveButton(onPressed: () {
-                          String name = taskController.nameController.text;
+                          TaskCategory taskCategory =
+                              taskCategoryController.category.value;
+                          String name =
+                              taskController.nameController.text;
                           String description =
                               taskController.descriptionController.text;
-                          //TODO Save Button
-
-                          DateTime dueDate = taskDueDateController.actualDate;
                           bool isDaily =
-                              (segmentedControlController.selectedIndex.value == 1)
-                                  ? true
-                                  : false;
-                          TaskCategory category =
-                              taskCategoryController.category.value;
+                          segmentedControlController.selectedIndex.value == 1
+                              ? true
+                              : false;
                           Event event = taskEventController.event.value;
-
-                          if (name != "" &&
-                              isDaily != null &&
-                              dueDate != "" &&
-                              description != "") {
-                            taskController.clearErrors();
-                            updateTask(
-                                docRef: task.taskRef,
-                                isDaily: isDaily,
-                                name: name,
-                                dueDate: dueDate,
-                                description: description,
-                                done: task.done,
-                                taskCategory: category,
-                                event: event);
-                            print("SAVE");
-                            Navigator.of(context).pop(context);
+                          if (isDaily) {
+                            if (name.isNotEmpty) {
+                              event = Event(
+                                  title: "",
+                                  description: "",
+                                  dateTime: DateTime.now(),
+                                  docRef: "1");
+                              updateTask(
+                                  isDaily: isDaily,
+                                  name: name,
+                                  dueDate: DateTime.now(),
+                                  description: "",
+                                  done: false,
+                                  taskCategory: taskCategory,
+                                  event: event,
+                                  docRef: task.taskRef);
+                              taskCategoryController.clear();
+                              taskController.clear();
+                              taskDueDateController.clear();
+                            } else {
+                              print("Values are null");
+                            }
                           } else {
-                            print("Values are null");
+                            if (name.isNotEmpty && description.isNotEmpty) {
+                              updateTask(
+                                  isDaily: isDaily,
+                                  name: name,
+                                  dueDate: DateTime.now(),
+                                  description: description,
+                                  done: false,
+                                  taskCategory: taskCategory,
+                                  event: event,
+                                  docRef: task.taskRef);
+                              taskCategoryController.clear();
+                              taskController.clear();
+                              taskDueDateController.clear();
+                              Navigator.of(context).pop(context);
+                            } else {
+                              print("Values are null");
+                            }
                           }
                         })
                       ],

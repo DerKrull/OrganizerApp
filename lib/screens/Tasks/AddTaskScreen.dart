@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:organizer_app/controller/DateController.dart';
 import 'package:organizer_app/controller/DropDownEventController.dart';
 import 'package:organizer_app/controller/DropDownTaskCategoryController.dart';
