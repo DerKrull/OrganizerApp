@@ -18,7 +18,6 @@ import '../controller/MonthController.dart';
 import '../core/FireStoreFutures/GetTasksFutures.dart';
 import '../core/model/Event.dart';
 import '../core/model/Task.dart';
-import '../core/model/TaskCategory.dart';
 import '../widgets/CustomTopAppBarHome.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
@@ -375,7 +374,7 @@ class HomeScreen extends StatelessWidget {
                   activeColor: CustomMaterialThemeColorConstant.light.primary,
                   value: isCheckedList[index].done,
                   onChanged: (bool? value) {
-                    changeDone(isCheckedList, index, snapshot.data!);
+                    updateDone(task: isCheckedList[index]);
                   },
                 ),
               ),
@@ -455,7 +454,7 @@ class HomeScreen extends StatelessWidget {
                   activeColor: CustomMaterialThemeColorConstant.light.primary,
                   value: isCheckedList[index].done,
                   onChanged: (bool? value) {
-                    changeDone(isCheckedList, index, snapshot.data!);
+                    updateDone(task: isCheckedList[index]);
                   },
                 ),
               ),
@@ -473,19 +472,6 @@ class HomeScreen extends StatelessWidget {
         },
       );
     }
-  }
-
-  void changeDone(
-      List<Task> isCheckedList, int index, TaskCategory taskCategory) {
-    isCheckedList[index].done = !isCheckedList[index].done;
-    updateTask(
-        docRef: isCheckedList[index].taskRef,
-        description: isCheckedList[index].description,
-        done: isCheckedList[index].done,
-        dueDate: isCheckedList[index].dueDate,
-        isDaily: isCheckedList[index].isDaily,
-        name: isCheckedList[index].name,
-        taskCategory: taskCategory, event: isCheckedList[index].event);
   }
 
   Text buildHeadingOfTaskBox() {

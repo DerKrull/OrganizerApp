@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:organizer_app/core/app_export.dart';
-import 'package:organizer_app/core/model/TaskCategory.dart';
 import 'package:organizer_app/screens/Tasks/DailyTasksScreen.dart';
 import 'package:organizer_app/screens/Tasks/TasksScreen.dart';
 import 'package:organizer_app/widgets/CustomBottomAppBar.dart';
@@ -321,7 +320,7 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
                   value: isCheckedList[index].done,
                   onChanged: (bool? value) {
                     setState(() {
-                      changeDone(isCheckedList, index, snapshot.data!);
+                      updateDone(task: isCheckedList[index]);
                     });
                   },
                 ),
@@ -403,7 +402,7 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
                   value: isCheckedList[index].done,
                   onChanged: (bool? value) {
                     setState(() {
-                      changeDone(isCheckedList, index, snapshot.data!);
+                      updateDone(task: isCheckedList[index]);
                     });
                   },
                 ),
@@ -422,19 +421,5 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
         },
       );
     }
-  }
-
-  void changeDone(
-      List<Task> isCheckedList, int index, TaskCategory taskCategory) {
-    isCheckedList[index].done = !isCheckedList[index].done;
-    updateTask(
-        docRef: isCheckedList[index].taskRef,
-        description: isCheckedList[index].description,
-        done: isCheckedList[index].done,
-        dueDate: isCheckedList[index].dueDate,
-        isDaily: isCheckedList[index].isDaily,
-        name: isCheckedList[index].name,
-        taskCategory: taskCategory,
-        event: isCheckedList[index].event);
   }
 }

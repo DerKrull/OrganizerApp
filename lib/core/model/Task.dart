@@ -60,4 +60,20 @@ class Task {
       "event": db.collection("event").doc(event.docRef)
     };
   }
+
+  static Map<String, dynamic> fromTaskChangeDone(
+      {required isDaily,
+        required name,
+        required dueDate,
+        required description,
+        required done}) {
+    Timestamp timestamp = Timestamp.fromDate(dueDate);
+    return {
+      "name": name,
+      "description": description,
+      "isDaily": isDaily,
+      "dueDate": timestamp,
+      "done": done
+    };
+  }
 }

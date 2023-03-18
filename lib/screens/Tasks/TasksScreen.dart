@@ -7,7 +7,6 @@ import 'package:organizer_app/widgets/CustomBottomAppBar.dart';
 
 import '../../core/FireStoreFutures/GetTasksFutures.dart';
 import '../../core/model/Task.dart';
-import '../../core/model/TaskCategory.dart';
 import '../../widgets/CustomTopAppBar.dart';
 import '../../widgets/ThreePointPopUpMenu.dart';
 import 'AddTaskScreen.dart';
@@ -163,7 +162,7 @@ class _TasksScreenState extends State<TasksScreen> {
                       value: entry.done,
                       onChanged: (bool? value) {
                         setState(() {
-                          changeDone(taskList, index, snapshot.data!);
+                          updateDone(task: taskList[index]);
                         });
                       },
                     ),
@@ -188,19 +187,5 @@ class _TasksScreenState extends State<TasksScreen> {
         ],
       ),
     );
-  }
-
-  void changeDone(
-      List<Task> isCheckedList, int index, TaskCategory taskCategory) {
-    isCheckedList[index].done = !isCheckedList[index].done;
-    updateTask(
-        docRef: isCheckedList[index].taskRef,
-        description: isCheckedList[index].description,
-        done: isCheckedList[index].done,
-        dueDate: isCheckedList[index].dueDate,
-        isDaily: isCheckedList[index].isDaily,
-        name: isCheckedList[index].name,
-        taskCategory: taskCategory,
-        event: isCheckedList[index].event);
   }
 }

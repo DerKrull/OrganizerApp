@@ -75,3 +75,19 @@ void updateTask(
       .update(data)
       .then((documentSnapshot) => print("Updated data with id: $docRef"));
 }
+
+void updateDone(
+    {required task}) {
+  Task t = task;
+  final data = Task.fromTaskChangeDone(
+      isDaily: t.isDaily,
+      name: t.name,
+      dueDate: t.dueDate,
+      description: t.description,
+      done: (t.done) ? false : true);
+  db
+      .collection("task")
+      .doc(t.taskRef)
+      .update(data)
+      .then((documentSnapshot) => print("Updated data with id: ${t.taskRef}"));
+}
