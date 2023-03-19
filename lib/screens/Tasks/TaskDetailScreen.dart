@@ -98,7 +98,7 @@ class TaskDetailScreen extends StatelessWidget {
                     label: 'Beschreibung',
                     hintText: 'Beschreibung',
                   ),
-                  TaskEventDropDownField(),
+                  TaskEventDropDownField(task: task,),
                 ],
               ],
             ),

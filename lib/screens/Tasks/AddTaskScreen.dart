@@ -75,7 +75,7 @@ class AddTaskScreen extends StatelessWidget {
                     label: 'Beschreibung',
                     hintText: 'Beschreibung',
                   ),
-                  TaskEventDropDownField(),
+                  TaskEventDropDownField(task: null,),
                 ],
                 Align(
                   alignment: Alignment.bottomCenter,

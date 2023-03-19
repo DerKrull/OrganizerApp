@@ -48,7 +48,6 @@ class EditTaskScreen extends StatelessWidget {
       taskController.descriptionController.text = task.description;
       taskDueDateController.updateSelectedDate(newDate: task.dueDate);
       selectedIndex.value = (task.isDaily) ? 1 : 0;
-      //TODO: How to fill DropDowns init Value?
       return Scaffold(
         appBar: CustomTopAppBar(
             title: task.name,
@@ -63,7 +62,6 @@ class EditTaskScreen extends StatelessWidget {
         ),
         backgroundColor: CustomMaterialThemeColorConstant.dark.surface1,
         body: SingleChildScrollView(
-          physics: NeverScrollableScrollPhysics(),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
@@ -87,7 +85,9 @@ class EditTaskScreen extends StatelessWidget {
                     label: 'Beschreibung',
                     hintText: 'Beschreibung',
                   ),
-                  TaskEventDropDownField(),
+                  TaskEventDropDownField(
+                    task: task,
+                  ),
                 ],
                 Align(
                   alignment: Alignment.bottomCenter,
@@ -105,14 +105,11 @@ class EditTaskScreen extends StatelessWidget {
                         SaveButton(onPressed: () {
                           TaskCategory taskCategory =
                               taskCategoryController.category.value;
-                          String name =
-                              taskController.nameController.text;
+                          String name = taskController.nameController.text;
                           String description =
                               taskController.descriptionController.text;
                           bool isDaily =
-                          selectedIndex.value == 1
-                              ? true
-                              : false;
+                              selectedIndex.value == 1 ? true : false;
                           Event event = taskEventController.event.value;
                           if (isDaily) {
                             if (name.isNotEmpty) {
