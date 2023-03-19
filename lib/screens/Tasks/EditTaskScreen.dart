@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:organizer_app/controller/DateController.dart';
 import 'package:organizer_app/controller/DropDownTaskCategoryController.dart';
-import 'package:organizer_app/controller/SegmentedControlController.dart';
 import 'package:organizer_app/controller/Tasks/SingleTaskController.dart';
 import 'package:organizer_app/core/model/Event.dart';
 import 'package:organizer_app/core/model/Task.dart';
@@ -23,13 +22,12 @@ import '../../widgets/ThreePointPopUpMenu.dart';
 class EditTaskScreen extends StatelessWidget {
   EditTaskScreen({Key? key, required this.task}) : super(key: key);
   final Task task;
+  final RxInt selectedIndex = 0.obs;
 
   final SingleTaskController taskController = Get.find();
   final DropDownTaskCategoryController taskCategoryController = Get.find();
   final DropDownEventController taskEventController = Get.find();
   final DateController taskDueDateController = Get.find();
-  final SegmentedControlController segmentedControlController = Get.find();
-  // final TaskTypeController taskTypeController = Get.find();
 
   final Map<int, Widget> _children = {
     0: const Text(
@@ -48,7 +46,7 @@ class EditTaskScreen extends StatelessWidget {
     taskController.nameController.text = task.name;
     taskController.descriptionController.text = task.description;
     taskDueDateController.updateSelectedDate(newDate: task.dueDate);
-    segmentedControlController.onIndexChange((task.isDaily) ? 1 : 0);
+    selectedIndex.value = (task.isDaily) ? 1 : 0;
     //TODO: How to fill DropDowns init Value?
     return Scaffold(
       appBar: CustomTopAppBar(
@@ -79,11 +77,11 @@ class EditTaskScreen extends StatelessWidget {
                       : taskController.valueError.value,
                 ),
                 buildSegmentedControl(),
-                if (segmentedControlController.selectedIndex.value == 0) ...[
+                if (selectedIndex.value == 0) ...[
                   CustomDatePicker(label: "Datum"),
                 ],
                 TaskCategoryDropDownField(),
-                if (segmentedControlController.selectedIndex.value == 0) ...[
+                if (selectedIndex.value == 0) ...[
                   CustomTextField(
                     controller: taskController.descriptionController,
                     label: 'Beschreibung',
@@ -112,7 +110,7 @@ class EditTaskScreen extends StatelessWidget {
                           String description =
                               taskController.descriptionController.text;
                           bool isDaily =
-                          segmentedControlController.selectedIndex.value == 1
+                          selectedIndex.value == 1
                               ? true
                               : false;
                           Event event = taskEventController.event.value;
@@ -177,12 +175,12 @@ class EditTaskScreen extends StatelessWidget {
         width: double.infinity,
         child: MaterialSegmentedControl(
           children: _children,
-          selectionIndex: segmentedControlController.selectedIndex.value,
+          selectionIndex: selectedIndex.value,
           selectedColor: Color.fromARGB(255, 74, 68, 88),
           unselectedColor: CustomMaterialThemeColorConstant.dark.surface1,
           borderColor: CustomMaterialThemeColorConstant.dark.outline,
           onSegmentChosen: (index) {
-            segmentedControlController.onIndexChange(index);
+            selectedIndex.value = (selectedIndex.value == 0) ? 1 : 0;
           },
         ),
       ),

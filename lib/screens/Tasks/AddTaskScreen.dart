@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:organizer_app/controller/DateController.dart';
 import 'package:organizer_app/controller/DropDownEventController.dart';
 import 'package:organizer_app/controller/DropDownTaskCategoryController.dart';
-import 'package:organizer_app/controller/SegmentedControlController.dart';
 import 'package:organizer_app/core/model/Event.dart';
 import 'package:organizer_app/core/model/TaskCategory.dart';
 import 'package:organizer_app/widgets/CustomDatePicker.dart';
@@ -21,12 +20,13 @@ import '../../widgets/ThreePointPopUpMenu.dart';
 
 class AddTaskScreen extends StatelessWidget {
   AddTaskScreen({Key? key}) : super(key: key);
+  final RxInt selectedIndex = 0.obs;
 
   final DropDownTaskCategoryController ddtcController = Get.find();
   final AddTaskController addTaskController = Get.find();
   final DateController dateController = Get.find();
   final DropDownEventController taskEventController = Get.find();
-  final SegmentedControlController segmentedControlController = Get.find();
+  // final SegmentedControlController segmentedControlController = Get.find();
 
   final Map<int, Widget> _children = {
     0: const Text(
@@ -66,11 +66,11 @@ class AddTaskScreen extends StatelessWidget {
                   hintText: 'Name der Aufgabe',
                 ),
                 buildSegmentedControl(),
-                if (segmentedControlController.selectedIndex.value == 0) ...[
+                if (selectedIndex.value == 0) ...[
                   CustomDatePicker(label: "Datum"),
                 ],
                 TaskCategoryDropDownField(),
-                if (segmentedControlController.selectedIndex.value == 0) ...[
+                if (selectedIndex.value == 0) ...[
                   CustomTextField(
                     controller: addTaskController.descriptionController,
                     label: 'Beschreibung',
@@ -99,7 +99,7 @@ class AddTaskScreen extends StatelessWidget {
                           String description =
                               addTaskController.descriptionController.text;
                           bool isDaily =
-                          segmentedControlController.selectedIndex.value == 1
+                          selectedIndex.value == 1
                                   ? true
                                   : false;
                           Event event = taskEventController.event.value;
@@ -164,12 +164,12 @@ class AddTaskScreen extends StatelessWidget {
         child: Obx(
           () => MaterialSegmentedControl(
             children: _children,
-            selectionIndex: segmentedControlController.selectedIndex.value,
+            selectionIndex: selectedIndex.value,
             selectedColor: Color.fromARGB(255, 74, 68, 88),
             unselectedColor: CustomMaterialThemeColorConstant.dark.surface1,
             borderColor: CustomMaterialThemeColorConstant.dark.outline,
             onSegmentChosen: (index) {
-              segmentedControlController.onIndexChange(index);
+              selectedIndex.value = (selectedIndex.value == 0) ? 1 : 0;
             },
           ),
         ),

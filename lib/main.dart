@@ -15,7 +15,6 @@ import 'controller/DateController.dart';
 import 'controller/DropDownCategoryController.dart';
 import 'controller/DropDownTaskCategoryController.dart';
 import 'controller/MonthController.dart';
-import 'controller/SegmentedControlController.dart';
 import 'controller/Tasks/SingleTaskController.dart';
 
 void main() {
@@ -41,7 +40,6 @@ class MyApp extends StatelessWidget {
   final SingleTaskController singleTaskController = Get.put(SingleTaskController());
   final MonthController monthController = Get.put(MonthController());
   final DropDownEventController dropDownEventController = Get.put(DropDownEventController());
-  final SegmentedControlController segmentedControlController = Get.put(SegmentedControlController());
   final AddTaskController addTaskController = Get.put(AddTaskController());
 
   @override

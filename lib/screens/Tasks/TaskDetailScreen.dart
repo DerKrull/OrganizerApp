@@ -8,7 +8,6 @@ import 'package:organizer_app/widgets/CustomTextField.dart';
 import '../../controller/DateController.dart';
 import '../../controller/DropDownEventController.dart';
 import '../../controller/DropDownTaskCategoryController.dart';
-import '../../controller/SegmentedControlController.dart';
 import '../../controller/Tasks/SingleTaskController.dart';
 import '../../core/app_export.dart';
 import '../../core/model/Task.dart';
@@ -22,12 +21,12 @@ import 'EditTaskScreen.dart';
 class TaskDetailScreen extends StatelessWidget {
   TaskDetailScreen({Key? key, required this.task}) : super(key: key);
   final Task task;
+  final RxInt selectedIndex = 0.obs;
 
   final SingleTaskController taskController = Get.find();
   final DropDownTaskCategoryController taskCategoryController = Get.find();
   final DropDownEventController taskEventController = Get.find();
   final DateController taskDueDateController = Get.find();
-  final SegmentedControlController segmentedControlController = Get.find();
 
   final Map<int, Widget> _children = {
     0: const Text(
@@ -46,7 +45,8 @@ class TaskDetailScreen extends StatelessWidget {
     taskController.nameController.text = task.name;
     taskController.descriptionController.text = task.description;
     taskDueDateController.updateSelectedDate(newDate: task.dueDate);
-    segmentedControlController.onIndexChange((task.isDaily) ? 1 : 0);
+    selectedIndex.value = (task.isDaily) ? 1 : 0;
+    // segmentedControlController.onIndexChange((task.isDaily) ? 1 : 0);
     //TODO: How to fill DropDowns init Value?
     return Scaffold(
       appBar: CustomTopAppBar(
@@ -79,8 +79,7 @@ class TaskDetailScreen extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         physics: NeverScrollableScrollPhysics(),
-        child: Obx(
-          () => Padding(
+        child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
@@ -91,11 +90,11 @@ class TaskDetailScreen extends StatelessWidget {
                   enabled: false,
                 ),
                 buildSegmentedControl(),
-                if (segmentedControlController.selectedIndex.value == 0) ...[
+                if (selectedIndex.value == 0) ...[
                   CustomDatePicker(label: "Datum"),
                 ],
                 TaskCategoryDropDownField(),
-                if (segmentedControlController.selectedIndex.value == 0) ...[
+                if (selectedIndex.value == 0) ...[
                   CustomTextField(
                     controller: taskController.descriptionController,
                     label: 'Beschreibung',
@@ -107,7 +106,6 @@ class TaskDetailScreen extends StatelessWidget {
             ),
           ),
         ),
-      ),
     );
   }
 
@@ -116,15 +114,16 @@ class TaskDetailScreen extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: Container(
         width: double.infinity,
-        child: MaterialSegmentedControl(
-          children: _children,
-          selectionIndex: segmentedControlController.selectedIndex.value,
-          selectedColor: Color.fromARGB(255, 74, 68, 88),
-          unselectedColor: CustomMaterialThemeColorConstant.dark.surface1,
-          borderColor: CustomMaterialThemeColorConstant.dark.outline,
-          onSegmentChosen: (index) {
-            segmentedControlController.onIndexChange(index);
-          },
+        child: Obx(() => MaterialSegmentedControl(
+            children: _children,
+            selectionIndex: selectedIndex.value,
+            selectedColor: Color.fromARGB(255, 74, 68, 88),
+            unselectedColor: CustomMaterialThemeColorConstant.dark.surface1,
+            borderColor: CustomMaterialThemeColorConstant.dark.outline,
+            onSegmentChosen: (index) {
+              selectedIndex.value = (selectedIndex.value == 0) ? 1 : 0;
+            },
+          ),
         ),
       ),
     );
