@@ -10,14 +10,9 @@ import '../../widgets/ThreePointPopUpMenu.dart';
 import 'AddTaskScreen.dart';
 import 'TaskDetailScreen.dart';
 
-class DailyTasksScreen extends StatefulWidget {
+class DailyTasksScreen extends StatelessWidget {
   const DailyTasksScreen({Key? key}) : super(key: key);
 
-  @override
-  State<DailyTasksScreen> createState() => _DailyTasksScreenState();
-}
-
-class _DailyTasksScreenState extends State<DailyTasksScreen> {
   Stream<List<Task>> tasksStream() {
     try {
       return db
@@ -101,31 +96,34 @@ class _DailyTasksScreenState extends State<DailyTasksScreen> {
                     entry.name,
                     style: entry.done
                         ? TextStyle(
-                      decoration: TextDecoration.lineThrough,
-                      decorationThickness: 3,
-                      fontSize: 20,
-                      color: CustomMaterialThemeColorConstant.dark.onSurface,
-                    )
+                            decoration: TextDecoration.lineThrough,
+                            decorationThickness: 3,
+                            fontSize: 20,
+                            color:
+                                CustomMaterialThemeColorConstant.dark.onSurface,
+                          )
                         : TextStyle(
-                      fontSize: 20,
-                      color: CustomMaterialThemeColorConstant.dark.onSurface,
-                    ),
+                            fontSize: 20,
+                            color:
+                                CustomMaterialThemeColorConstant.dark.onSurface,
+                          ),
                   ),
                   leading: Transform.scale(
                     scale: 1.3,
                     child: Checkbox(
                       side: BorderSide(
-                          color: CustomMaterialThemeColorConstant.dark.secondary,
+                          color:
+                              CustomMaterialThemeColorConstant.dark.secondary,
                           width: 1.5),
                       shape: const CircleBorder(),
                       checkColor: Colors.white,
-                      activeColor: CustomMaterialThemeColorConstant.light.primary,
+                      activeColor:
+                          CustomMaterialThemeColorConstant.light.primary,
                       value: entry.done,
                       onChanged: (bool? value) {
-                        setState(() {
-                          //TODO only entry needed?
-                          updateDone(task: taskList[index]);
-                        });
+                        //TODO only entry needed?
+                        taskList[index].done = value ?? false;
+                        updateDone(task: taskList[index]);
                       },
                     ),
                   ),
@@ -136,8 +134,10 @@ class _DailyTasksScreenState extends State<DailyTasksScreen> {
                         fontSize: 16),
                   ),
                   onTap: () {
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => TaskDetailScreen(task: entry,)));
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => TaskDetailScreen(
+                              task: entry,
+                            )));
                   },
                 );
               } else if (snapshot.hasError) {

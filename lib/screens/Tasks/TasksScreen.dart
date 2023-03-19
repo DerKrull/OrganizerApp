@@ -11,14 +11,9 @@ import '../../widgets/CustomTopAppBar.dart';
 import '../../widgets/ThreePointPopUpMenu.dart';
 import 'AddTaskScreen.dart';
 
-class TasksScreen extends StatefulWidget {
+class TasksScreen extends StatelessWidget {
   const TasksScreen({Key? key}) : super(key: key);
 
-  @override
-  State<TasksScreen> createState() => _TasksScreenState();
-}
-
-class _TasksScreenState extends State<TasksScreen> {
   Stream<List<Task>> tasksStream() {
     try {
       return db
@@ -161,15 +156,16 @@ class _TasksScreenState extends State<TasksScreen> {
                           CustomMaterialThemeColorConstant.light.primary,
                       value: entry.done,
                       onChanged: (bool? value) {
-                        setState(() {
-                          updateDone(task: taskList[index]);
-                        });
+                        taskList[index].done = value ?? false;
+                        updateDone(task: taskList[index]);
                       },
                     ),
                   ),
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => TaskDetailScreen(task: entry,)));
+                        builder: (context) => TaskDetailScreen(
+                              task: entry,
+                            )));
                   },
                 );
               } else if (snapshot.hasError) {

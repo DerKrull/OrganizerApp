@@ -12,16 +12,11 @@ import '../core/FireStoreFutures/GetTasksFutures.dart';
 import '../core/model/Task.dart';
 import 'Tasks/AddTaskScreen.dart';
 
-class TaskOverviewScreen extends StatefulWidget {
+class TaskOverviewScreen extends StatelessWidget {
   TaskOverviewScreen({super.key});
 
   FirebaseFirestore db = FirebaseFirestore.instance;
 
-  @override
-  State<TaskOverviewScreen> createState() => _TaskOverviewScreenState();
-}
-
-class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
   Stream<List<Task>> dailyTasksStream() {
     try {
       return db
@@ -129,7 +124,7 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
                                   itemCount: 3,
                                   itemBuilder: (context, index) {
                                     return _buildSingleTask(
-                                        index, snapshot.data!);
+                                        index, snapshot.data!, context);
                                   });
                             } else if (snapshot.hasError) {
                               Text("${snapshot.error}");
@@ -183,7 +178,7 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
                                   itemCount: 3,
                                   itemBuilder: (context, index) {
                                     return _buildSingleTask(
-                                        index, snapshot.data!);
+                                        index, snapshot.data!, context);
                                   });
                             } else if (snapshot.hasError) {
                               Text("${snapshot.error}");
@@ -208,7 +203,8 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
     );
   }
 
-  Widget _buildSingleTask(int index, List<Task> isCheckedList) {
+  Widget _buildSingleTask(
+      int index, List<Task> isCheckedList, BuildContext context) {
     if (index >= isCheckedList.length) {
       if (index == 2) {
         return Column(
@@ -319,9 +315,7 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
                   activeColor: CustomMaterialThemeColorConstant.light.primary,
                   value: isCheckedList[index].done,
                   onChanged: (bool? value) {
-                    setState(() {
-                      updateDone(task: isCheckedList[index]);
-                    });
+                    updateDone(task: isCheckedList[index]);
                   },
                 ),
               ),
@@ -401,9 +395,7 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
                   activeColor: CustomMaterialThemeColorConstant.light.primary,
                   value: isCheckedList[index].done,
                   onChanged: (bool? value) {
-                    setState(() {
-                      updateDone(task: isCheckedList[index]);
-                    });
+                    updateDone(task: isCheckedList[index]);
                   },
                 ),
               ),
