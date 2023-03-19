@@ -112,15 +112,18 @@ class TaskDetailScreen extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: Container(
         width: double.infinity,
-        child: Obx(() => MaterialSegmentedControl(
-            children: _children,
-            selectionIndex: selectedIndex.value,
-            selectedColor: Color.fromARGB(255, 74, 68, 88),
-            unselectedColor: CustomMaterialThemeColorConstant.dark.surface1,
-            borderColor: CustomMaterialThemeColorConstant.dark.outline,
-            onSegmentChosen: (index) {
-              selectedIndex.value = (selectedIndex.value == 0) ? 1 : 0;
-            },
+        child: IgnorePointer(
+          ignoring: true,
+          child: Obx(() => MaterialSegmentedControl(
+              children: _children,
+              selectionIndex: selectedIndex.value,
+              selectedColor: Color.fromARGB(255, 74, 68, 88),
+              unselectedColor: CustomMaterialThemeColorConstant.dark.surface1,
+              borderColor: CustomMaterialThemeColorConstant.dark.outline,
+              onSegmentChosen: (index) {
+                selectedIndex.value = (selectedIndex.value == 0) ? 1 : 0;
+              },
+            ),
           ),
         ),
       ),
