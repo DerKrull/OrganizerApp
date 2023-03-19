@@ -121,8 +121,6 @@ class DailyTasksScreen extends StatelessWidget {
                           CustomMaterialThemeColorConstant.light.primary,
                       value: entry.done,
                       onChanged: (bool? value) {
-                        //TODO only entry needed?
-                        taskList[index].done = value ?? false;
                         updateDone(task: taskList[index]);
                       },
                     ),

@@ -156,7 +156,6 @@ class TasksScreen extends StatelessWidget {
                           CustomMaterialThemeColorConstant.light.primary,
                       value: entry.done,
                       onChanged: (bool? value) {
-                        taskList[index].done = value ?? false;
                         updateDone(task: taskList[index]);
                       },
                     ),

@@ -76,8 +76,7 @@ void updateTask(
       .then((documentSnapshot) => print("Updated data with id: $docRef"));
 }
 
-void updateDone(
-    {required task}) {
+void updateDone({required task}) {
   Task t = task;
   final data = Task.fromTaskChangeDone(
       isDaily: t.isDaily,
