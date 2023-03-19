@@ -46,8 +46,6 @@ class TaskDetailScreen extends StatelessWidget {
     taskController.descriptionController.text = task.description;
     taskDueDateController.updateSelectedDate(newDate: task.dueDate);
     selectedIndex.value = (task.isDaily) ? 1 : 0;
-    // segmentedControlController.onIndexChange((task.isDaily) ? 1 : 0);
-    //TODO: How to fill DropDowns init Value?
     return Scaffold(
       appBar: CustomTopAppBar(
           title: task.name,
@@ -93,7 +91,7 @@ class TaskDetailScreen extends StatelessWidget {
                 if (selectedIndex.value == 0) ...[
                   CustomDatePicker(label: "Datum"),
                 ],
-                TaskCategoryDropDownField(),
+                TaskCategoryDropDownField(task: task,),
                 if (selectedIndex.value == 0) ...[
                   CustomTextField(
                     controller: taskController.descriptionController,

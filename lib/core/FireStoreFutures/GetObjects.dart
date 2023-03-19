@@ -94,6 +94,39 @@ Future<List<TaskCategory>> getTaskCategories() async {
   }
 }
 
+Future<List<TaskCategory>> getTaskCategoryOfTask(String taskName) async {
+  List<TaskCategory> list = [];
+  try {
+    var query = await db.collection("taskCategory").get();
+    int i = 0;
+    int realI = -1;
+    TaskCategory taskCategory;
+    for (var doc in query.docs) {
+      taskCategory = TaskCategory.fromDocumentSnapshot(doc: doc);
+      if (taskCategory.docRef == taskName) {
+        realI = i;
+        i++;
+        list.add(TaskCategory.fromDocumentSnapshot(doc: doc));
+      } else {
+        i++;
+      }
+    }
+
+    int j = 0;
+    for (var doc in query.docs) {
+      if(j == realI) {
+        j++;
+        continue;
+      }
+      list.add(TaskCategory.fromDocumentSnapshot(doc: doc));
+      j++;
+    }
+    return list;
+  } catch (e) {
+    rethrow;
+  }
+}
+
 Future<List<Event>> getEvents() async {
   List<Event> list = [];
   try {

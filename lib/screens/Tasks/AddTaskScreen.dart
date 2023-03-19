@@ -26,7 +26,6 @@ class AddTaskScreen extends StatelessWidget {
   final AddTaskController addTaskController = Get.find();
   final DateController dateController = Get.find();
   final DropDownEventController taskEventController = Get.find();
-  // final SegmentedControlController segmentedControlController = Get.find();
 
   final Map<int, Widget> _children = {
     0: const Text(
@@ -69,7 +68,7 @@ class AddTaskScreen extends StatelessWidget {
                 if (selectedIndex.value == 0) ...[
                   CustomDatePicker(label: "Datum"),
                 ],
-                TaskCategoryDropDownField(),
+                TaskCategoryDropDownField(task: null,),
                 if (selectedIndex.value == 0) ...[
                   CustomTextField(
                     controller: addTaskController.descriptionController,

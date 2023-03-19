@@ -42,29 +42,29 @@ class EditTaskScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    taskController.clearErrors();
-    taskController.nameController.text = task.name;
-    taskController.descriptionController.text = task.description;
-    taskDueDateController.updateSelectedDate(newDate: task.dueDate);
-    selectedIndex.value = (task.isDaily) ? 1 : 0;
-    //TODO: How to fill DropDowns init Value?
-    return Scaffold(
-      appBar: CustomTopAppBar(
-          title: task.name,
-          showDelete: false,
-          showThreePoints: true,
-          menu: ThreePointPopUpMenu(
-              onSelected: (int result) {},
-              entries: const ["Kategorie-Einstellungen"]).build(context)),
-      bottomNavigationBar: CustomBottomAppBar(
-        mainPage: MainPages.TaskScreen,
-        isMainPage: false,
-      ),
-      backgroundColor: CustomMaterialThemeColorConstant.dark.surface1,
-      body: SingleChildScrollView(
-        physics: NeverScrollableScrollPhysics(),
-        child: Obx(
-          () => Padding(
+    return Obx(() {
+      taskController.clearErrors();
+      taskController.nameController.text = task.name;
+      taskController.descriptionController.text = task.description;
+      taskDueDateController.updateSelectedDate(newDate: task.dueDate);
+      selectedIndex.value = (task.isDaily) ? 1 : 0;
+      //TODO: How to fill DropDowns init Value?
+      return Scaffold(
+        appBar: CustomTopAppBar(
+            title: task.name,
+            showDelete: false,
+            showThreePoints: true,
+            menu: ThreePointPopUpMenu(
+                onSelected: (int result) {},
+                entries: const ["Kategorie-Einstellungen"]).build(context)),
+        bottomNavigationBar: CustomBottomAppBar(
+          mainPage: MainPages.TaskScreen,
+          isMainPage: false,
+        ),
+        backgroundColor: CustomMaterialThemeColorConstant.dark.surface1,
+        body: SingleChildScrollView(
+          physics: NeverScrollableScrollPhysics(),
+          child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
@@ -80,7 +80,7 @@ class EditTaskScreen extends StatelessWidget {
                 if (selectedIndex.value == 0) ...[
                   CustomDatePicker(label: "Datum"),
                 ],
-                TaskCategoryDropDownField(),
+                TaskCategoryDropDownField(task: task),
                 if (selectedIndex.value == 0) ...[
                   CustomTextField(
                     controller: taskController.descriptionController,
@@ -164,8 +164,8 @@ class EditTaskScreen extends StatelessWidget {
             ),
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   Widget buildSegmentedControl() {
