@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:organizer_app/controller/Budget/SingleBudgetController.dart';
 import 'package:organizer_app/controller/Calendar/TableCalendarController.dart';
 import 'package:organizer_app/controller/DropDownEventController.dart';
+import 'package:organizer_app/controller/Tasks/AddTaskController.dart';
 import 'package:organizer_app/firebase_options.dart';
 import 'package:organizer_app/screens/DataPrivacyScreen.dart';
 
@@ -41,6 +42,7 @@ class MyApp extends StatelessWidget {
   final MonthController monthController = Get.put(MonthController());
   final DropDownEventController dropDownEventController = Get.put(DropDownEventController());
   final SegmentedControlController segmentedControlController = Get.put(SegmentedControlController());
+  final AddTaskController addTaskController = Get.put(AddTaskController());
 
   @override
   Widget build(BuildContext context) {

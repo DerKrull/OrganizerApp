@@ -4,7 +4,6 @@ import 'package:organizer_app/controller/DateController.dart';
 import 'package:organizer_app/controller/DropDownEventController.dart';
 import 'package:organizer_app/controller/DropDownTaskCategoryController.dart';
 import 'package:organizer_app/controller/SegmentedControlController.dart';
-import 'package:organizer_app/controller/Tasks/SingleTaskController.dart';
 import 'package:organizer_app/core/model/Event.dart';
 import 'package:organizer_app/core/model/TaskCategory.dart';
 import 'package:organizer_app/widgets/CustomDatePicker.dart';
@@ -14,6 +13,7 @@ import 'package:material_segmented_control/material_segmented_control.dart';
 import 'package:organizer_app/widgets/DropDownFields/TaskCategoryDropDownField.dart';
 import 'package:organizer_app/widgets/DropDownFields/TaskEventDropDownField.dart';
 
+import '../../controller/Tasks/AddTaskController.dart';
 import '../../core/app_export.dart';
 import '../../widgets/CustomBottomAppBar.dart';
 import '../../widgets/CustomButtons.dart';
@@ -23,8 +23,7 @@ class AddTaskScreen extends StatelessWidget {
   AddTaskScreen({Key? key}) : super(key: key);
 
   final DropDownTaskCategoryController ddtcController = Get.find();
-  final SingleTaskController singleTaskController = Get.find();
-  // final TaskTypeController taskTypeController = Get.find();
+  final AddTaskController addTaskController = Get.find();
   final DateController dateController = Get.find();
   final DropDownEventController taskEventController = Get.find();
   final SegmentedControlController segmentedControlController = Get.find();
@@ -62,7 +61,7 @@ class AddTaskScreen extends StatelessWidget {
             child: Column(
               children: [
                 CustomTextField(
-                  controller: singleTaskController.nameController,
+                  controller: addTaskController.nameController,
                   label: 'Name',
                   hintText: 'Name der Aufgabe',
                 ),
@@ -73,7 +72,7 @@ class AddTaskScreen extends StatelessWidget {
                 TaskCategoryDropDownField(),
                 if (segmentedControlController.selectedIndex.value == 0) ...[
                   CustomTextField(
-                    controller: singleTaskController.descriptionController,
+                    controller: addTaskController.descriptionController,
                     label: 'Beschreibung',
                     hintText: 'Beschreibung',
                   ),
@@ -96,9 +95,9 @@ class AddTaskScreen extends StatelessWidget {
                           TaskCategory taskCategory =
                               ddtcController.category.value;
                           String name =
-                              singleTaskController.nameController.text;
+                              addTaskController.nameController.text;
                           String description =
-                              singleTaskController.descriptionController.text;
+                              addTaskController.descriptionController.text;
                           bool isDaily =
                           segmentedControlController.selectedIndex.value == 1
                                   ? true
@@ -120,9 +119,9 @@ class AddTaskScreen extends StatelessWidget {
                                   taskCategory: taskCategory,
                                   event: event);
                               ddtcController.clear();
-                              singleTaskController.clear();
+                              addTaskController.clear();
                               dateController.clear();
-                              // segmentedControlController.clear();
+                              Navigator.of(context).pop(context);
                             } else {
                               print("Values are null");
                             }
@@ -137,9 +136,8 @@ class AddTaskScreen extends StatelessWidget {
                                   taskCategory: taskCategory,
                                   event: event);
                               ddtcController.clear();
-                              singleTaskController.clear();
+                              addTaskController.clear();
                               dateController.clear();
-                              // taskTypeController.clear();
                               Navigator.of(context).pop(context);
                             } else {
                               print("Values are null");
