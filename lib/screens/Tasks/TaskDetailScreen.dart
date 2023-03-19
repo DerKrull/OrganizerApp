@@ -54,8 +54,11 @@ class TaskDetailScreen extends StatelessWidget {
           showDelete: false,
           showThreePoints: true,
           menu: ThreePointPopUpMenu(
-              onSelected: (int result) {},
-              entries: const ["Kategorie-Einstellungen"]).build(context)),
+              onSelected: (int result) {
+                deleteTask(docRef: task.taskRef);
+                Navigator.of(context).pop();
+              },
+              entries: const ["Aufgabe löschen"]).build(context)),
       bottomNavigationBar: CustomBottomAppBar(
         mainPage: MainPages.TaskScreen,
         isMainPage: false,

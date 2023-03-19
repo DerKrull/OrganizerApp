@@ -15,3 +15,11 @@ void deleteExpenditure({required String docRef}) {
       .delete()
       .then((documentSnapshot) => print("Deleted data with id: ${docRef}"));
 }
+
+void deleteTask({required String docRef}) {
+  db
+      .collection("task")
+      .doc(docRef)
+      .delete()
+      .then((documentSnapshot) => print("Deleted data with id: ${docRef}"));
+}
