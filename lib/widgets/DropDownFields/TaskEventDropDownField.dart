@@ -2,6 +2,7 @@ import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:organizer_app/controller/DropDownEventController.dart';
 import 'package:organizer_app/core/model/Event.dart';
 
 import '../../core/FireStoreFutures/GetObjects.dart';
@@ -15,9 +16,10 @@ class TaskEventDropDownField extends StatelessWidget {
   }) : super(key: key);
   final Task? task;
 
-  var event =
-      Event(title: '', description: '', dateTime: DateTime.now(), docRef: '')
-          .obs;
+  final DropDownEventController eventController = Get.find();
+  // var event =
+  //     Event(title: '', description: '', dateTime: DateTime.now(), docRef: '')
+  //         .obs;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +35,7 @@ class TaskEventDropDownField extends StatelessWidget {
                 }
               } else if (snapshot.hasData) {
                 List<Event> list = snapshot.data!;
-                event.value = list[0];
+                // event.value = list[0];
                 return Obx(
                   () => DropDownTextField(
                     dropDownIconProperty: IconProperty(
@@ -43,7 +45,7 @@ class TaskEventDropDownField extends StatelessWidget {
                         icon: Icons.cancel_outlined,
                         color: CustomMaterialThemeColorConstant.dark.onSurface),
                     readOnly: true,
-                    initialValue: event.value.title,
+                    initialValue: eventController.event.value.title,
                     enableSearch: true,
                     listTextStyle: TextStyle(
                       color: CustomMaterialThemeColorConstant.dark.background,
@@ -68,7 +70,7 @@ class TaskEventDropDownField extends StatelessWidget {
                     ),
                     onChanged: (dropDownValue) {
                       DropDownValueModel valueModel = dropDownValue;
-                      event.value = valueModel.value;
+                      eventController.changeEvent(taskEvent: valueModel.value);
                     },
                     dropDownList: list.map<DropDownValueModel>((doc) {
                       return DropDownValueModel(name: doc.title, value: doc);
@@ -100,7 +102,7 @@ class TaskEventDropDownField extends StatelessWidget {
                         icon: Icons.cancel_outlined,
                         color: CustomMaterialThemeColorConstant.dark.onSurface),
                     readOnly: true,
-                    initialValue: event.value.title,
+                    initialValue: eventController.event.value.title,
                     enableSearch: true,
                     listTextStyle: TextStyle(
                       color: CustomMaterialThemeColorConstant.dark.background,
@@ -125,7 +127,7 @@ class TaskEventDropDownField extends StatelessWidget {
                     ),
                     onChanged: (dropDownValue) {
                       DropDownValueModel valueModel = dropDownValue;
-                      event.value = valueModel.value;
+                      eventController.changeEvent(taskEvent: valueModel.value);
                     },
                     dropDownList: list.map<DropDownValueModel>((doc) {
                       return DropDownValueModel(name: doc.title, value: doc);
