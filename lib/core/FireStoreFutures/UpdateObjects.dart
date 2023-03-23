@@ -1,5 +1,6 @@
 import '../model/Budget.dart';
 import '../model/BudgetCategory.dart';
+import '../model/Event.dart';
 import '../model/Expenditure.dart';
 import '../model/Task.dart';
 import 'FirebaseInstance.dart';
@@ -49,7 +50,18 @@ void updateBudget(
       .collection("budget")
       .doc(docRef)
       .update(data)
-      .then((documentSnapshot) => print("Update data with id: ${docRef}"));
+      .then((documentSnapshot) => print("Update data with id: $docRef"));
+}
+
+void updateEvent(
+    {required String docRef,
+    required String title,
+    required String description,
+    required DateTime dateTime}) {
+  final data = Event.fromEvent(
+      title: title, description: description, dateTime: dateTime);
+  db.collection("event").doc(docRef).update(data).then((documentSnapshot) =>
+      print("Update data with id: $docRef"));
 }
 
 void updateTask(

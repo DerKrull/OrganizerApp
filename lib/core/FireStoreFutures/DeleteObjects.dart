@@ -5,7 +5,7 @@ void deleteCategory({required String docRef}) {
       .collection("budgetCategory")
       .doc(docRef)
       .delete()
-      .then((documentSnapshot) => print("Deleted data with id: ${docRef}"));
+      .then((documentSnapshot) => print("Deleted data with id: $docRef"));
 }
 
 void deleteExpenditure({required String docRef}) {
@@ -13,5 +13,13 @@ void deleteExpenditure({required String docRef}) {
       .collection("expenditure")
       .doc(docRef)
       .delete()
-      .then((documentSnapshot) => print("Deleted data with id: ${docRef}"));
+      .then((documentSnapshot) => print("Deleted data with id: $docRef"));
+}
+
+void deleteEvent({required String docRef}) {
+  db
+      .collection("event")
+      .doc(docRef)
+      .delete()
+      .then((documentSnapshot) => print("Deleted data with id: $docRef"));
 }

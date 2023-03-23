@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:organizer_app/controller/Budget/SingleBudgetController.dart';
+import 'package:organizer_app/controller/Calendar/SingleEventController.dart';
 import 'package:organizer_app/controller/Calendar/TableCalendarController.dart';
+import 'package:organizer_app/controller/TimeController.dart';
 import 'package:organizer_app/firebase_options.dart';
 import 'package:organizer_app/screens/DataPrivacyScreen.dart';
 
@@ -29,6 +31,8 @@ class MyApp extends StatelessWidget {
 
   MyApp({super.key});
 
+  final SingleEventController singleEventController = Get.put(SingleEventController());
+  final TimeController timeController = Get.put(TimeController());
   final TableCalendarController tableCalendarController = Get.put(TableCalendarController());
   final SingleBudgetController sbController = Get.put(SingleBudgetController());
   final SingleExpenditureController seController = Get.put(SingleExpenditureController());

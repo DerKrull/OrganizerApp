@@ -1,16 +1,16 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:organizer_app/controller/DateController.dart';
 
+import '../controller/TimeController.dart';
 import '../core/app_export.dart';
 
-class CustomDatePicker extends StatelessWidget {
-  CustomDatePicker({Key? key, required this.label, this.enabled = true}) : super(key: key);
+class CustomTimePicker extends StatelessWidget {
+  CustomTimePicker({Key? key, required this.label, this.enabled = true}) : super(key: key);
 
   final String label;
   final bool enabled;
-  final DateController dateController = Get.find();
+  final TimeController timeController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +24,8 @@ class CustomDatePicker extends StatelessWidget {
         child: Padding(
           padding: getPadding(all: 20),
           child: TextFormField(
-              controller: dateController.dateTextController,
-              key: Key(dateController.dateTextController.text),
+              controller: timeController.timeTextController,
+              key: Key(timeController.timeTextController.text),
               expands: false,
               readOnly: true,
               style: const TextStyle(color: Colors.white),
@@ -41,18 +41,18 @@ class CustomDatePicker extends StatelessWidget {
                     borderSide: const BorderSide(color: Colors.white)),
               ),
               onTap: !enabled ? () {} : () async {
-                DateTime? pickedDate = await showDatePicker(
-                    context: context,
-                    initialDate: DateTime.now() != dateController.actualDate
-                        ? dateController.actualDate
-                        : DateTime.now(),
-                    firstDate: DateTime(2000),
-                    lastDate: DateTime(2101));
-                if (pickedDate != null) {
-                  dateController.updateSelectedDate(newDate: pickedDate);
+                TimeOfDay? pickedTime = await showTimePicker(
+                  context: context,
+                  initialTime: TimeOfDay.now() != timeController.actualTime
+                      ? timeController.actualTime
+                      : TimeOfDay.now(),
+                );
+                if (pickedTime != null) {
+                  timeController.updateSelectedTime(
+                      newTime: pickedTime);
                 } else {
                   if (kDebugMode) {
-                    print("Date is not selected");
+                    print("Time is not selected");
                   }
                 }
               }),

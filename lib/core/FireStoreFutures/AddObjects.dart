@@ -1,3 +1,4 @@
+import 'package:organizer_app/core/model/Event.dart';
 import 'package:organizer_app/core/model/Expenditure.dart';
 import 'package:organizer_app/core/model/TaskCategory.dart';
 
@@ -38,10 +39,21 @@ void addExpenditure(
       .then((document) => print("Added data with id: ${document.id}"));
 }
 
-void addBudget(
-    {required value, required description, required date}) {
-  final data = Budget.fromBudget(value: value, description: description, date: date);
-  db.collection("budget").add(data).then((documentSnapshot) => print("Update data with id: ${documentSnapshot.id}"));
+void addBudget({required value, required description, required date}) {
+  final data =
+      Budget.fromBudget(value: value, description: description, date: date);
+  db.collection("budget").add(data).then((documentSnapshot) =>
+      print("Update data with id: ${documentSnapshot.id}"));
+}
+
+void addEvent(
+    {required String title,
+    required String description,
+    required DateTime dateTime}) {
+  final data = Event.fromEvent(
+      title: title, description: description, dateTime: dateTime);
+  db.collection("event").add(data).then((documentSnapshot) =>
+      print("Update data with id: ${documentSnapshot.id}"));
 }
 
 void addTask(
