@@ -41,7 +41,7 @@ class _CalendarMonthScreenState extends State<CalendarMonthScreen> {
     return SafeArea(
         child: Scaffold(
             appBar: CustomTopAppBarMainPage(
-                title: "Budget",
+                title: "Kalendar",
                 showThreePoints: true,
                 menu: ThreePointPopUpMenu(
                     onSelected: (int result) {},
@@ -89,6 +89,7 @@ class _CalendarMonthScreenState extends State<CalendarMonthScreen> {
                             weekendDays: const [DateTime.sunday],
                             weekNumbersVisible: true,
                             eventLoader: eventLoader,
+                            locale: "DE_de",
                             selectedDayPredicate: (day) {
                               return isSameDay(
                                   tableCalendarController.selectedDay.value,
