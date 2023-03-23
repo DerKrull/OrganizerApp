@@ -5,20 +5,14 @@ import 'package:organizer_app/widgets/CustomBottomAppBar.dart';
 
 import '../../core/FireStoreFutures/GetTasksFutures.dart';
 import '../../core/model/Task.dart';
-import '../../core/model/TaskCategory.dart';
 import '../../widgets/CustomTopAppBar.dart';
 import '../../widgets/ThreePointPopUpMenu.dart';
 import 'AddTaskScreen.dart';
 import 'TaskDetailScreen.dart';
 
-class DailyTasksScreen extends StatefulWidget {
+class DailyTasksScreen extends StatelessWidget {
   const DailyTasksScreen({Key? key}) : super(key: key);
 
-  @override
-  State<DailyTasksScreen> createState() => _DailyTasksScreenState();
-}
-
-class _DailyTasksScreenState extends State<DailyTasksScreen> {
   Stream<List<Task>> tasksStream() {
     try {
       return db
@@ -73,7 +67,8 @@ class _DailyTasksScreenState extends State<DailyTasksScreen> {
                     child: ListView.builder(
                         itemCount: snapshot.data!.length,
                         itemBuilder: (context, index) {
-                          return _buildSingleTask(index, snapshot.data!);
+                          final entry = snapshot.data![index];
+                          return _buildSingleTask(index, snapshot.data!, entry);
                         }),
                   );
                 } else if (snapshot.hasError) {
@@ -86,45 +81,47 @@ class _DailyTasksScreenState extends State<DailyTasksScreen> {
     );
   }
 
-  Widget _buildSingleTask(int index, List<Task> taskList) {
+  Widget _buildSingleTask(int index, List<Task> taskList, Task entry) {
     return Card(
       color: CustomMaterialThemeColorConstant.dark.surface5,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           FutureBuilder(
-            future: getTaskCategoryName(taskList[index].taskCategory.id),
+            future: getTaskCategoryName(entry.taskCategory.id),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return ListTile(
                   title: Text(
-                    taskList[index].name,
-                    style: taskList[index].done
+                    entry.name,
+                    style: entry.done
                         ? TextStyle(
-                      decoration: TextDecoration.lineThrough,
-                      decorationThickness: 3,
-                      fontSize: 20,
-                      color: CustomMaterialThemeColorConstant.dark.onSurface,
-                    )
+                            decoration: TextDecoration.lineThrough,
+                            decorationThickness: 3,
+                            fontSize: 20,
+                            color:
+                                CustomMaterialThemeColorConstant.dark.onSurface,
+                          )
                         : TextStyle(
-                      fontSize: 20,
-                      color: CustomMaterialThemeColorConstant.dark.onSurface,
-                    ),
+                            fontSize: 20,
+                            color:
+                                CustomMaterialThemeColorConstant.dark.onSurface,
+                          ),
                   ),
                   leading: Transform.scale(
                     scale: 1.3,
                     child: Checkbox(
                       side: BorderSide(
-                          color: CustomMaterialThemeColorConstant.dark.secondary,
+                          color:
+                              CustomMaterialThemeColorConstant.dark.secondary,
                           width: 1.5),
                       shape: const CircleBorder(),
                       checkColor: Colors.white,
-                      activeColor: CustomMaterialThemeColorConstant.light.primary,
-                      value: taskList[index].done,
+                      activeColor:
+                          CustomMaterialThemeColorConstant.light.primary,
+                      value: entry.done,
                       onChanged: (bool? value) {
-                        setState(() {
-                          changeDone(taskList, index, snapshot.data!);
-                        });
+                        updateDone(task: taskList[index]);
                       },
                     ),
                   ),
@@ -135,8 +132,10 @@ class _DailyTasksScreenState extends State<DailyTasksScreen> {
                         fontSize: 16),
                   ),
                   onTap: () {
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => TaskDetailScreen()));
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => TaskDetailScreen(
+                              task: entry,
+                            )));
                   },
                 );
               } else if (snapshot.hasError) {
@@ -148,17 +147,5 @@ class _DailyTasksScreenState extends State<DailyTasksScreen> {
         ],
       ),
     );
-  }
-
-  void changeDone(List<Task> isCheckedList, int index, TaskCategory taskCategory) {
-    isCheckedList[index].done = !isCheckedList[index].done;
-    updateTask(
-        docRef: isCheckedList[index].taskRef,
-        description: isCheckedList[index].description,
-        done: isCheckedList[index].done,
-        dueDate: isCheckedList[index].dueDate,
-        isDaily: isCheckedList[index].isDaily,
-        name: isCheckedList[index].name,
-        taskCategory: taskCategory);
   }
 }

@@ -8,6 +8,7 @@ class CustomTextField extends StatelessWidget {
   final String hintText;
   final bool multiline;
   final String? errorMessage;
+  final bool enabled;
 
   const CustomTextField(
       {Key? key,
@@ -15,7 +16,8 @@ class CustomTextField extends StatelessWidget {
       required this.label,
       required this.hintText,
       this.multiline = false,
-      this.errorMessage})
+      this.errorMessage,
+      this.enabled = true})
       : super(key: key);
 
   @override
@@ -29,6 +31,7 @@ class CustomTextField extends StatelessWidget {
               minLines: 1,
               maxLines: 10,
               controller: controller,
+              enabled: enabled,
               style: TextStyle(
                 color: CustomMaterialThemeColorConstant.dark.onSurface,
               ),

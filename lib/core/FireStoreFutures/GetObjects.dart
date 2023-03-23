@@ -94,12 +94,78 @@ Future<List<TaskCategory>> getTaskCategories() async {
   }
 }
 
+Future<List<TaskCategory>> getTaskCategoryOfTask(String taskCategoryRef) async {
+  List<TaskCategory> list = [];
+  try {
+    var query = await db.collection("taskCategory").get();
+    int i = 0;
+    int realI = -1;
+    TaskCategory taskCategory;
+    for (var doc in query.docs) {
+      taskCategory = TaskCategory.fromDocumentSnapshot(doc: doc);
+      if (taskCategory.docRef == taskCategoryRef) {
+        realI = i;
+        i++;
+        list.add(TaskCategory.fromDocumentSnapshot(doc: doc));
+      } else {
+        i++;
+      }
+    }
+
+    int j = 0;
+    for (var doc in query.docs) {
+      if(j == realI) {
+        j++;
+        continue;
+      }
+      list.add(TaskCategory.fromDocumentSnapshot(doc: doc));
+      j++;
+    }
+    return list;
+  } catch (e) {
+    rethrow;
+  }
+}
+
 Future<List<Event>> getEvents() async {
   List<Event> list = [];
   try {
     var query = await db.collection("event").get();
     for (var doc in query.docs) {
       list.add(Event.fromDocumentSnapshot(doc: doc));
+    }
+    return list;
+  } catch (e) {
+    rethrow;
+  }
+}
+
+Future<List<Event>> getEventOfTask(String eventRef) async {
+  List<Event> list = [];
+  try {
+    var query = await db.collection("event").get();
+    int i = 0;
+    int realI = -1;
+    Event event;
+    for (var doc in query.docs) {
+      event = Event.fromDocumentSnapshot(doc: doc);
+      if (event.docRef == eventRef) {
+        realI = i;
+        i++;
+        list.add(Event.fromDocumentSnapshot(doc: doc));
+      } else {
+        i++;
+      }
+    }
+
+    int j = 0;
+    for (var doc in query.docs) {
+      if(j == realI) {
+        j++;
+        continue;
+      }
+      list.add(Event.fromDocumentSnapshot(doc: doc));
+      j++;
     }
     return list;
   } catch (e) {

@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:organizer_app/core/app_export.dart';
-import 'package:organizer_app/core/model/TaskCategory.dart';
 import 'package:organizer_app/screens/Tasks/DailyTasksScreen.dart';
 import 'package:organizer_app/screens/Tasks/TasksScreen.dart';
 import 'package:organizer_app/widgets/CustomBottomAppBar.dart';
@@ -13,16 +12,11 @@ import '../core/FireStoreFutures/GetTasksFutures.dart';
 import '../core/model/Task.dart';
 import 'Tasks/AddTaskScreen.dart';
 
-class TaskOverviewScreen extends StatefulWidget {
+class TaskOverviewScreen extends StatelessWidget {
   TaskOverviewScreen({super.key});
 
   FirebaseFirestore db = FirebaseFirestore.instance;
 
-  @override
-  State<TaskOverviewScreen> createState() => _TaskOverviewScreenState();
-}
-
-class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
   Stream<List<Task>> dailyTasksStream() {
     try {
       return db
@@ -130,7 +124,7 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
                                   itemCount: 3,
                                   itemBuilder: (context, index) {
                                     return _buildSingleTask(
-                                        index, snapshot.data!);
+                                        index, snapshot.data!, context);
                                   });
                             } else if (snapshot.hasError) {
                               Text("${snapshot.error}");
@@ -184,7 +178,7 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
                                   itemCount: 3,
                                   itemBuilder: (context, index) {
                                     return _buildSingleTask(
-                                        index, snapshot.data!);
+                                        index, snapshot.data!, context);
                                   });
                             } else if (snapshot.hasError) {
                               Text("${snapshot.error}");
@@ -209,7 +203,8 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
     );
   }
 
-  Widget _buildSingleTask(int index, List<Task> isCheckedList) {
+  Widget _buildSingleTask(
+      int index, List<Task> isCheckedList, BuildContext context) {
     if (index >= isCheckedList.length) {
       if (index == 2) {
         return Column(
@@ -299,15 +294,15 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
                 isCheckedList[index].name,
                 style: isCheckedList[index].done
                     ? TextStyle(
-                  decoration: TextDecoration.lineThrough,
-                  decorationThickness: 3,
-                  fontSize: 20,
-                  color: CustomMaterialThemeColorConstant.dark.onSurface,
-                )
+                        decoration: TextDecoration.lineThrough,
+                        decorationThickness: 3,
+                        fontSize: 20,
+                        color: CustomMaterialThemeColorConstant.dark.onSurface,
+                      )
                     : TextStyle(
-                  fontSize: 20,
-                  color: CustomMaterialThemeColorConstant.dark.onSurface,
-                ),
+                        fontSize: 20,
+                        color: CustomMaterialThemeColorConstant.dark.onSurface,
+                      ),
               ),
               leading: Transform.scale(
                 scale: 1.3,
@@ -320,9 +315,7 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
                   activeColor: CustomMaterialThemeColorConstant.light.primary,
                   value: isCheckedList[index].done,
                   onChanged: (bool? value) {
-                    setState(() {
-                      changeDone(isCheckedList, index, snapshot.data!);
-                    });
+                    updateDone(task: isCheckedList[index]);
                   },
                 ),
               ),
@@ -355,15 +348,15 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
                 isCheckedList[index].name,
                 style: isCheckedList[index].done
                     ? TextStyle(
-                  decoration: TextDecoration.lineThrough,
-                  decorationThickness: 3,
-                  fontSize: 20,
-                  color: CustomMaterialThemeColorConstant.dark.onSurface,
-                )
+                        decoration: TextDecoration.lineThrough,
+                        decorationThickness: 3,
+                        fontSize: 20,
+                        color: CustomMaterialThemeColorConstant.dark.onSurface,
+                      )
                     : TextStyle(
-                  fontSize: 20,
-                  color: CustomMaterialThemeColorConstant.dark.onSurface,
-                ),
+                        fontSize: 20,
+                        color: CustomMaterialThemeColorConstant.dark.onSurface,
+                      ),
               ),
               subtitle: Text(
                 "${snapshot.data?.name}",
@@ -402,9 +395,7 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
                   activeColor: CustomMaterialThemeColorConstant.light.primary,
                   value: isCheckedList[index].done,
                   onChanged: (bool? value) {
-                    setState(() {
-                      changeDone(isCheckedList, index, snapshot.data!);
-                    });
+                    updateDone(task: isCheckedList[index]);
                   },
                 ),
               ),
@@ -422,17 +413,5 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
         },
       );
     }
-  }
-
-  void changeDone(List<Task> isCheckedList, int index, TaskCategory taskCategory) {
-    isCheckedList[index].done = !isCheckedList[index].done;
-    updateTask(
-        docRef: isCheckedList[index].taskRef,
-        description: isCheckedList[index].description,
-        done: isCheckedList[index].done,
-        dueDate: isCheckedList[index].dueDate,
-        isDaily: isCheckedList[index].isDaily,
-        name: isCheckedList[index].name,
-        taskCategory: taskCategory);
   }
 }

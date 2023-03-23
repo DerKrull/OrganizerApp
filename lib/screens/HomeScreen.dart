@@ -2,8 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:material_segmented_control/material_segmented_control.dart';
 import 'package:organizer_app/core/app_export.dart';
@@ -14,21 +12,20 @@ import 'package:organizer_app/widgets/CustomBottomAppBar.dart';
 
 import '../controller/Calendar/TableCalendarController.dart';
 import '../controller/MonthController.dart';
-import '../controller/TaskTypeController.dart';
 import '../core/FireStoreFutures/GetTasksFutures.dart';
 import '../core/model/Event.dart';
 import '../core/model/Task.dart';
-import '../core/model/TaskCategory.dart';
 import '../widgets/CustomTopAppBarHome.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
 class HomeScreen extends StatelessWidget {
   final DateTime initialDate = DateTime.now();
+  RxInt selectedIndex = 0.obs;
 
   HomeScreen({Key? key}) : super(key: key);
 
   final MonthController monthController = Get.find();
-  final TaskTypeController taskTypeController = Get.find();
+  // final SegmentedControlController segmentedControlController = Get.find();
   final TableCalendarController tableCalendarController = Get.find();
 
   final Map<int, Widget> _children = {
@@ -47,7 +44,7 @@ class HomeScreen extends StatelessWidget {
       return db
           .collection("task")
           .where("isDaily",
-              isEqualTo: (taskTypeController.currentSelected.value == 0)
+              isEqualTo: (selectedIndex.value == 0)
                   ? false
                   : true)
           .snapshots()
@@ -204,12 +201,12 @@ class HomeScreen extends StatelessWidget {
         child: Obx(
           () => MaterialSegmentedControl(
             children: _children,
-            selectionIndex: taskTypeController.currentSelected.value,
+            selectionIndex: selectedIndex.value,
             selectedColor: Color.fromARGB(255, 74, 68, 88),
             unselectedColor: CustomMaterialThemeColorConstant.dark.surface1,
             borderColor: CustomMaterialThemeColorConstant.dark.outline,
             onSegmentChosen: (index) {
-              taskTypeController.changeCurrentSelected(index: index);
+              selectedIndex.value = (selectedIndex.value == 0) ? 1 : 0;
             },
           ),
         ),
@@ -375,7 +372,7 @@ class HomeScreen extends StatelessWidget {
                   activeColor: CustomMaterialThemeColorConstant.light.primary,
                   value: isCheckedList[index].done,
                   onChanged: (bool? value) {
-                    changeDone(isCheckedList, index, snapshot.data!);
+                    updateDone(task: isCheckedList[index]);
                   },
                 ),
               ),
@@ -455,7 +452,7 @@ class HomeScreen extends StatelessWidget {
                   activeColor: CustomMaterialThemeColorConstant.light.primary,
                   value: isCheckedList[index].done,
                   onChanged: (bool? value) {
-                    changeDone(isCheckedList, index, snapshot.data!);
+                    updateDone(task: isCheckedList[index]);
                   },
                 ),
               ),
@@ -475,21 +472,8 @@ class HomeScreen extends StatelessWidget {
     }
   }
 
-  void changeDone(
-      List<Task> isCheckedList, int index, TaskCategory taskCategory) {
-    isCheckedList[index].done = !isCheckedList[index].done;
-    updateTask(
-        docRef: isCheckedList[index].taskRef,
-        description: isCheckedList[index].description,
-        done: isCheckedList[index].done,
-        dueDate: isCheckedList[index].dueDate,
-        isDaily: isCheckedList[index].isDaily,
-        name: isCheckedList[index].name,
-        taskCategory: taskCategory);
-  }
-
   Text buildHeadingOfTaskBox() {
-    if (taskTypeController.currentSelected.value == 0) {
+    if (selectedIndex.value == 0) {
       return const Text(
         "Aufgaben",
         style: TextStyle(
@@ -537,13 +521,24 @@ class HomeScreen extends StatelessWidget {
                 } else if (snapshot.hasData) {
                   List<Event> events = snapshot.data!;
                   return SizedBox(
-                    height: events.length * 80,
-                    child: ListView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                        itemCount: events.length,
-                        itemBuilder: (context, index) {
-                          return _buildSingleEvent(index, events);
-                        }),
+                    height: (events.isEmpty) ? 50 : events.length * 80,
+                    child: (events.isEmpty)
+                        ? Center(
+                            child: Text(
+                              "Keine Termine",
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: CustomMaterialThemeColorConstant
+                                    .dark.onSurface,
+                              ),
+                            ),
+                          )
+                        : ListView.builder(
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: events.length,
+                            itemBuilder: (context, index) {
+                              return _buildSingleEvent(index, events);
+                            }),
                   );
                 }
                 return const CircularProgressIndicator();

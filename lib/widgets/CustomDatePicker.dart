@@ -6,10 +6,13 @@ import 'package:organizer_app/controller/DateController.dart';
 import '../core/app_export.dart';
 
 class CustomDatePicker extends StatelessWidget {
-  CustomDatePicker({Key? key, required this.label, this.enabled = true}) : super(key: key);
+  final bool enabled;
+
+  CustomDatePicker({
+    Key? key, required this.label, this.enabled = true
+  }) : super(key: key);
 
   final String label;
-  final bool enabled;
   final DateController dateController = Get.find();
 
   @override
@@ -28,6 +31,7 @@ class CustomDatePicker extends StatelessWidget {
               key: Key(dateController.dateTextController.text),
               expands: false,
               readOnly: true,
+              enabled: enabled,
               style: const TextStyle(color: Colors.white),
               decoration: InputDecoration(
                 label: Text(label),
@@ -40,17 +44,16 @@ class CustomDatePicker extends StatelessWidget {
                     borderRadius: BorderRadius.circular(4.0),
                     borderSide: const BorderSide(color: Colors.white)),
               ),
-              onTap: !enabled ? () {} : () async {
+              onTap: () async {
                 DateTime? pickedDate = await showDatePicker(
                     context: context,
-                    initialDate: DateTime.now() != dateController.actualDate
-                        ? dateController.actualDate
-                        : DateTime.now(),
-                    firstDate: DateTime(2000),
-                    lastDate: DateTime(2101));
-                if (pickedDate != null) {
+                    initialDate: DateTime.now(),
+                    firstDate:DateTime(2000),
+                    lastDate: DateTime(2101)
+                );
+                if(pickedDate != null ){
                   dateController.updateSelectedDate(newDate: pickedDate);
-                } else {
+                }else{
                   if (kDebugMode) {
                     print("Date is not selected");
                   }

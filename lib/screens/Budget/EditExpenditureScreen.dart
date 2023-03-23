@@ -8,7 +8,7 @@ import '../../controller/Budget/SingleExpenditureController.dart';
 import '../../controller/DateController.dart';
 import '../../controller/DropDownCategoryController.dart';
 import '../../core/model/BudgetCategory.dart';
-import '../../widgets/BudgetCategoryDropDownField.dart';
+import '../../widgets/DropDownFields/BudgetCategoryDropDownField.dart';
 import '../../widgets/CustomDatePicker.dart';
 import '../../widgets/CustomTopAppBar.dart';
 import '../../core/app_export.dart';
@@ -36,7 +36,7 @@ class EditExpenditureScreen extends StatelessWidget {
     dateController.updateSelectedDate(newDate: expenditure.date);
     return Scaffold(
       appBar: CustomTopAppBar(
-          title: "Aufgabe hinzufügen",
+          title: "Ausgabe hinzufügen",
           showDelete: false,
           showThreePoints: true,
           menu: ThreePointPopUpMenu(
@@ -44,7 +44,7 @@ class EditExpenditureScreen extends StatelessWidget {
               entries: const ["Kategorie-Einstellungen"]).build(context)),
       bottomNavigationBar: CustomBottomAppBar(
         isMainPage: false,
-        mainPage: MainPages.TaskScreen,
+        mainPage: MainPages.BudgetScreen,
       ),
       backgroundColor: CustomMaterialThemeColorConstant.dark.surface1,
       body: SingleChildScrollView(

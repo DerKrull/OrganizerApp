@@ -7,7 +7,7 @@ class Event {
   DateTime dateTime;
 
   Event(
-      {required this.docRef, required this.title, required this.description, required this.dateTime});
+      {required this.title, required this.description, required this.dateTime});
 
   factory Event.fromDocumentSnapshot(
       {required DocumentSnapshot<Map<String, dynamic>> doc}) {

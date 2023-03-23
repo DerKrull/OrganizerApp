@@ -62,14 +62,15 @@ void addTask(
     required dueDate,
     required description,
     required done,
-    required TaskCategory taskCategory}) {
+    required TaskCategory taskCategory,
+    required Event event}) {
   final data = Task.fromTask(
       isDaily: isDaily,
       name: name,
       dueDate: dueDate,
       description: description,
       done: done,
-      taskCategory: taskCategory);
+      taskCategory: taskCategory, event: event);
   db.collection("task").add(data).then((documentSnapshot) =>
       print("Added data with id: ${documentSnapshot.id}"));
 }

@@ -71,17 +71,34 @@ void updateTask(
     required dueDate,
     required description,
     required done,
-    required taskCategory}) {
+    required taskCategory,
+    required event}) {
   final data = Task.fromTask(
       isDaily: isDaily,
       name: name,
       dueDate: dueDate,
       description: description,
       done: done,
-      taskCategory: taskCategory);
+      taskCategory: taskCategory,
+      event: event);
   db
       .collection("task")
       .doc(docRef)
       .update(data)
       .then((documentSnapshot) => print("Updated data with id: $docRef"));
+}
+
+void updateDone({required task}) {
+  Task t = task;
+  final data = Task.fromTaskChangeDone(
+      isDaily: t.isDaily,
+      name: t.name,
+      dueDate: t.dueDate,
+      description: t.description,
+      done: (t.done) ? false : true);
+  db
+      .collection("task")
+      .doc(t.taskRef)
+      .update(data)
+      .then((documentSnapshot) => print("Updated data with id: ${t.taskRef}"));
 }
