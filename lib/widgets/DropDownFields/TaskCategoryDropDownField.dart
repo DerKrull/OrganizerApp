@@ -10,9 +10,13 @@ import '../../core/model/Task.dart';
 import '../../core/utils/materialThemeColorConstant.dart';
 
 class TaskCategoryDropDownField extends StatelessWidget {
+
+  final String? errorMessage;
+
   TaskCategoryDropDownField({
     Key? key,
     required this.task,
+    this.errorMessage
   }) : super(key: key);
   final Task? task;
 
@@ -48,6 +52,7 @@ class TaskCategoryDropDownField extends StatelessWidget {
                       textStyle: TextStyle(color: CustomMaterialThemeColorConstant.dark.onSurface,),
                       listSpace: 2,
                       textFieldDecoration: InputDecoration(
+                        errorText: errorMessage,
                         hintText: "Kategorie",
                         hintStyle: TextStyle(
                             color: CustomMaterialThemeColorConstant.dark.onSurface),
@@ -61,8 +66,12 @@ class TaskCategoryDropDownField extends StatelessWidget {
                             "Kategorie"),
                       ),
                       onChanged: (dropDownValue) {
-                        DropDownValueModel valueModel = dropDownValue;
-                        taskCategoryController.changeCategory(taskCategory: valueModel.value);
+                        if(dropDownValue == "") {
+                          taskCategoryController.changeCategory(taskCategory: TaskCategory(name: "", docRef: ""));
+                        } else {
+                          DropDownValueModel valueModel = dropDownValue;
+                          taskCategoryController.changeCategory(taskCategory: valueModel.value);
+                        }
                       },
                       dropDownList: list.map<DropDownValueModel>((doc) {
                         return DropDownValueModel(name: doc.name, value: doc);
@@ -100,6 +109,7 @@ class TaskCategoryDropDownField extends StatelessWidget {
                       textStyle: TextStyle(color: CustomMaterialThemeColorConstant.dark.onSurface,),
                       listSpace: 2,
                       textFieldDecoration: InputDecoration(
+                        errorText: errorMessage,
                         hintText: "Kategorie",
                         hintStyle: TextStyle(
                             color: CustomMaterialThemeColorConstant.dark.onSurface),
@@ -113,8 +123,12 @@ class TaskCategoryDropDownField extends StatelessWidget {
                             "Kategorie"),
                       ),
                       onChanged: (dropDownValue) {
-                        DropDownValueModel valueModel = dropDownValue;
-                        taskCategoryController.changeCategory(taskCategory: valueModel.value);
+                        if(dropDownValue == "") {
+                          taskCategoryController.changeCategory(taskCategory: TaskCategory(name: "", docRef: ""));
+                        } else {
+                          DropDownValueModel valueModel = dropDownValue;
+                          taskCategoryController.changeCategory(taskCategory: valueModel.value);
+                        }
                       },
                       dropDownList: list.map<DropDownValueModel>((doc) {
                         return DropDownValueModel(name: doc.name, value: doc);

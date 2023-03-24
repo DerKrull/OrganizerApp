@@ -42,6 +42,8 @@ class AddTaskScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     addTaskController.clearErrors();
+    taskEventController.clearErrors();
+    ddtcController.clearErrors();
     return Scaffold(
       appBar: CustomTopAppBar(
           title: "Aufgabe hinzufügen",
@@ -74,6 +76,9 @@ class AddTaskScreen extends StatelessWidget {
                 ],
                 TaskCategoryDropDownField(
                   task: null,
+                  errorMessage: ddtcController.categoryError.value.isEmpty
+                      ? null
+                      : ddtcController.categoryError.value,
                 ),
                 if (selectedIndex.value == 0) ...[
                   CustomTextField(
@@ -87,6 +92,9 @@ class AddTaskScreen extends StatelessWidget {
                   ),
                   TaskEventDropDownField(
                     task: null,
+                    errorMessage: taskEventController.eventError.value.isEmpty
+                        ? null
+                        : taskEventController.eventError.value,
                   ),
                 ],
                 Align(
@@ -113,10 +121,15 @@ class AddTaskScreen extends StatelessWidget {
                               selectedIndex.value == 1 ? true : false;
                           Event event = taskEventController.event.value;
                           addTaskController.clearErrors();
+                          taskEventController.clearErrors();
+                          ddtcController.clearErrors();
                           if (isDaily) {
                             if (name.isEmpty) {
                               addTaskController.displayError(
                                   name: "Name eingeben");
+                            } else if (taskCategory.name.isEmpty) {
+                              ddtcController.displayError(
+                                  category: "Kategorie auswählen");
                             } else {
                               event = Event(
                                   title: "",
@@ -147,6 +160,11 @@ class AddTaskScreen extends StatelessWidget {
                             } else if (description.isEmpty) {
                               addTaskController.displayError(
                                   description: "Beschreibung eingeben");
+                            } else if (taskCategory.name.isEmpty) {
+                              ddtcController.displayError(
+                                  category: "Kategorie auswählen");
+                            } else if (event.title.isEmpty) {
+                              taskEventController.displayError(event: "Termin auswählen");
                             } else {
                               addTask(
                                   isDaily: isDaily,

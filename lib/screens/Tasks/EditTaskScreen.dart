@@ -43,14 +43,18 @@ class EditTaskScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (taskController.nameError.value.isNotEmpty ||
+        taskController.descriptionError.value.isNotEmpty) {
+      taskController.clearErrors();
+      taskController.nameController.text = task.name;
+      taskController.descriptionController.text = task.description;
+    } else if (taskEventController.eventError.value.isNotEmpty) {
+      taskEventController.clearErrors();
+    }
+    taskCategoryController.clearErrors();
+    taskDueDateController.updateSelectedDate(newDate: task.dueDate);
+    selectedIndex.value = (task.isDaily) ? 1 : 0;
     return Obx(() {
-      if(taskController.nameError.value.isEmpty ||taskController.descriptionError.value.isNotEmpty) {
-        taskController.clearErrors();
-        taskController.nameController.text = task.name;
-        taskController.descriptionController.text = task.description;
-      }
-      taskDueDateController.updateSelectedDate(newDate: task.dueDate);
-      selectedIndex.value = (task.isDaily) ? 1 : 0;
       return Scaffold(
         appBar: CustomTopAppBar(
             title: task.name,
@@ -85,7 +89,13 @@ class EditTaskScreen extends StatelessWidget {
                 if (selectedIndex.value == 0) ...[
                   CustomDatePicker(label: "Datum"),
                 ],
-                TaskCategoryDropDownField(task: task),
+                TaskCategoryDropDownField(
+                  task: task,
+                  errorMessage:
+                      taskCategoryController.categoryError.value.isEmpty
+                          ? null
+                          : taskCategoryController.categoryError.value,
+                ),
                 if (selectedIndex.value == 0) ...[
                   CustomTextField(
                     controller: taskController.descriptionController,
@@ -97,6 +107,9 @@ class EditTaskScreen extends StatelessWidget {
                   ),
                   TaskEventDropDownField(
                     task: task,
+                    errorMessage: taskEventController.eventError.value.isEmpty
+                        ? null
+                        : taskEventController.eventError.value,
                   ),
                 ],
                 Align(
@@ -123,10 +136,15 @@ class EditTaskScreen extends StatelessWidget {
                               selectedIndex.value == 1 ? true : false;
                           Event event = taskEventController.event.value;
                           taskController.clearErrors();
+                          taskEventController.clearErrors();
+                          taskCategoryController.clearErrors();
                           if (isDaily) {
                             if (name.isEmpty) {
                               taskController.displayError(
                                   name: "Name eingeben");
+                            } else if (taskCategory.name.isEmpty) {
+                              taskCategoryController.displayError(
+                                  category: "Kategorie auswählen");
                             } else {
                               event = Event(
                                   title: "",
@@ -158,6 +176,12 @@ class EditTaskScreen extends StatelessWidget {
                             } else if (description.isEmpty) {
                               taskController.displayError(
                                   description: "Beschreibung eingeben");
+                            } else if (taskCategory.name.isEmpty) {
+                              taskCategoryController.displayError(
+                                  category: "Kategorie auswählen");
+                            } else if (event.title.isEmpty) {
+                              taskEventController.displayError(
+                                  event: "Termin auswählen");
                             } else {
                               updateTask(
                                   isDaily: isDaily,

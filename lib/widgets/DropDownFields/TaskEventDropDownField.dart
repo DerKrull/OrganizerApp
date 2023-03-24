@@ -10,16 +10,17 @@ import '../../core/model/Task.dart';
 import '../../core/utils/materialThemeColorConstant.dart';
 
 class TaskEventDropDownField extends StatelessWidget {
+
+  final String? errorMessage;
+
   TaskEventDropDownField({
     Key? key,
     required this.task,
+    this.errorMessage
   }) : super(key: key);
   final Task? task;
 
   final DropDownEventController eventController = Get.find();
-  // var event =
-  //     Event(title: '', description: '', dateTime: DateTime.now(), docRef: '')
-  //         .obs;
 
   @override
   Widget build(BuildContext context) {
@@ -55,6 +56,7 @@ class TaskEventDropDownField extends StatelessWidget {
                     ),
                     listSpace: 2,
                     textFieldDecoration: InputDecoration(
+                      errorText: errorMessage,
                       hintText: "Event",
                       hintStyle: TextStyle(
                           color:
@@ -69,8 +71,12 @@ class TaskEventDropDownField extends StatelessWidget {
                           "Event"),
                     ),
                     onChanged: (dropDownValue) {
-                      DropDownValueModel valueModel = dropDownValue;
-                      eventController.changeEvent(taskEvent: valueModel.value);
+                      if(dropDownValue == "") {
+                        eventController.changeEvent(taskEvent: Event(docRef: "", title: "", description: "", dateTime: DateTime.now()));
+                      } else {
+                        DropDownValueModel valueModel = dropDownValue;
+                        eventController.changeEvent(taskEvent: valueModel.value);
+                      }
                     },
                     dropDownList: list.map<DropDownValueModel>((doc) {
                       return DropDownValueModel(name: doc.title, value: doc);
@@ -112,6 +118,7 @@ class TaskEventDropDownField extends StatelessWidget {
                     ),
                     listSpace: 2,
                     textFieldDecoration: InputDecoration(
+                      errorText: errorMessage,
                       hintText: "Event",
                       hintStyle: TextStyle(
                           color:
@@ -126,8 +133,12 @@ class TaskEventDropDownField extends StatelessWidget {
                           "Event"),
                     ),
                     onChanged: (dropDownValue) {
-                      DropDownValueModel valueModel = dropDownValue;
-                      eventController.changeEvent(taskEvent: valueModel.value);
+                      if(dropDownValue == "") {
+                        eventController.changeEvent(taskEvent: Event(docRef: "", title: "", description: "", dateTime: DateTime.now()));
+                      } else {
+                        DropDownValueModel valueModel = dropDownValue;
+                        eventController.changeEvent(taskEvent: valueModel.value);
+                      }
                     },
                     dropDownList: list.map<DropDownValueModel>((doc) {
                       return DropDownValueModel(name: doc.title, value: doc);
