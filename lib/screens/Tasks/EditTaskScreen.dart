@@ -108,6 +108,7 @@ class EditTaskScreen extends StatelessWidget {
                           String name = taskController.nameController.text;
                           String description =
                               taskController.descriptionController.text;
+                          DateTime dueDate = taskDueDateController.actualDate;
                           bool isDaily =
                               selectedIndex.value == 1 ? true : false;
                           Event event = taskEventController.event.value;
@@ -138,7 +139,7 @@ class EditTaskScreen extends StatelessWidget {
                               updateTask(
                                   isDaily: isDaily,
                                   name: name,
-                                  dueDate: DateTime.now(),
+                                  dueDate: dueDate,
                                   description: description,
                                   done: false,
                                   taskCategory: taskCategory,

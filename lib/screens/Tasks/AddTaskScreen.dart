@@ -97,6 +97,7 @@ class AddTaskScreen extends StatelessWidget {
                               addTaskController.nameController.text;
                           String description =
                               addTaskController.descriptionController.text;
+                          DateTime dueDate = dateController.actualDate;
                           bool isDaily =
                           selectedIndex.value == 1
                                   ? true
@@ -129,7 +130,7 @@ class AddTaskScreen extends StatelessWidget {
                               addTask(
                                   isDaily: isDaily,
                                   name: name,
-                                  dueDate: DateTime.now(),
+                                  dueDate: dueDate,
                                   description: description,
                                   done: false,
                                   taskCategory: taskCategory,
