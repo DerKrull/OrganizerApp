@@ -6,6 +6,7 @@ import 'package:organizer_app/controller/Tasks/SingleTaskController.dart';
 import 'package:organizer_app/core/model/Event.dart';
 import 'package:organizer_app/core/model/Task.dart';
 import 'package:organizer_app/core/model/TaskCategory.dart';
+import 'package:organizer_app/screens/TasksOverviewScreen.dart';
 import 'package:organizer_app/widgets/CustomDatePicker.dart';
 import 'package:organizer_app/widgets/CustomTextField.dart';
 import 'package:organizer_app/widgets/CustomTopAppBar.dart';
@@ -51,11 +52,18 @@ class EditTaskScreen extends StatelessWidget {
       return Scaffold(
         appBar: CustomTopAppBar(
             title: task.name,
-            showDelete: false,
-            showThreePoints: true,
+            showDelete: true,
+            showThreePoints: false,
+            deleteOnPressed: () {
+              deleteTask(docRef: task.taskRef);
+              Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          TaskOverviewScreen()));
+            },
             menu: ThreePointPopUpMenu(
                 onSelected: (int result) {},
-                entries: const ["Kategorie-Einstellungen"]).build(context)),
+                entries: const []).build(context)),
         bottomNavigationBar: CustomBottomAppBar(
           mainPage: MainPages.TaskScreen,
           isMainPage: false,

@@ -10,6 +10,7 @@ import '../../core/model/Task.dart';
 import '../../widgets/CustomTopAppBar.dart';
 import '../../widgets/ThreePointPopUpMenu.dart';
 import 'AddTaskScreen.dart';
+import 'TaskCategory/TaskCategoryScreen.dart';
 
 class TasksScreen extends StatelessWidget {
   const TasksScreen({Key? key}) : super(key: key);
@@ -40,7 +41,10 @@ class TasksScreen extends StatelessWidget {
           showDelete: false,
           showThreePoints: true,
           menu: ThreePointPopUpMenu(
-              onSelected: (int result) {},
+              onSelected: (int result) {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => TaskCategoryScreen()));
+              },
               entries: const ["Kategorie-Einstellungen"]).build(context)),
       bottomNavigationBar: CustomBottomAppBar(
         mainPage: MainPages.TaskScreen,

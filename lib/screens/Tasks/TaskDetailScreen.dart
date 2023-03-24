@@ -17,6 +17,7 @@ import '../../widgets/DropDownFields/TaskCategoryDropDownField.dart';
 import '../../widgets/DropDownFields/TaskEventDropDownField.dart';
 import '../../widgets/ThreePointPopUpMenu.dart';
 import 'EditTaskScreen.dart';
+import 'TaskCategory/TaskCategoryScreen.dart';
 
 class TaskDetailScreen extends StatelessWidget {
   TaskDetailScreen({Key? key, required this.task}) : super(key: key);
@@ -53,10 +54,10 @@ class TaskDetailScreen extends StatelessWidget {
           showThreePoints: true,
           menu: ThreePointPopUpMenu(
               onSelected: (int result) {
-                deleteTask(docRef: task.taskRef);
-                Navigator.of(context).pop();
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => TaskCategoryScreen()));
               },
-              entries: const ["Aufgabe löschen"]).build(context)),
+              entries: const ["Kategorie-Einstellungen"]).build(context)),
       bottomNavigationBar: CustomBottomAppBar(
         mainPage: MainPages.TaskScreen,
         isMainPage: false,

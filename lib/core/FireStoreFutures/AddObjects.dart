@@ -43,7 +43,7 @@ void addBudget({required value, required description, required date}) {
   final data =
       Budget.fromBudget(value: value, description: description, date: date);
   db.collection("budget").add(data).then((documentSnapshot) =>
-      print("Update data with id: ${documentSnapshot.id}"));
+      print("Added data with id: ${documentSnapshot.id}"));
 }
 
 void addEvent(
@@ -53,7 +53,7 @@ void addEvent(
   final data = Event.fromEvent(
       title: title, description: description, dateTime: dateTime);
   db.collection("event").add(data).then((documentSnapshot) =>
-      print("Update data with id: ${documentSnapshot.id}"));
+      print("Added data with id: ${documentSnapshot.id}"));
 }
 
 void addTask(
@@ -72,5 +72,12 @@ void addTask(
       done: done,
       taskCategory: taskCategory, event: event);
   db.collection("task").add(data).then((documentSnapshot) =>
+      print("Added data with id: ${documentSnapshot.id}"));
+}
+
+void addTaskCategory({required name}) {
+  final data =
+  TaskCategory.fromTaskCategory(name: name);
+  db.collection("taskCategory").add(data).then((documentSnapshot) =>
       print("Added data with id: ${documentSnapshot.id}"));
 }

@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:organizer_app/controller/Budget/SingleBudgetController.dart';
 import 'package:organizer_app/controller/Calendar/SingleEventController.dart';
 import 'package:organizer_app/controller/Calendar/TableCalendarController.dart';
+import 'package:organizer_app/controller/Tasks/SingleTaskCategoryController.dart';
 import 'package:organizer_app/controller/TimeController.dart';
 import 'package:organizer_app/controller/DropDownEventController.dart';
 import 'package:organizer_app/controller/Tasks/AddTaskController.dart';
@@ -45,6 +46,7 @@ class MyApp extends StatelessWidget {
   final MonthController monthController = Get.put(MonthController());
   final DropDownEventController dropDownEventController = Get.put(DropDownEventController());
   final AddTaskController addTaskController = Get.put(AddTaskController());
+  final SingleTaskCategoryController singleTaskCategoryController = Get.put(SingleTaskCategoryController());
 
   @override
   Widget build(BuildContext context) {

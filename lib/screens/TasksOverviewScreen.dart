@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:organizer_app/core/app_export.dart';
 import 'package:organizer_app/screens/Tasks/DailyTasksScreen.dart';
+import 'package:organizer_app/screens/Tasks/TaskCategory/TaskCategoryScreen.dart';
 import 'package:organizer_app/screens/Tasks/TasksScreen.dart';
 import 'package:organizer_app/widgets/CustomBottomAppBar.dart';
 import 'package:organizer_app/widgets/CustomTopAppBarMainPage.dart';
@@ -63,7 +64,10 @@ class TaskOverviewScreen extends StatelessWidget {
             title: "Aufgaben",
             showThreePoints: true,
             menu: ThreePointPopUpMenu(
-                onSelected: (int result) {},
+                onSelected: (int result) {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => TaskCategoryScreen()));
+                },
                 entries: const ["Kategorie-Einstellungen"]).build(context)),
         bottomNavigationBar: CustomBottomAppBar(
           mainPage: MainPages.TaskScreen,

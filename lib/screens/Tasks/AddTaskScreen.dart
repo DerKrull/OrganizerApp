@@ -44,10 +44,10 @@ class AddTaskScreen extends StatelessWidget {
       appBar: CustomTopAppBar(
           title: "Aufgabe hinzufügen",
           showDelete: false,
-          showThreePoints: true,
+          showThreePoints: false,
           menu: ThreePointPopUpMenu(
               onSelected: (int result) {},
-              entries: const ["Kategorie-Einstellungen"]).build(context)),
+              entries: const []).build(context)),
       bottomNavigationBar: CustomBottomAppBar(
         mainPage: MainPages.TaskScreen,
         isMainPage: false,

@@ -3,6 +3,7 @@ import '../model/BudgetCategory.dart';
 import '../model/Event.dart';
 import '../model/Expenditure.dart';
 import '../model/Task.dart';
+import '../model/TaskCategory.dart';
 import 'FirebaseInstance.dart';
 
 void updateCategory(
@@ -101,4 +102,12 @@ void updateDone({required task}) {
       .doc(t.taskRef)
       .update(data)
       .then((documentSnapshot) => print("Updated data with id: ${t.taskRef}"));
+}
+
+void updateTaskCategory(
+    {required String docRef,
+      required String name}) {
+  final data = TaskCategory.fromTaskCategory(name: name);
+  db.collection("taskCategory").doc(docRef).update(data).then((documentSnapshot) =>
+      print("Update data with id: $docRef"));
 }

@@ -31,3 +31,11 @@ void deleteTask({required String docRef}) {
       .delete()
       .then((documentSnapshot) => print("Deleted data with id: ${docRef}"));
 }
+
+void deleteTaskCategory({required String docRef}) {
+  db
+      .collection("taskCategory")
+      .doc(docRef)
+      .delete()
+      .then((documentSnapshot) => print("Deleted data with id: $docRef"));
+}
