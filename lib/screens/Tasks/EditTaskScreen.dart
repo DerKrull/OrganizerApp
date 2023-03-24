@@ -44,9 +44,11 @@ class EditTaskScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      taskController.clearErrors();
-      taskController.nameController.text = task.name;
-      taskController.descriptionController.text = task.description;
+      if(taskController.nameError.value.isEmpty ||taskController.descriptionError.value.isNotEmpty) {
+        taskController.clearErrors();
+        taskController.nameController.text = task.name;
+        taskController.descriptionController.text = task.description;
+      }
       taskDueDateController.updateSelectedDate(newDate: task.dueDate);
       selectedIndex.value = (task.isDaily) ? 1 : 0;
       return Scaffold(
@@ -56,14 +58,11 @@ class EditTaskScreen extends StatelessWidget {
             showThreePoints: false,
             deleteOnPressed: () {
               deleteTask(docRef: task.taskRef);
-              Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          TaskOverviewScreen()));
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (context) => TaskOverviewScreen()));
             },
             menu: ThreePointPopUpMenu(
-                onSelected: (int result) {},
-                entries: const []).build(context)),
+                onSelected: (int result) {}, entries: const []).build(context)),
         bottomNavigationBar: CustomBottomAppBar(
           mainPage: MainPages.TaskScreen,
           isMainPage: false,
@@ -78,9 +77,9 @@ class EditTaskScreen extends StatelessWidget {
                   controller: taskController.nameController,
                   label: 'Name',
                   hintText: 'Name der Aufgabe',
-                  errorMessage: taskController.valueError.value.isEmpty
+                  errorMessage: taskController.nameError.value.isEmpty
                       ? null
-                      : taskController.valueError.value,
+                      : taskController.nameError.value,
                 ),
                 buildSegmentedControl(),
                 if (selectedIndex.value == 0) ...[
@@ -92,6 +91,9 @@ class EditTaskScreen extends StatelessWidget {
                     controller: taskController.descriptionController,
                     label: 'Beschreibung',
                     hintText: 'Beschreibung',
+                    errorMessage: taskController.descriptionError.value.isEmpty
+                        ? null
+                        : taskController.descriptionError.value,
                   ),
                   TaskEventDropDownField(
                     task: task,
@@ -120,8 +122,12 @@ class EditTaskScreen extends StatelessWidget {
                           bool isDaily =
                               selectedIndex.value == 1 ? true : false;
                           Event event = taskEventController.event.value;
+                          taskController.clearErrors();
                           if (isDaily) {
-                            if (name.isNotEmpty) {
+                            if (name.isEmpty) {
+                              taskController.displayError(
+                                  name: "Name eingeben");
+                            } else {
                               event = Event(
                                   title: "",
                                   description: "",
@@ -139,11 +145,20 @@ class EditTaskScreen extends StatelessWidget {
                               taskCategoryController.clear();
                               taskController.clear();
                               taskDueDateController.clear();
-                            } else {
-                              print("Values are null");
+                              Navigator.of(context).pop();
+                              Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          TaskOverviewScreen()));
                             }
                           } else {
-                            if (name.isNotEmpty && description.isNotEmpty) {
+                            if (name.isEmpty) {
+                              taskController.displayError(
+                                  name: "Name eingeben");
+                            } else if (description.isEmpty) {
+                              taskController.displayError(
+                                  description: "Beschreibung eingeben");
+                            } else {
                               updateTask(
                                   isDaily: isDaily,
                                   name: name,
@@ -156,9 +171,11 @@ class EditTaskScreen extends StatelessWidget {
                               taskCategoryController.clear();
                               taskController.clear();
                               taskDueDateController.clear();
-                              Navigator.of(context).pop(context);
-                            } else {
-                              print("Values are null");
+                              Navigator.of(context).pop();
+                              Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          TaskOverviewScreen()));
                             }
                           }
                         })

@@ -5,6 +5,7 @@ import 'package:organizer_app/controller/DropDownEventController.dart';
 import 'package:organizer_app/controller/DropDownTaskCategoryController.dart';
 import 'package:organizer_app/core/model/Event.dart';
 import 'package:organizer_app/core/model/TaskCategory.dart';
+import 'package:organizer_app/screens/TasksOverviewScreen.dart';
 import 'package:organizer_app/widgets/CustomDatePicker.dart';
 import 'package:organizer_app/widgets/CustomTextField.dart';
 import 'package:organizer_app/widgets/CustomTopAppBar.dart';
@@ -40,14 +41,14 @@ class AddTaskScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    addTaskController.clearErrors();
     return Scaffold(
       appBar: CustomTopAppBar(
           title: "Aufgabe hinzufügen",
           showDelete: false,
           showThreePoints: false,
           menu: ThreePointPopUpMenu(
-              onSelected: (int result) {},
-              entries: const []).build(context)),
+              onSelected: (int result) {}, entries: const []).build(context)),
       bottomNavigationBar: CustomBottomAppBar(
         mainPage: MainPages.TaskScreen,
         isMainPage: false,
@@ -61,6 +62,9 @@ class AddTaskScreen extends StatelessWidget {
               children: [
                 CustomTextField(
                   controller: addTaskController.nameController,
+                  errorMessage: addTaskController.nameError.value.isEmpty
+                      ? null
+                      : addTaskController.nameError.value,
                   label: 'Name',
                   hintText: 'Name der Aufgabe',
                 ),
@@ -68,14 +72,22 @@ class AddTaskScreen extends StatelessWidget {
                 if (selectedIndex.value == 0) ...[
                   CustomDatePicker(label: "Datum"),
                 ],
-                TaskCategoryDropDownField(task: null,),
+                TaskCategoryDropDownField(
+                  task: null,
+                ),
                 if (selectedIndex.value == 0) ...[
                   CustomTextField(
                     controller: addTaskController.descriptionController,
                     label: 'Beschreibung',
                     hintText: 'Beschreibung',
+                    errorMessage:
+                        addTaskController.descriptionError.value.isEmpty
+                            ? null
+                            : addTaskController.descriptionError.value,
                   ),
-                  TaskEventDropDownField(task: null,),
+                  TaskEventDropDownField(
+                    task: null,
+                  ),
                 ],
                 Align(
                   alignment: Alignment.bottomCenter,
@@ -93,18 +105,19 @@ class AddTaskScreen extends StatelessWidget {
                         SaveButton(onPressed: () {
                           TaskCategory taskCategory =
                               ddtcController.category.value;
-                          String name =
-                              addTaskController.nameController.text;
+                          String name = addTaskController.nameController.text;
                           String description =
                               addTaskController.descriptionController.text;
                           DateTime dueDate = dateController.actualDate;
                           bool isDaily =
-                          selectedIndex.value == 1
-                                  ? true
-                                  : false;
+                              selectedIndex.value == 1 ? true : false;
                           Event event = taskEventController.event.value;
+                          addTaskController.clearErrors();
                           if (isDaily) {
-                            if (name.isNotEmpty) {
+                            if (name.isEmpty) {
+                              addTaskController.displayError(
+                                  name: "Name eingeben");
+                            } else {
                               event = Event(
                                   title: "",
                                   description: "",
@@ -121,12 +134,20 @@ class AddTaskScreen extends StatelessWidget {
                               ddtcController.clear();
                               addTaskController.clear();
                               dateController.clear();
-                              Navigator.of(context).pop(context);
-                            } else {
-                              print("Values are null");
+                              Navigator.of(context).pop();
+                              Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          TaskOverviewScreen()));
                             }
                           } else {
-                            if (name.isNotEmpty && description.isNotEmpty) {
+                            if (name.isEmpty) {
+                              addTaskController.displayError(
+                                  name: "Name eingeben");
+                            } else if (description.isEmpty) {
+                              addTaskController.displayError(
+                                  description: "Beschreibung eingeben");
+                            } else {
                               addTask(
                                   isDaily: isDaily,
                                   name: name,
@@ -138,9 +159,11 @@ class AddTaskScreen extends StatelessWidget {
                               ddtcController.clear();
                               addTaskController.clear();
                               dateController.clear();
-                              Navigator.of(context).pop(context);
-                            } else {
-                              print("Values are null");
+                              Navigator.of(context).pop();
+                              Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          TaskOverviewScreen()));
                             }
                           }
                         })

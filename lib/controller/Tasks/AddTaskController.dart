@@ -3,14 +3,9 @@ import 'package:get/get.dart';
 
 class AddTaskController extends GetxController {
   final nameController = TextEditingController();
+  final nameError = "".obs;
   final descriptionController = TextEditingController();
-
-  var valueError = "".obs;
-
-  @override
-  void onInit() {
-    super.onInit();
-  }
+  final descriptionError = "".obs;
 
   @override
   void onClose() {
@@ -18,12 +13,14 @@ class AddTaskController extends GetxController {
     descriptionController.dispose();
   }
 
-  void displayError({String value = ""}) {
-    if(value.isEmpty) valueError.value = value;
+  void displayError({String name = "", String description = ""}) {
+    if(name.isNotEmpty) nameError.value = name;
+    if(description.isNotEmpty) descriptionError.value = description;
   }
 
   void clearErrors() {
-    valueError.value = "";
+    nameError.value = "";
+    descriptionError.value = "";
   }
 
   void clear() {
