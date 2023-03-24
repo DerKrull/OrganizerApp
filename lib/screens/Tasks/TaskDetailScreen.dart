@@ -79,28 +79,31 @@ class TaskDetailScreen extends StatelessWidget {
         physics: NeverScrollableScrollPhysics(),
         child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                CustomTextField(
-                  controller: taskController.nameController,
-                  label: 'Name',
-                  hintText: 'Name der Aufgabe',
-                  enabled: false,
-                ),
-                buildSegmentedControl(),
-                if (selectedIndex.value == 0) ...[
-                  CustomDatePicker(label: "Datum"),
-                ],
-                TaskCategoryDropDownField(task: task,),
-                if (selectedIndex.value == 0) ...[
+            child: IgnorePointer(
+              ignoring: true,
+              child: Column(
+                children: [
                   CustomTextField(
-                    controller: taskController.descriptionController,
-                    label: 'Beschreibung',
-                    hintText: 'Beschreibung',
+                    controller: taskController.nameController,
+                    label: 'Name',
+                    hintText: 'Name der Aufgabe',
+                    enabled: false,
                   ),
-                  TaskEventDropDownField(task: task,),
+                  buildSegmentedControl(),
+                  if (selectedIndex.value == 0) ...[
+                    CustomDatePicker(label: "Datum"),
+                  ],
+                  TaskCategoryDropDownField(task: task,),
+                  if (selectedIndex.value == 0) ...[
+                    CustomTextField(
+                      controller: taskController.descriptionController,
+                      label: 'Beschreibung',
+                      hintText: 'Beschreibung',
+                    ),
+                    TaskEventDropDownField(task: task,),
+                  ],
                 ],
-              ],
+              ),
             ),
           ),
         ),
