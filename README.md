@@ -48,7 +48,7 @@ git clone git@github.com:DerKrull/OrganizerApp.git
 
 ## Beispiel HomeScreen
 
-![HomeScreen Screenshot](assets/images/HomeScreen_Screenshot.jpeg)
+<img src="assets/images/HomeScreen_Screenshot.jpg" alt="HomeScreen Screenshot" width="400"/>
 
 ## Team
 
