@@ -6,8 +6,8 @@ class TimeController extends GetxController {
   final timeTextController = TextEditingController();
 
   void updateSelectedTime({required TimeOfDay newTime}) {
-
-    timeTextController.text = "${newTime.hour}:${newTime.minute}";
+    timeTextController.text =
+        "${newTime.hour < 10 ? "0${newTime.hour}" : newTime.hour}:${newTime.minute < 10 ? "0${newTime.minute}" : newTime.minute}";
     actualTime = newTime;
   }
 
