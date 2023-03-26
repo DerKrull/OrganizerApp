@@ -43,6 +43,9 @@ class CustomDatePicker extends StatelessWidget {
                 enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(4.0),
                     borderSide: const BorderSide(color: Colors.white)),
+                disabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(4.0),
+                    borderSide: const BorderSide(color: Colors.white))
               ),
               onTap: () async {
                 DateTime? pickedDate = await showDatePicker(
