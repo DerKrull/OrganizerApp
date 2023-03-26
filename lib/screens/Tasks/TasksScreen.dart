@@ -13,7 +13,7 @@ import 'AddTaskScreen.dart';
 import 'TaskCategory/TaskCategoryScreen.dart';
 
 class TasksScreen extends StatelessWidget {
-  const TasksScreen({Key? key}) : super(key: key);
+  TasksScreen({Key? key}) : super(key: key);
 
   Stream<List<Task>> tasksStream() {
     try {
@@ -32,6 +32,8 @@ class TasksScreen extends StatelessWidget {
       rethrow;
     }
   }
+
+  late bool showTrashcan = true;
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +75,7 @@ class TasksScreen extends StatelessWidget {
                         itemCount: snapshot.data!.length,
                         itemBuilder: (context, index) {
                           final entry = snapshot.data![index];
-                          return _buildSingleTask(index, snapshot.data!, entry);
+                          return _buildSingleTask(index, snapshot.data!, entry, context);
                         }),
                   );
                 } else if (snapshot.hasError) {
@@ -92,98 +94,140 @@ class TasksScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSingleTask(int index, List<Task> taskList, Task entry) {
-    return Card(
-      color: CustomMaterialThemeColorConstant.dark.surface5,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          FutureBuilder(
-            future: getTaskCategoryName(entry.taskCategory.id),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return ListTile(
-                  title: Text(
-                    entry.name,
-                    style: entry.done
-                        ? TextStyle(
-                            decoration: TextDecoration.lineThrough,
-                            decorationThickness: 3,
-                            fontSize: 20,
-                            color:
-                                CustomMaterialThemeColorConstant.dark.onSurface,
-                          )
-                        : TextStyle(
-                            fontSize: 20,
-                            color:
-                                CustomMaterialThemeColorConstant.dark.onSurface,
-                          ),
-                  ),
-                  subtitle: Text(
-                    "${snapshot.data?.name}",
-                    style: TextStyle(
-                        color: CustomMaterialThemeColorConstant.dark.onSurface,
-                        fontSize: 16),
-                  ),
-                  trailing: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      Text(
-                        " ${DateFormat("dd.MM.yyyy").format(entry.dueDate)}",
-                        style: TextStyle(
-                            fontSize: 16,
-                            color: CustomMaterialThemeColorConstant
-                                .dark.onSurface),
-                      ),
-                      Text(
-                        entry.description,
-                        style: TextStyle(
-                            fontSize: 16,
-                            color: CustomMaterialThemeColorConstant
-                                .dark.onSurface),
-                      ),
-                    ],
-                  ),
-                  leading: Transform.scale(
-                    scale: 1.3,
-                    child: Checkbox(
-                      side: BorderSide(
-                          color:
-                              CustomMaterialThemeColorConstant.dark.secondary,
-                          width: 1.5),
-                      shape: const CircleBorder(),
-                      checkColor: Colors.white,
-                      activeColor:
-                          CustomMaterialThemeColorConstant.light.primary,
-                      value: entry.done,
-                      onChanged: (bool? value) {
-                        updateDone(task: taskList[index]);
-                      },
+  Widget _buildSingleTask(int index, List<Task> taskList, Task entry, BuildContext context) {
+    return Dismissible(
+      key: Key(entry.name),
+      background: Container(
+        color: Colors.red,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: const [
+            Icon(
+              Icons.delete,
+              color: Colors.white,
+            ),
+            SizedBox(
+              width: 16,
+            ),
+          ],
+        ),
+      ),
+      direction: DismissDirection.endToStart,
+      onDismissed: (direction) {
+        deleteTask(docRef: entry.taskRef);
+      },
+      confirmDismiss: (direction) async {
+        return await showDialog(context: context, builder: (BuildContext context) {
+          return AlertDialog(
+            backgroundColor: CustomMaterialThemeColorConstant.dark.surface5,
+            title: const Text("Bestätigen", style: TextStyle(color: Colors.white),),
+            content: const Text("Sind Sie sicher, dass Sie die Aufgabe löschen wollen?", style: TextStyle(color: Colors.white),),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const Text("Abbrechen", style: TextStyle(color: Colors.white),),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: const Text("Löschen", style: TextStyle(color: Colors.white),),
+              ),
+            ],
+          );
+        });
+      },
+      child: Card(
+        color: CustomMaterialThemeColorConstant.dark.surface5,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            FutureBuilder(
+              future: getTaskCategoryName(entry.taskCategory.id),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return ListTile(
+                    title: Text(
+                      entry.name,
+                      style: entry.done
+                          ? TextStyle(
+                              decoration: TextDecoration.lineThrough,
+                              decorationThickness: 3,
+                              fontSize: 20,
+                              color: CustomMaterialThemeColorConstant
+                                  .dark.onSurface,
+                            )
+                          : TextStyle(
+                              fontSize: 20,
+                              color: CustomMaterialThemeColorConstant
+                                  .dark.onSurface,
+                            ),
                     ),
+                    subtitle: Text(
+                      "${snapshot.data?.name}",
+                      style: TextStyle(
+                          color:
+                              CustomMaterialThemeColorConstant.dark.onSurface,
+                          fontSize: 16),
+                    ),
+                    trailing: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          " ${DateFormat("dd.MM.yyyy").format(entry.dueDate)}",
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: CustomMaterialThemeColorConstant
+                                  .dark.onSurface),
+                        ),
+                        Text(
+                          entry.description,
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: CustomMaterialThemeColorConstant
+                                  .dark.onSurface),
+                        ),
+                      ],
+                    ),
+                    leading: Transform.scale(
+                      scale: 1.3,
+                      child: Checkbox(
+                        side: BorderSide(
+                            color:
+                                CustomMaterialThemeColorConstant.dark.secondary,
+                            width: 1.5),
+                        shape: const CircleBorder(),
+                        checkColor: Colors.white,
+                        activeColor:
+                            CustomMaterialThemeColorConstant.light.primary,
+                        value: entry.done,
+                        onChanged: (bool? value) {
+                          updateDone(task: taskList[index]);
+                        },
+                      ),
+                    ),
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => TaskDetailScreen(
+                                task: entry,
+                              )));
+                    },
+                  );
+                } else if (snapshot.hasError) {
+                  return Text("${snapshot.error}");
+                }
+                return Center(
+                  child: Container(
+                    width: 20,
+                    height: 20,
+                    child: const CircularProgressIndicator(),
                   ),
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => TaskDetailScreen(
-                              task: entry,
-                            )));
-                  },
                 );
-              } else if (snapshot.hasError) {
-                return Text("${snapshot.error}");
-              }
-              return Center(
-                child: Container(
-                  width: 20,
-                  height: 20,
-                  child: const CircularProgressIndicator(),
-                ),
-              );
-            },
-          ),
-        ],
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

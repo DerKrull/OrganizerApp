@@ -16,9 +16,9 @@ class TaskCategoryScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomTopAppBar(
-          title: "Tägliche Aufgaben",
+          title: "Aufgaben Kategorien",
           showDelete: false,
-          showThreePoints: true,
+          showThreePoints: false,
           menu: ThreePointPopUpMenu(
               onSelected: (int result) {},
               entries: const ["Kategorie-Einstellungen"]).build(context)),
@@ -65,27 +65,68 @@ class TaskCategoryScreen extends StatelessWidget {
 
   Widget _buildSingleTaskCategory(int index, List<TaskCategory> taskCategories,
       TaskCategory entry, BuildContext context) {
-    return Card(
-      color: CustomMaterialThemeColorConstant.dark.surface5,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ListTile(
-            title: Text(
-              taskCategories[index].name,
-              style: TextStyle(
-                fontSize: 20,
-                color: CustomMaterialThemeColorConstant.dark.onSurface,
-              ),
+    return Dismissible(
+      key: Key(entry.name),
+      background: Container(
+        color: Colors.red,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: const [
+            Icon(
+              Icons.delete,
+              color: Colors.white,
             ),
-            onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => ShowTaskCategoryScreen(
-                        taskCategory: entry,
-                      )));
-            },
-          )
-        ],
+            SizedBox(
+              width: 16,
+            ),
+          ],
+        ),
+      ),
+      direction: DismissDirection.endToStart,
+      onDismissed: (direction) {
+        deleteTaskCategory(docRef: entry.docRef);
+      },
+      confirmDismiss: (direction) async {
+        return await showDialog(context: context, builder: (BuildContext context) {
+          return AlertDialog(
+            backgroundColor: CustomMaterialThemeColorConstant.dark.surface5,
+            title: const Text("Bestätigen", style: TextStyle(color: Colors.white),),
+            content: const Text("Sind Sie sicher, dass Sie die Kategorie löschen wollen?", style: TextStyle(color: Colors.white),),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const Text("Abbrechen", style: TextStyle(color: Colors.white),),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: const Text("Löschen", style: TextStyle(color: Colors.white),),
+              ),
+            ],
+          );
+        });
+      },
+      child: Card(
+        color: CustomMaterialThemeColorConstant.dark.surface5,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ListTile(
+              title: Text(
+                taskCategories[index].name,
+                style: TextStyle(
+                  fontSize: 20,
+                  color: CustomMaterialThemeColorConstant.dark.onSurface,
+                ),
+              ),
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => ShowTaskCategoryScreen(
+                          taskCategory: entry,
+                        )));
+              },
+            )
+          ],
+        ),
       ),
     );
   }

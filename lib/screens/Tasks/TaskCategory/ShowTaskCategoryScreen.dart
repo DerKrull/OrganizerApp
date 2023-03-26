@@ -24,7 +24,7 @@ class ShowTaskCategoryScreen extends StatelessWidget {
     singleTaskCategoryController.nameController.text = taskCategory.name;
     return Scaffold(
       appBar: CustomTopAppBar(
-          title: "Aufgaben Kategorien",
+          title: taskCategory.name,
           showDelete: false,
           showThreePoints: false,
           menu: ThreePointPopUpMenu(

@@ -23,7 +23,7 @@ class AddTaskCategoryController extends StatelessWidget {
     singleTaskCategoryController.clearErrors();
     return Scaffold(
         appBar: CustomTopAppBar(
-            title: "Aufgaben Kategorie hinzufügen",
+            title: "Kategorie hinzufügen",
             showDelete: false,
             showThreePoints: false,
             menu: ThreePointPopUpMenu(
