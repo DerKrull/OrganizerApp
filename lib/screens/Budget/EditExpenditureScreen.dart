@@ -36,9 +36,9 @@ class EditExpenditureScreen extends StatelessWidget {
     dateController.updateSelectedDate(newDate: expenditure.date);
     return Scaffold(
       appBar: CustomTopAppBar(
-          title: "Ausgabe hinzufügen",
+          title: "Ausgabe bearbeiten",
           showDelete: false,
-          showThreePoints: true,
+          showThreePoints: false,
           menu: ThreePointPopUpMenu(
               onSelected: (int result) {},
               entries: const ["Kategorie-Einstellungen"]).build(context)),

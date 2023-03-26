@@ -28,12 +28,12 @@ class AddExpenditureScreen extends StatelessWidget {
     seController.clearErrors();
     return Scaffold(
       appBar: CustomTopAppBar(
-          title: "Aufgabe hinzufügen",
+          title: "Ausgabe hinzufügen",
           showDelete: false,
-          showThreePoints: true,
+          showThreePoints: false,
           menu: ThreePointPopUpMenu(
               onSelected: (int result) {},
-              entries: const ["Kategorie-Einstellungen"]).build(context)),
+              entries: const []).build(context)),
       bottomNavigationBar: CustomBottomAppBar(
         isMainPage: false,
         mainPage: MainPages.TaskScreen,

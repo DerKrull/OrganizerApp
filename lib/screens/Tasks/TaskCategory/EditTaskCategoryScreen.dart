@@ -23,7 +23,7 @@ class EditTaskCategoryScreen extends StatelessWidget {
     singleTaskCategoryController.nameController.text = taskCategory.name;
     return Scaffold(
         appBar: CustomTopAppBar(
-            title: "Aufgaben Kategorie bearbeiten",
+            title: taskCategory.name,
             showDelete: true,
             deleteOnPressed: () {
               deleteTaskCategory(docRef: taskCategory.docRef);

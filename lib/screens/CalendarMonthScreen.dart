@@ -41,11 +41,11 @@ class _CalendarMonthScreenState extends State<CalendarMonthScreen> {
     return SafeArea(
         child: Scaffold(
             appBar: CustomTopAppBarMainPage(
-                title: "Kalendar",
+                title: "Kalender",
                 showThreePoints: true,
                 menu: ThreePointPopUpMenu(
                     onSelected: (int result) {},
-                    entries: const ["Budget-Einstellungen"]).build(context)),
+                    entries: const ["Kalender-Einstellungen"]).build(context)),
             bottomNavigationBar: CustomBottomAppBar(
               mainPage: MainPages.CalendarScreen,
               isMainPage: true,
