@@ -156,7 +156,7 @@ class _CalendarMonthScreenState extends State<CalendarMonthScreen> {
                                           subtitle: Text(tableCalendarController
                                               .eventList[index].description),
                                           trailing: Text(
-                                            "um ${DateFormat("hh:mm").format(tableCalendarController.eventList[index].dateTime)}",
+                                            "um ${DateFormat("HH:mm").format(tableCalendarController.eventList[index].dateTime)}",
                                             style:
                                                 const TextStyle(fontSize: 16.0),
                                           ),
